@@ -7,24 +7,24 @@ import { UniformRegistry } from "./core/webgl/uniformRegistry";
 import { UserInterface } from "./simulation/ui/UserInterface";
 import "../../res/style/style.scss";
 import { fixEveryPreload } from "./core/utils";
+import { NodePlayground } from "./simulation/ui/NodePlayground";
+import { VectorI2D } from "./core/vector2D";
 
 export class Main {
     private fpsCounter = new FPSCounter();
     private userInterface = new UserInterface();
+    private playground = new NodePlayground();
     private mainRenderer!: MainRenderer;
 
     public initialize(): void {
-        const canvas = new Canvas();
+        // if (!this.bigEnoughScreen()) {
+        //     throw new Error("Your screen is too small!");
+        // }
+
+        GlobalVariables.resolution = new VectorI2D(0, 0);
+        GlobalVariables.canvas = this.playground.mainCanvas;
+        GlobalVariables.ctx = GlobalVariables.canvas.getContext();
         const mouse = new Mouse();
-
-        canvas.initialize();
-        GlobalVariables.resolution = canvas.getResolution();
-        GlobalVariables.canvas = canvas;
-        GlobalVariables.ctx = canvas.getContext();
-
-        if (!this.bigEnoughScreen()) {
-            throw new Error("Your screen is too small!");
-        }
 
         mouse.initialize();
         GlobalVariables.mouse = mouse;

@@ -12,14 +12,15 @@ export class Canvas {
     public onResize = new Signal<[width: number, height: number]>();
     private resizeTimeout!: NodeJS.Timeout;
 
-    public initialize(): void {
-        this.mainCanvas = createCanvas({ parent: document.body });
+    public initialize(parent: HTMLElement | null = null): void {
+        if (!parent) parent = document.body;
+        this.mainCanvas = createCanvas({ parent });
         this.updateResolution();
 
         this.context = this.mainCanvas.getContext("webgl2") as WebGL2RenderingContext;
         checkFor(this.context, "Unable to initialize WebGL. Your browser or machine may not support it.");
 
-        window.addEventListener("resize", () => {
+        parent.addEventListener("resize", () => {
             clearTimeout(this.resizeTimeout);
             this.resizeTimeout = setTimeout(this.updateResolution.bind(this), 100);
         });

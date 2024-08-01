@@ -61,7 +61,7 @@ export function getElementById<T extends HTMLElement>(id: string): T {
 
 export function fixEveryPreload(): void {
     setTimeout(() => {
-        const preloads = document.getElementsByClassName("preload");
+        const preloads = [...document.getElementsByClassName("preload")];
         for (const element of preloads) {
             element.classList.remove("preload");
         }
