@@ -32,7 +32,7 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin({
             patterns: [
-                // { from: "res", to: "res" },
+                { from: "res", to: "res" },
                 // { from: "libs", to: "libs" },
                 // { from: 'index.html' },
                 // { from: 'src/preload.js' },

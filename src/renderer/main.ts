@@ -22,6 +22,10 @@ export class Main {
         GlobalVariables.canvas = canvas;
         GlobalVariables.ctx = canvas.getContext();
 
+        if (!this.bigEnoughScreen()) {
+            throw new Error("Your screen is too small!");
+        }
+
         mouse.initialize();
         GlobalVariables.mouse = mouse;
 
@@ -41,5 +45,11 @@ export class Main {
         this.mainRenderer.frameUpdate();
 
         requestAnimationFrame(() => this.startRunning());
+    }
+
+    private bigEnoughScreen(): boolean {
+        const screenWidth = window.innerWidth;
+        console.log(screenWidth);
+        return screenWidth > 600;
     }
 }

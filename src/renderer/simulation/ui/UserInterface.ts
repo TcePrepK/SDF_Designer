@@ -24,7 +24,7 @@ export class UserInterface {
         } else {
             this.getAudio("closing").play();
         }
-        setTimeout(() => this.toggleable = true, 1000);
+        setTimeout(() => this.toggleable = true, 600);
         toggleClass(this.body, "expanded");
     }
 
