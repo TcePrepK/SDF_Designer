@@ -1,26 +1,45 @@
-import { createDiv, getElementById, toggleClass } from "../../core/utils";
+import { createDiv, getElementById, getElementByQuery, toggleClass } from "../../core/utils";
+import { AttachedMouse } from "../utils/AttachedMouse";
+import { ButtonType } from "../../core/mouse";
 
 export class UserInterface {
-    private readonly body!: HTMLDivElement;
-    private readonly header!: HTMLDivElement;
-    private readonly selection!: HTMLDivElement;
+    private body!: HTMLDivElement;
+    private header!: HTMLDivElement;
+    private selection!: HTMLDivElement;
 
     private allNodes: HTMLElement[] = [];
 
     private expanded = true;
     private toggleable = true;
 
-    public constructor() {
+    private lastScrollY = 0;
+    private currentlyScrolling = false;
+
+    public initialize(): void {
         this.body = getElementById("user-interface");
         toggleClass(this.body, "expanded");
 
-        this.header = createDiv({ id: "header", parent: this.body });
-        this.selection = createDiv({ id: "selection", parent: this.body });
+        this.header = getElementByQuery("#user-interface #header");
+        this.selection = getElementByQuery("#user-interface #selection");
+
+        const attachedMouse = new AttachedMouse().attachElement(this.selection);
+        attachedMouse.onMouseDrag.add((this.selectionDrag.bind(this)));
+        attachedMouse.onMouseButtonUp.add((this.selectionUp.bind(this)));
 
         const handle = getElementById("drawer-handle");
         handle.addEventListener("click", () => this.toggleExpanded());
 
         this.removeLater();
+    }
+
+    public update(): void {
+        this.fixScrollFading();
+
+        if (this.currentlyScrolling) return;
+        if (Math.abs(this.lastScrollY) < 0.01) return;
+
+        this.lastScrollY *= 0.9;
+        this.selection.scrollBy(0, this.lastScrollY);
     }
 
     private removeLater(): void {
@@ -34,6 +53,17 @@ export class UserInterface {
         window.addEventListener("resize", this.fixScrollFading.bind(this));
     }
 
+    private selectionDrag(button: ButtonType, _: number, dy: number): void {
+        if (button !== ButtonType.LEFT) return;
+        this.currentlyScrolling = true;
+        this.lastScrollY = -dy;
+    }
+
+    private selectionUp(button: ButtonType): void {
+        if (button !== ButtonType.LEFT) return;
+        this.currentlyScrolling = false;
+    }
+
     private fixScrollFading(): void {
         const selectionRect = this.selection.getBoundingClientRect();
         for (const node of this.allNodes) {
@@ -42,10 +72,12 @@ export class UserInterface {
             const bottomDiff = nodeRect.bottom - selectionRect.bottom;
             const diff = Math.max(topDiff, bottomDiff);
 
-            node.style.opacity = "1";
             if (diff > 0) {
-                const height = nodeRect.height * 0.8;
-                node.style.opacity = String(1 - diff / height);
+                let alpha = diff / nodeRect.height / 0.6;
+                alpha = Math.min(1, Math.max(0, alpha));
+                node.style.opacity = String(1 - alpha);
+            } else {
+                node.style.opacity = "1";
             }
         }
     }
