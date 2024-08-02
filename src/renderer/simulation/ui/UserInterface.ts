@@ -31,6 +31,7 @@ export class UserInterface {
 
         this.fixScrollFading();
         this.selection.addEventListener("scroll", this.fixScrollFading.bind(this));
+        window.addEventListener("resize", this.fixScrollFading.bind(this));
     }
 
     private fixScrollFading(): void {

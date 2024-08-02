@@ -32,7 +32,8 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin({
             patterns: [
-                { from: "res", to: "res" },
+                { from: "res/audio", to: "res/audio" },
+                { from: "res/svg", to: "res/svg" },
                 // { from: "libs", to: "libs" },
                 // { from: 'index.html' },
                 // { from: 'src/preload.js' },

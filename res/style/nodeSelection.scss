@@ -7,6 +7,7 @@ $scrollbar-hover: #2c778f;
 #selection {
     display: flex;
     flex-direction: column;
+    gap: 1.25rem;
 
     width: 100%;
     flex-grow: 1;
@@ -39,6 +40,13 @@ $scrollbar-hover: #2c778f;
         }
     }
 
+    .node:first-child {
+        margin-top: 1.25rem;
+    }
+    .node:last-child {
+        margin-bottom: 1.25rem;
+    }
+
     .node {
         position: relative;
 
@@ -47,7 +55,7 @@ $scrollbar-hover: #2c778f;
         background: $node-color;
 
         border-radius: $node-radius;
-        margin: 1rem auto 0 auto;
+        margin: 0 auto 0 auto;
 
         box-shadow: 0 0 10px $background;
 
