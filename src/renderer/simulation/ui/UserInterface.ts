@@ -33,12 +33,11 @@ export class UserInterface {
     }
 
     public update(): void {
-        this.fixScrollFading();
-
         if (this.currentlyScrolling) return;
-        if (Math.abs(this.lastScrollY) < 0.01) return;
+        if (Math.abs(this.lastScrollY) <= 0.1) return;
 
-        this.lastScrollY *= 0.9;
+        this.fixScrollFading();
+        this.lastScrollY -= Math.sign(this.lastScrollY) * 0.1;
         this.selection.scrollBy(0, this.lastScrollY);
     }
 
@@ -57,6 +56,8 @@ export class UserInterface {
         if (button !== ButtonType.LEFT) return;
         this.currentlyScrolling = true;
         this.lastScrollY = -dy;
+
+        this.selection.scrollBy(0, this.lastScrollY);
     }
 
     private selectionUp(button: ButtonType): void {
