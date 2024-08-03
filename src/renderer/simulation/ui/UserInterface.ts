@@ -84,7 +84,8 @@ export class UserInterface {
     }
 
     private createNode(name: string, inputs: number, outputs: number): HTMLElement {
-        const node = createDiv({ classes: ["node", "preload"], parent: this.selection },
+        const nodeHolder = createDiv({ classes: ["holder"], parent: this.selection });
+        const node = createDiv({ classes: ["node", "preload"], parent: nodeHolder },
             createDiv({ classes: ["name"], innerText: name })
         );
 

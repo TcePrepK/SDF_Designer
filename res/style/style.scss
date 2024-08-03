@@ -1,57 +1,9 @@
 @import "variables.scss";
 @import "errorPage.scss";
-@import "nodeSelection.scss";
+@import "userInterface.scss";
 @import "nodePlayground.scss";
 
-$ui-width: min(15rem, 100% - 15rem);
-@keyframes ui-expand {
-    0% {
-        width: 0;
-    }
-    70% {
-        width: calc($ui-width - 1rem);
-    }
-    75%, 100% {
-        width: $ui-width;
-    }
-}
-
-@keyframes ui-nodes-expand {
-    0%, 75% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-@keyframes ui-collapse {
-    0%, 25% {
-        width: $ui-width;
-    }
-    95% {
-        width: 1rem;
-    }
-    100% {
-        width: 0;
-    }
-}
-
-@keyframes ui-nodes-collapse {
-    0% {
-        opacity: 1;
-    }
-    25%, 100% {
-        opacity: 0;
-    }
-}
-
-html {
-    width: 100%;
-    height: 100%;
-}
-
-body {
+html, body {
     width: 100%;
     height: 100%;
 
@@ -82,38 +34,6 @@ body {
         height: calc(100% - 3rem);
 
         display: flex;
-
-        #user-interface {
-            display: flex;
-            flex-direction: column;
-            row-gap: 1rem;
-            width: 0;
-
-            margin: 0.5rem 0 0.5rem 1rem;
-
-            animation: ui-collapse 0.5s ease-out;
-            #selection > * {
-                animation: ui-nodes-collapse 0.5s;
-            }
-
-            &.expanded {
-                animation: ui-expand 0.5s;
-                width: $ui-width;
-
-                #selection > * {
-                    animation: ui-nodes-expand 0.5s;
-                }
-            }
-
-            #header {
-                width: 100%;
-                height: 4rem;
-
-                background: $interface-foreground;
-                border-radius: $interface-radius;
-                box-shadow: 0 0 15px #000 inset;
-            }
-        }
     }
 }
 
