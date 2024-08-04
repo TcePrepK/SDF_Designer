@@ -24,18 +24,19 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        gap: 0.5rem;
 
         > * {
             margin: 0 auto;
         }
 
         #background-logo {
-            width: 30vw;
+            width: 25vh;
         }
 
         #background-name {
             text-align: center;
-            font-size: 7.5vw;
+            font-size: 5vh;
             font-weight: bold;
 
             color: $foreground;
