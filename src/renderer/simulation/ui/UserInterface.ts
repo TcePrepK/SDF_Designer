@@ -1,6 +1,7 @@
 import { createDiv, getElementById, getElementByQuery, toggleClass } from "../../core/utils";
 import { AttachedMouse } from "../utils/AttachedMouse";
 import { ButtonType } from "../../core/mouse";
+import { calculateFontColor, PossibleColors } from "./nodes/Node";
 
 export class UserInterface {
     private body!: HTMLDivElement;
@@ -9,7 +10,7 @@ export class UserInterface {
 
     private allNodes: HTMLElement[] = [];
 
-    private expanded = true;
+    private expanded = false;
     private toggleable = true;
 
     private lastScrollY = 0;
@@ -17,7 +18,7 @@ export class UserInterface {
 
     public initialize(): void {
         this.body = getElementById("user-interface");
-        // toggleClass(this.body, "expanded"); // TODO: Remove comment
+        this.toggleExpanded(false);
 
         this.header = getElementByQuery("#user-interface #header");
         this.selection = getElementByQuery("#user-interface #selection");
@@ -43,7 +44,8 @@ export class UserInterface {
 
     private removeLater(): void {
         for (let i = 0; i < 15; i++) {
-            const node = this.createNode("Node", 2, 1);
+            const inputAmount = Math.floor(Math.random() * 3) + 1;
+            const node = this.createNode("Node", inputAmount, 1);
             this.allNodes.push(node);
         }
 
@@ -89,6 +91,11 @@ export class UserInterface {
             createDiv({ classes: ["name"], innerText: name })
         );
 
+        const color = PossibleColors[Math.floor(Math.random() * PossibleColors.length)];
+        const textColor = calculateFontColor(color);
+        node.style.setProperty("--node-name-color", textColor);
+        node.style.setProperty("--node-color", color);
+
         const inputPort = createDiv({ classes: ["input_ports"], parent: node });
         const outputPort = createDiv({ classes: ["output_ports"], parent: node });
 
@@ -103,18 +110,20 @@ export class UserInterface {
         return node;
     }
 
-    public toggleExpanded(): void {
+    public toggleExpanded(audio = true): void {
         if (!this.toggleable) return;
         this.toggleable = false;
 
         this.expanded = !this.expanded;
-        if (this.expanded) {
-            this.getAudio("opening").play();
-        } else {
-            this.getAudio("closing").play();
+        if (audio) {
+            if (this.expanded) {
+                this.getAudio("opening").play();
+            } else {
+                this.getAudio("closing").play();
+            }
         }
 
-        getElementById("node-playground").style.filter = `blur(${this.expanded ? 0 : 2}px)`;
+        getElementById("node-playground").style.filter = `blur(${this.expanded ? 2 : 0}px)`;
 
         setTimeout(() => this.toggleable = true, 400);
         toggleClass(this.body, "expanded");
