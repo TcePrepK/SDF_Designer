@@ -2,7 +2,7 @@
 
 @keyframes ui-expand {
     0% {
-        left: calc(-1 * $ui-width);
+        left: -16rem;
     }
     70% {
         left: -1rem;
@@ -17,10 +17,10 @@
         left: 0;
     }
     95% {
-        left: calc(1rem - $ui-width);
+        left: -15rem;
     }
     100% {
-        left: calc(-1 * $ui-width);
+        left: -16rem;
     }
 }
 
@@ -55,9 +55,9 @@
     background: $drawer-foreground;
 
     position: absolute;
-    width: calc($ui-width - 1rem);
+    width: 15rem;
     height: calc(100% - 2rem);
-    left: calc(-1 * $ui-width);
+    left: -16rem;
 
     padding: 2rem 1rem;
     top: -1rem;

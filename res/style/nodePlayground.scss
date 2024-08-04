@@ -32,6 +32,7 @@
 
         #background-logo {
             width: 25vh;
+            filter: brightness(1.5);
         }
 
         #background-name {
@@ -41,9 +42,8 @@
 
             color: $foreground;
             font-family: Arial, Helvetica, sans-serif;
-            text-shadow: #000 1px 1px 15px;
+            text-shadow: #303030 1px 1px 5px;
         }
-
     }
 
     #blue-screen {
