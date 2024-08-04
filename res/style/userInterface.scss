@@ -26,22 +26,22 @@
 
 @keyframes node-expand {
     0%, 25% {
-        scale: 0.9;
+        scale: calc(min(var(--node-max-scale), 0.9));
         box-shadow: 0 0 10px $background inset;
     }
     100% {
-        scale: 1;
+        scale: calc(min(var(--node-max-scale), 1));
         box-shadow: 0 0 10px $background;
     }
 }
 
 @keyframes node-collapse {
     0% {
-        scale: 1;
+        scale: calc(min(var(--node-max-scale), 1));
         box-shadow: 0 0 10px $background;
     }
     75%, 100% {
-        scale: 0.9;
+        scale: calc(min(var(--node-max-scale), 0.9));
         box-shadow: 0 0 10px $background inset;
     }
 }
@@ -67,6 +67,7 @@
     box-shadow: 5px 0 13px -3px #000;
 
     #selection .node {
+        scale: var(--node-max-scale);
         animation: node-collapse 0.5s;
     }
 

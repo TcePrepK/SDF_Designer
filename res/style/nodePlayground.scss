@@ -16,4 +16,42 @@
         width: 100%;
         height: 100%;
     }
+
+    #background {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        > * {
+            margin: 0 auto;
+        }
+
+        #background-logo {
+            width: 30vw;
+        }
+
+        #background-name {
+            text-align: center;
+            font-size: 7.5vw;
+            font-weight: bold;
+
+            color: $foreground;
+            font-family: Arial, Helvetica, sans-serif;
+            text-shadow: #000 1px 1px 15px;
+        }
+
+    }
+
+    #blue-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: $interface-radius;
+        background: radial-gradient(circle, rgba(0, 100, 150, 0.2) 20%, rgba(0, 255, 255, 0.1) 100%);
+    }
 }

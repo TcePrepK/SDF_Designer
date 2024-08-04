@@ -17,7 +17,7 @@ export class UserInterface {
 
     public initialize(): void {
         this.body = getElementById("user-interface");
-        toggleClass(this.body, "expanded");
+        // toggleClass(this.body, "expanded"); // TODO: Remove comment
 
         this.header = getElementByQuery("#user-interface #header");
         this.selection = getElementByQuery("#user-interface #selection");
@@ -76,9 +76,9 @@ export class UserInterface {
             if (diff > 0) {
                 let alpha = diff / nodeRect.height / 0.6;
                 alpha = Math.min(1, Math.max(0, alpha));
-                node.style.opacity = String(1 - alpha);
+                node.style.setProperty("--node-max-scale", String(1 - alpha * 0.1));
             } else {
-                node.style.opacity = "1";
+                node.style.setProperty("--node-max-scale", "1");
             }
         }
     }
@@ -113,6 +113,9 @@ export class UserInterface {
         } else {
             this.getAudio("closing").play();
         }
+
+        getElementById("node-playground").style.filter = `blur(${this.expanded ? 0 : 1}px)`;
+
         setTimeout(() => this.toggleable = true, 400);
         toggleClass(this.body, "expanded");
     }
