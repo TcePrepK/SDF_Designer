@@ -114,7 +114,7 @@ export class UserInterface {
             this.getAudio("closing").play();
         }
 
-        getElementById("node-playground").style.filter = `blur(${this.expanded ? 0 : 1}px)`;
+        getElementById("node-playground").style.filter = `blur(${this.expanded ? 0 : 2}px)`;
 
         setTimeout(() => this.toggleable = true, 400);
         toggleClass(this.body, "expanded");
