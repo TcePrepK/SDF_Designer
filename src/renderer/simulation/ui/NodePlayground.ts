@@ -35,8 +35,8 @@ export class NodePlayground {
         const w = this.canvas.width;
         const h = this.canvas.height;
 
-        const ox = (x - w / 2) % size;
-        const oy = (y - h / 2) % size;
+        const ox = (x + w / 2) % size;
+        const oy = (y + h / 2) % size;
 
         ctx.strokeStyle = color;
         ctx.lineWidth = width;
