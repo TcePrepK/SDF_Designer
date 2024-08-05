@@ -59,6 +59,14 @@ export function getElementById<T extends HTMLElement>(id: string): T {
     return document.getElementById(id) as T;
 }
 
+export function getElementsByClass<T extends HTMLElement>(className: string): T[] {
+    return [...document.getElementsByClassName(className)] as T[];
+}
+
+export function getElementsByQuery<T extends HTMLElement>(query: string): T[] {
+    return [...document.querySelectorAll(query)] as T[];
+}
+
 export function getElementByQuery<T extends HTMLElement>(query: string): T {
     return document.querySelector(query) as T;
 }

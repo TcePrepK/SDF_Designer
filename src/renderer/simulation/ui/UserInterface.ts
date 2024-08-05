@@ -16,6 +16,7 @@ export class UserInterface {
 
     private lastScrollY = 0;
     private grabbingSelection = false;
+    private editingBuffer = false;
 
     public initialize(): void {
         this.body = getElementById("user-interface");
@@ -23,23 +24,33 @@ export class UserInterface {
         this.selection = getElementByQuery("#user-interface #selection");
         this.buffer = getElementById("buffer-interface");
 
-        const attachedMouse = new AttachedMouse().attachElement(this.selection);
-        attachedMouse.onMouseButtonDown.add(() => this.grabbingSelection = true);
-        attachedMouse.onMouseMove.add(this.selectionDrag.bind(this));
+        { // Selection
+            const attachedMouse = new AttachedMouse().attachElement(this.selection);
+            attachedMouse.onMouseButtonDown.add(() => this.grabbingSelection = true);
+            attachedMouse.onMouseMove.add(this.selectionDrag.bind(this));
+            window.addEventListener("mouseup", () => this.grabbingSelection = false);
+        }
 
-        const playground = getElementById("node-playground");
-        const playgroundMouse = new AttachedMouse().attachElement(playground);
-        playgroundMouse.onMouseButtonUp.add(() => !this.grabbingSelection ? this.toggleSelection(true) : null);
-        playgroundMouse.onMouseMove.add(this.selectionDrag.bind(this));
-        window.addEventListener("mouseup", () => this.grabbingSelection = false);
+        { // Playground
+            const playground = getElementById("node-playground");
+            const playgroundMouse = new AttachedMouse().attachElement(playground);
+            playgroundMouse.onMouseButtonUp.add(() => !this.grabbingSelection ? this.toggleSelection(true) : null);
+            playgroundMouse.onMouseMove.add(this.selectionDrag.bind(this));
+        }
 
-        const bufferHitBox = getElementById("buffer-hit-box");
-        const bufferMouse = new AttachedMouse().attachElement(bufferHitBox);
-        bufferMouse.onMouseEnter.add(this.toggleBuffer.bind(this, true));
-        bufferMouse.onMouseLeave.add(this.toggleBuffer.bind(this, false));
+        { // Buffer
+            const bufferHitBox = getElementById("buffer-hit-box");
+            const bufferMouse = new AttachedMouse().attachElement(bufferHitBox);
+            bufferMouse.onMouseEnter.add(this.toggleBuffer.bind(this, true));
 
-        const handle = getElementById("drawer-handle");
-        handle.addEventListener("click", () => this.toggleSelection());
+            const plus = getElementById("buffer-more");
+            plus.addEventListener("click", () => this.createNewTemplate());
+        }
+
+        { // Handle
+            const handle = getElementById("drawer-handle");
+            handle.addEventListener("click", () => this.toggleSelection());
+        }
 
         this.removeLater();
     }
@@ -114,6 +125,22 @@ export class UserInterface {
         }
 
         return node;
+    }
+
+    public createNewTemplate(): void {
+        const plus = getElementById("buffer-more");
+        const container = getElementById("container");
+        container.removeChild(plus);
+        const template = createDiv({ classes: ["buffer"], contentEditable: "true", parent: container });
+        container.appendChild(plus);
+
+        template.addEventListener("keypress", e => {
+            if (e.key !== "Enter") return;
+            e.preventDefault();
+            template.blur();
+        });
+        template.addEventListener("focus", () => this.buffer.classList.add("expanded-edit"));
+        template.addEventListener("blur", () => this.buffer.classList.remove("expanded-edit"));
     }
 
     public toggleBuffer(state: boolean): void {
