@@ -114,9 +114,8 @@ export class UserInterface {
 
     public toggleExpanded(outside = false): void {
         if (!this.toggleable) return;
-        this.toggleable = false;
         if (outside && !this.expanded) return;
-
+        this.toggleable = false;
 
         this.expanded = !this.expanded;
         if (this.expanded) {
