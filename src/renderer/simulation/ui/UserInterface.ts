@@ -42,6 +42,7 @@ export class UserInterface {
             const bufferHitBox = getElementById("buffer-hit-box");
             const bufferMouse = new AttachedMouse().attachElement(bufferHitBox);
             bufferMouse.onMouseEnter.add(this.toggleBuffer.bind(this, true));
+            bufferMouse.onMouseLeave.add(this.toggleBuffer.bind(this, false));
 
             const plus = getElementById("buffer-more");
             plus.addEventListener("click", () => this.createNewTemplate());
@@ -141,6 +142,8 @@ export class UserInterface {
         });
         template.addEventListener("focus", () => this.buffer.classList.add("expanded-edit"));
         template.addEventListener("blur", () => this.buffer.classList.remove("expanded-edit"));
+
+        template.focus();
     }
 
     public toggleBuffer(state: boolean): void {
