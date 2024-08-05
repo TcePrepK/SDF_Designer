@@ -1,5 +1,5 @@
-import { Signal } from "../../core/signal";
 import { ButtonType } from "../../core/mouse";
+import { Signal } from "../../core/signal";
 
 export class AttachedMouse {
     public x = 0;
@@ -38,7 +38,7 @@ export class AttachedMouse {
 
         element.addEventListener("mouseleave", e => {
             this.onMouseButtonLeave.dispatch(e.button);
-            this.onMouseButtonUp.dispatch(e.button);
+            if (this.isDragging) this.onMouseButtonUp.dispatch(e.button);
             this.isDragging = false;
         });
 

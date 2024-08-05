@@ -4,7 +4,7 @@ export function checkFor<T>(check: T | null, message: string, error: string | nu
     }
 }
 
-type ElementArgs = {
+export type ElementArgs = {
     parent?: HTMLElement
     classes?: string[]
 };

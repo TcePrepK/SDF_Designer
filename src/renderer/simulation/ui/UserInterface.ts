@@ -1,6 +1,6 @@
+import { ButtonType } from "../../core/mouse";
 import { createDiv, getElementById, getElementByQuery, toggleClass } from "../../core/utils";
 import { AttachedMouse } from "../utils/AttachedMouse";
-import { ButtonType } from "../../core/mouse";
 import { calculateFontColor, PossibleColors } from "./nodes/Node";
 
 export class UserInterface {
@@ -18,14 +18,16 @@ export class UserInterface {
 
     public initialize(): void {
         this.body = getElementById("user-interface");
-        this.toggleExpanded(false);
 
         this.header = getElementByQuery("#user-interface #header");
         this.selection = getElementByQuery("#user-interface #selection");
 
         const attachedMouse = new AttachedMouse().attachElement(this.selection);
-        attachedMouse.onMouseDrag.add((this.selectionDrag.bind(this)));
-        attachedMouse.onMouseButtonUp.add((this.selectionUp.bind(this)));
+        attachedMouse.onMouseDrag.add(this.selectionDrag.bind(this));
+        attachedMouse.onMouseButtonUp.add(this.selectionUp.bind(this));
+
+        const closeMouse = new AttachedMouse().attachElement(getElementById("node-playground"));
+        closeMouse.onMouseButtonUp.add(this.toggleExpanded.bind(this, true));
 
         const handle = getElementById("drawer-handle");
         handle.addEventListener("click", () => this.toggleExpanded());
@@ -110,23 +112,26 @@ export class UserInterface {
         return node;
     }
 
-    public toggleExpanded(audio = true): void {
+    public toggleExpanded(outside = false): void {
         if (!this.toggleable) return;
         this.toggleable = false;
+        if (outside && !this.expanded) return;
+
 
         this.expanded = !this.expanded;
-        if (audio) {
-            if (this.expanded) {
-                this.getAudio("opening").play();
-            } else {
-                this.getAudio("closing").play();
-            }
+        if (this.expanded) {
+            this.getAudio("opening").play();
+        } else {
+            this.getAudio("closing").play();
         }
 
         getElementById("node-playground").style.filter = `blur(${this.expanded ? 2 : 0}px)`;
 
         setTimeout(() => this.toggleable = true, 400);
         toggleClass(this.body, "expanded");
+
+        const bufferHeader = getElementById("buffer-interface");
+        toggleClass(bufferHeader, "expanded");
     }
 
     private getAudio(state: string): HTMLAudioElement {

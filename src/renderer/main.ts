@@ -1,14 +1,15 @@
+import { Canvas } from "./core/canvas";
 import { FPSCounter } from "./core/fpsCounter";
-import { MainRenderer } from "./simulation/renderer/mainRenderer";
 import { GlobalVariables } from "./core/globalVariables";
-import { UniformRegistry } from "./core/webgl/uniformRegistry";
-import { UserInterface } from "./simulation/ui/UserInterface";
 import { fixEveryPreload } from "./core/utils";
-import { NodePlayground } from "./simulation/ui/NodePlayground";
 import { VectorI2D } from "./core/vector2D";
-import { BrowserSupport } from "./simulation/ui/BrowserSupport";
-import "../../res/style/style.scss";
+import { UniformRegistry } from "./core/webgl/uniformRegistry";
+import { MainRenderer } from "./simulation/renderer/mainRenderer";
 import { Root } from "./simulation/root";
+import { BrowserSupport } from "./simulation/ui/BrowserSupport";
+import { NodePlayground } from "./simulation/ui/NodePlayground";
+import { UserInterface } from "./simulation/ui/UserInterface";
+import "../../res/style/style.scss";
 
 export class Main {
     private readonly browserSupport = new BrowserSupport();
@@ -22,8 +23,9 @@ export class Main {
 
     public initialize(): void {
         GlobalVariables.resolution = new VectorI2D(0, 0);
-        GlobalVariables.canvas = this.playground.mainCanvas;
-        GlobalVariables.ctx = GlobalVariables.canvas.getContext();
+        GlobalVariables.canvas = new Canvas();
+        GlobalVariables.canvas.initialize();
+        GlobalVariables.ctx = GlobalVariables.canvas.getWebGLContext();
 
         this.root.initialize();
         this.userInterface.initialize();

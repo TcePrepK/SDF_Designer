@@ -50,17 +50,18 @@
 
     background: $drawer-foreground;
 
-    position: absolute;
+    position: relative;
     width: 15rem;
-    height: calc(100% - 2rem);
+    height: calc(100% - 3rem);
     left: -16rem;
 
-    padding: 2rem 1rem;
-    top: -1rem;
+    padding: 1rem;
+    margin: auto 0;
+
     animation: ui-collapse 0.5s ease-out;
 
     border-radius: 0 $interface-radius $interface-radius 0;
-    box-shadow: 5px 0 13px -3px #000;
+    box-shadow: 5px 0 13px -3px $shadow-color;
 
     #selection .node {
         scale: var(--node-max-scale);

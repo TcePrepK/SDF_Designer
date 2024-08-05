@@ -1,5 +1,6 @@
 @import "variables.scss";
 @import "errorPage.scss";
+@import "bufferInterface.scss";
 @import "userInterface.scss";
 @import "nodePlayground.scss";
 
@@ -23,18 +24,6 @@ html, body {
     flex-direction: column;
 
     background: $foreground;
-
-    > * {
-        height: 1.5rem;
-        background: $foreground;
-    }
-
-    .interfaces {
-        position: relative;
-        height: calc(100% - 3rem);
-
-        display: flex;
-    }
 }
 
 .preload {

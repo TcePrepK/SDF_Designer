@@ -9,8 +9,8 @@ logger.log("Renderer initialized successfully!");
 logger.log("Imported main successfully!");
 logger.log("Starting the main process...");
 
-const main = new Main();
 try {
+    const main = new Main();
     main.initialize();
 } catch (error) {
     let msg = error;

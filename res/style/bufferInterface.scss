@@ -1,0 +1,88 @@
+@import "variables.scss";
+
+@keyframes buffer-expand {
+    0%, 75% {
+        top: -5rem;
+    }
+    100% {
+        top: 0;
+    }
+}
+
+@keyframes buffer-collapse {
+    0% {
+        top: 0;
+    }
+    25%, 100% {
+        top: -5rem;
+    }
+}
+
+#buffer-interface {
+    position: absolute;
+
+    width: calc(100% - 3rem);
+    height: 4.5rem;
+
+    margin: 0 1.5rem;
+
+    z-index: 1;
+
+    background: $buffer-foreground;
+    border-radius: 0 0 $interface-radius $interface-radius;
+    box-shadow: 0 0 10px 0 $shadow-color;
+
+    animation: buffer-collapse 0.5s;
+    top: -5rem;
+
+    &.expanded {
+        animation: buffer-expand 0.5s;
+        top: 0;
+    }
+
+    #container {
+        width: calc(100% - 1.5rem);
+        height: 3rem;
+
+        margin: 0.75rem;
+
+        border-radius: 0.5rem;
+        background: $buffer-background;
+        box-shadow: 0 0 10px $buffer-foreground inset;
+
+        display: flex;
+
+        .buffer {
+            width: auto;
+            height: 2rem;
+
+            line-height: 2rem;
+            font-size: 1.2rem;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #999;
+
+            padding: 0.5rem;
+
+            //background: mix($buffer-background, $buffer-foreground, 50%);
+            //border-radius: 5px;
+            //box-shadow: 0 0 10px $buffer-foreground inset;
+
+            &:first-child {
+                position: relative;
+
+                &::after {
+                    content: " ";
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+
+                    width: 100%;
+                    height: 5px;
+
+                    background: $buffer-selected;
+                    border-radius: 5px;
+                }
+            }
+        }
+    }
+}
