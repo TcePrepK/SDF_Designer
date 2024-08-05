@@ -76,9 +76,9 @@ export class UserInterface {
         }
         this.fixScrollFading();
 
-        for (let i = 0; i < 15; i++) {
-            this.createNewTemplate();
-        }
+        // for (let i = 0; i < 15; i++) {
+        //     this.createNewTemplate();
+        // }
     }
 
     private selectionDrag(button: ButtonType, _: number, dy: number): void {
