@@ -1,7 +1,7 @@
 import { ButtonType } from "../../core/mouse";
 import { createDiv, getElementById, getElementByQuery, toggleClass } from "../../core/utils";
 import { AttachedMouse } from "../utils/AttachedMouse";
-import { calculateFontColor, PossibleColors } from "./nodes/Node";
+import { calculateFontColor, PossibleColors } from "./nodes/TemplateNode";
 import { TemplateInterface } from "./templates/TemplateInterface";
 
 export class UserInterface {
@@ -55,6 +55,10 @@ export class UserInterface {
         this.fixScrollFading();
         this.lastScrollY -= Math.sign(this.lastScrollY) * 0.15;
         this.selection.scrollBy(0, this.lastScrollY);
+    }
+
+    public updateFrame(): void {
+        this.templateUI.updateFrame();
     }
 
     private removeLater(): void {

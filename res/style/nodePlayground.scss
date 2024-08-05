@@ -25,6 +25,9 @@
         justify-content: center;
         gap: 0.5rem;
 
+        pointer-events: none;
+        user-select: none;
+
         > * {
             margin: 0 auto;
         }

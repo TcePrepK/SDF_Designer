@@ -1,3 +1,5 @@
+import { NodeConnection } from "./NodeConnection";
+
 export const PossibleColors: Array<string> = [
     "#FF5733", // Red-Orange
     "#33FF57", // Green
@@ -67,15 +69,13 @@ export function calculateFontColor(color: string): string {
     return luminance > 0.5 ? "#000" : "#fff";
 }
 
-export function calculateScaledColor(color: string, scale: number): string {
-    const rgb = parseInt(color.slice(1), 16);
-    const r = (rgb >> 16) & 0xFF;
-    const g = (rgb >> 8) & 0xFF;
-    const b = rgb & 0xFF;
+export class TemplateNode {
+    private x: number;
+    private y: number;
+    private readonly connections: NodeConnection[] = [];
 
-    return `rgb(${r * scale}, ${g * scale}, ${b * scale})`;
-}
-
-export class Node {
-
+    public constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+    }
 }

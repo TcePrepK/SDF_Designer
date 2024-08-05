@@ -7,7 +7,6 @@ import { UniformRegistry } from "./core/webgl/uniformRegistry";
 import { MainRenderer } from "./simulation/renderer/mainRenderer";
 import { Root } from "./simulation/root";
 import { BrowserSupport } from "./simulation/ui/BrowserSupport";
-import { NodePlayground } from "./simulation/ui/NodePlayground";
 import { UserInterface } from "./simulation/ui/UserInterface";
 import "../../res/style/style.scss";
 
@@ -18,7 +17,6 @@ export class Main {
 
     private readonly fpsCounter = new FPSCounter();
     private readonly userInterface = new UserInterface();
-    private readonly playground = new NodePlayground();
     private mainRenderer!: MainRenderer;
 
     public initialize(): void {
@@ -45,6 +43,9 @@ export class Main {
 
         this.userInterface.update();
         this.mainRenderer.frameUpdate();
+
+        // TODO: This should happen when update happens, not every frame!!!
+        this.userInterface.updateFrame();
 
         requestAnimationFrame(() => this.startRunning());
     }

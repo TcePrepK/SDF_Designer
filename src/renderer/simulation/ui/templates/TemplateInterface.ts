@@ -28,6 +28,10 @@ export class TemplateInterface {
         this.createMainTemplate();
     }
 
+    public updateFrame(): void {
+        this.activeTemplate.getEnvironment().updateFrame();
+    }
+
     private createMainTemplate(): void {
         this.plus.remove();
         const mainTemplate = createDiv({

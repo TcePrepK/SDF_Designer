@@ -30,13 +30,14 @@ export class AttachedMouse {
         element.addEventListener("mousedown", e => {
             this.onMouseButtonDown.dispatch(e.button);
 
+            if (this.isDragging) return;
             this.isDragging = true;
             this.draggingButton = e.button;
         });
 
         element.addEventListener("mouseup", e => {
             this.onMouseButtonUp.dispatch(e.button);
-            this.isDragging = false;
+            if (e.button === this.draggingButton) this.isDragging = false;
         });
 
         element.addEventListener("mouseenter", () => {
