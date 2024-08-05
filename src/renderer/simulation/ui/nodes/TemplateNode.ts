@@ -70,8 +70,8 @@ export function calculateFontColor(color: string): string {
 }
 
 export class TemplateNode {
-    private x: number;
-    private y: number;
+    public x: number;
+    public y: number;
     private readonly connections: NodeConnection[] = [];
 
     public constructor(x: number, y: number) {
