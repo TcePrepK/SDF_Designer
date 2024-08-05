@@ -13,10 +13,10 @@
 }
 
 @keyframes ui-collapse {
-    0%, 25% {
+    0% {
         left: 0;
     }
-    95% {
+    70%, 75% {
         left: -15rem;
     }
     100% {
