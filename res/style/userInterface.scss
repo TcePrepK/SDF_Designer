@@ -2,25 +2,25 @@
 
 @keyframes ui-expand {
     0% {
-        left: -16rem;
+        transform: translateX(calc(1rem - 100%));
     }
     70% {
-        left: -1rem;
+        transform: translateX(-1rem);
     }
-    75%, 100% {
-        left: 0;
+    75% {
+        transform: translateX(0);
     }
 }
 
 @keyframes ui-collapse {
     0% {
-        left: 0;
+        transform: translateX(0);
     }
-    70%, 75% {
-        left: -15rem;
+    70%, 80% {
+        transform: translateX(calc(2rem - 100%));
     }
     100% {
-        left: -16rem;
+        transform: translateX(calc(1rem - 100%));
     }
 }
 
@@ -53,7 +53,6 @@
     position: relative;
     width: 15rem;
     height: calc(100% - 6rem);
-    left: -16rem;
 
     padding: 1rem;
     margin: auto 0;
@@ -68,9 +67,11 @@
         animation: node-collapse 0.5s;
     }
 
+    transform: translateX(calc(1rem - 100%));
+
     &.expanded {
         animation: ui-expand 0.5s;
-        left: 0;
+        transform: translateX(0);
 
         #selection .node {
             animation: node-expand 0.5s;
