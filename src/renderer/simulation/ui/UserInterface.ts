@@ -15,7 +15,7 @@ export class UserInterface {
     private toggleable = true;
 
     private lastScrollY = 0;
-    private currentlyScrolling = false;
+    private grabbingSelection = false;
 
     public initialize(): void {
         this.body = getElementById("user-interface");
@@ -24,11 +24,14 @@ export class UserInterface {
         this.buffer = getElementById("buffer-interface");
 
         const attachedMouse = new AttachedMouse().attachElement(this.selection);
-        attachedMouse.onMouseDrag.add(this.selectionDrag.bind(this));
-        attachedMouse.onMouseButtonUp.add(this.selectionUp.bind(this));
+        attachedMouse.onMouseButtonDown.add(() => this.grabbingSelection = true);
+        attachedMouse.onMouseMove.add(this.selectionDrag.bind(this));
 
-        const closeMouse = new AttachedMouse().attachElement(getElementById("node-playground"));
-        closeMouse.onMouseButtonUp.add(this.toggleSelection.bind(this, true));
+        const playground = getElementById("node-playground");
+        const playgroundMouse = new AttachedMouse().attachElement(playground);
+        playgroundMouse.onMouseButtonUp.add(() => !this.grabbingSelection ? this.toggleSelection(true) : null);
+        playgroundMouse.onMouseMove.add(this.selectionDrag.bind(this));
+        window.addEventListener("mouseup", () => this.grabbingSelection = false);
 
         const bufferHitBox = getElementById("buffer-hit-box");
         const bufferMouse = new AttachedMouse().attachElement(bufferHitBox);
@@ -42,11 +45,11 @@ export class UserInterface {
     }
 
     public update(): void {
-        if (this.currentlyScrolling) return;
+        if (this.grabbingSelection) return;
         if (Math.abs(this.lastScrollY) <= 0.1) return;
 
         this.fixScrollFading();
-        this.lastScrollY -= Math.sign(this.lastScrollY) * 0.1;
+        this.lastScrollY -= Math.sign(this.lastScrollY) * 0.15;
         this.selection.scrollBy(0, this.lastScrollY);
     }
 
@@ -63,16 +66,11 @@ export class UserInterface {
     }
 
     private selectionDrag(button: ButtonType, _: number, dy: number): void {
+        if (!this.grabbingSelection) return;
         if (button !== ButtonType.LEFT) return;
-        this.currentlyScrolling = true;
         this.lastScrollY = -dy;
 
         this.selection.scrollBy(0, this.lastScrollY);
-    }
-
-    private selectionUp(button: ButtonType): void {
-        if (button !== ButtonType.LEFT) return;
-        this.currentlyScrolling = false;
     }
 
     private fixScrollFading(): void {

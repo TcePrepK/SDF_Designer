@@ -101,6 +101,9 @@
         overflow-y: auto;
         overflow-x: hidden;
 
+        user-select: none;
+        -webkit-user-drag: none;
+
         &::-webkit-scrollbar {
             width: 1.25rem;
             background: $scrollbar-background;
