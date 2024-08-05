@@ -18,7 +18,7 @@
     }
 }
 
-#buffer-hit-box {
+#interface-hit-box {
     position: absolute;
 
     width: calc(100vw - 10rem);
@@ -29,7 +29,7 @@
 
     z-index: 1;
 
-    #buffer-interface {
+    #template-interface {
         min-height: calc(100% - 4rem);
         padding: 0 1rem 1rem 1rem;
 
@@ -123,14 +123,11 @@
                 box-shadow: 0 0 10px $buffer-foreground inset;
                 border: none;
 
-                &:first-child {
-                    cursor: none;
-                    pointer-events: none;
-                    user-select: none;
-                }
+                cursor: pointer;
+                user-select: none;
 
                 &:empty::before {
-                    content: "New Template";
+                    content: "Enter Name";
                     color: $buffer-text-placeholder;
                 }
 
@@ -143,7 +140,7 @@
                     outline: none;
                 }
 
-                &.selected {
+                &.active {
                     color: $buffer-text-selected;
                     text-decoration: underline;
                 }

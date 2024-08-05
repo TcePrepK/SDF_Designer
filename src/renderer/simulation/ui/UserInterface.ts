@@ -2,12 +2,12 @@ import { ButtonType } from "../../core/mouse";
 import { createDiv, getElementById, getElementByQuery, toggleClass } from "../../core/utils";
 import { AttachedMouse } from "../utils/AttachedMouse";
 import { calculateFontColor, PossibleColors } from "./nodes/Node";
+import { TemplateInterface } from "./templates/TemplateInterface";
 
 export class UserInterface {
     private body!: HTMLDivElement;
-    private header!: HTMLDivElement;
     private selection!: HTMLDivElement;
-    private buffer!: HTMLDivElement;
+    private templateUI = new TemplateInterface();
 
     private allNodes: HTMLElement[] = [];
 
@@ -16,13 +16,12 @@ export class UserInterface {
 
     private lastScrollY = 0;
     private grabbingSelection = false;
-    private editingBuffer = false;
 
     public initialize(): void {
+        this.templateUI.initialize();
+
         this.body = getElementById("user-interface");
-        this.header = getElementByQuery("#user-interface #header");
         this.selection = getElementByQuery("#user-interface #selection");
-        this.buffer = getElementById("buffer-interface");
 
         { // Selection
             const attachedMouse = new AttachedMouse().attachElement(this.selection);
@@ -39,16 +38,6 @@ export class UserInterface {
             const playgroundMouse = new AttachedMouse().attachElement(playground);
             playgroundMouse.onMouseButtonUp.add(() => !this.grabbingSelection ? this.toggleSelection(true) : null);
             playgroundMouse.onMouseMove.add(this.selectionDrag.bind(this));
-        }
-
-        { // Buffer
-            const bufferHitBox = getElementById("buffer-hit-box");
-            const bufferMouse = new AttachedMouse().attachElement(bufferHitBox);
-            bufferMouse.onMouseEnter.add(this.toggleBuffer.bind(this, true));
-            bufferMouse.onMouseLeave.add(this.toggleBuffer.bind(this, false));
-
-            const plus = getElementById("buffer-more");
-            plus.addEventListener("click", () => this.createNewTemplate());
         }
 
         { // Handle
@@ -130,35 +119,6 @@ export class UserInterface {
         }
 
         return node;
-    }
-
-    public createNewTemplate(): void {
-        const plus = getElementById("buffer-more");
-        const container = getElementById("container");
-        container.removeChild(plus);
-        const template = createDiv({ classes: ["buffer"], contentEditable: "true", parent: container });
-        container.appendChild(plus);
-
-        template.addEventListener("keypress", e => {
-            if (e.key !== "Enter") return;
-            e.preventDefault();
-            template.blur();
-        });
-        template.addEventListener("focus", () => this.buffer.classList.add("expanded-edit"));
-        template.addEventListener("blur", () => this.buffer.classList.remove("expanded-edit"));
-
-        template.focus();
-    }
-
-    public toggleBuffer(state: boolean): void {
-        const classList = this.buffer.classList;
-        if (classList.contains("expanded") === state) return;
-
-        if (state) {
-            this.buffer.classList.add("expanded");
-        } else {
-            this.buffer.classList.remove("expanded");
-        }
     }
 
     public toggleSelection(outside = false): void {
