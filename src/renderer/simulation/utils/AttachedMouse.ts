@@ -7,7 +7,8 @@ export class AttachedMouse {
 
     public onMouseButtonDown = new Signal<[ButtonType, void]>();
     public onMouseButtonUp = new Signal<[ButtonType, void]>();
-    public onMouseButtonLeave = new Signal<[ButtonType, void]>();
+    public onMouseEnter = new Signal<[void]>();
+    public onMouseLeave = new Signal<[void]>();
     public onMouseDrag = new Signal<[ButtonType, number, number, void]>();
     public onWheelScroll = new Signal<[number, void]>();
 
@@ -36,8 +37,12 @@ export class AttachedMouse {
             this.isDragging = false;
         });
 
+        element.addEventListener("mouseenter", () => {
+            this.onMouseEnter.dispatch();
+        });
+
         element.addEventListener("mouseleave", e => {
-            this.onMouseButtonLeave.dispatch(e.button);
+            this.onMouseLeave.dispatch();
             if (this.isDragging) this.onMouseButtonUp.dispatch(e.button);
             this.isDragging = false;
         });

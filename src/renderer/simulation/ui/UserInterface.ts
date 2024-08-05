@@ -7,6 +7,7 @@ export class UserInterface {
     private body!: HTMLDivElement;
     private header!: HTMLDivElement;
     private selection!: HTMLDivElement;
+    private buffer!: HTMLDivElement;
 
     private allNodes: HTMLElement[] = [];
 
@@ -18,19 +19,24 @@ export class UserInterface {
 
     public initialize(): void {
         this.body = getElementById("user-interface");
-
         this.header = getElementByQuery("#user-interface #header");
         this.selection = getElementByQuery("#user-interface #selection");
+        this.buffer = getElementById("buffer-interface");
 
         const attachedMouse = new AttachedMouse().attachElement(this.selection);
         attachedMouse.onMouseDrag.add(this.selectionDrag.bind(this));
         attachedMouse.onMouseButtonUp.add(this.selectionUp.bind(this));
 
         const closeMouse = new AttachedMouse().attachElement(getElementById("node-playground"));
-        closeMouse.onMouseButtonUp.add(this.toggleExpanded.bind(this, true));
+        closeMouse.onMouseButtonUp.add(this.toggleSelection.bind(this, true));
+
+        const bufferHitBox = getElementById("buffer-hit-box");
+        const bufferMouse = new AttachedMouse().attachElement(bufferHitBox);
+        bufferMouse.onMouseEnter.add(this.toggleBuffer.bind(this, true));
+        bufferMouse.onMouseLeave.add(this.toggleBuffer.bind(this, false));
 
         const handle = getElementById("drawer-handle");
-        handle.addEventListener("click", () => this.toggleExpanded());
+        handle.addEventListener("click", () => this.toggleSelection());
 
         this.removeLater();
     }
@@ -80,7 +86,7 @@ export class UserInterface {
             if (diff > 0) {
                 let alpha = diff / nodeRect.height / 0.6;
                 alpha = Math.min(1, Math.max(0, alpha));
-                node.style.setProperty("--node-max-scale", String(1 - alpha * 0.1));
+                node.style.setProperty("--node-max-scale", String(1 - alpha * 0.15));
             } else {
                 node.style.setProperty("--node-max-scale", "1");
             }
@@ -112,7 +118,18 @@ export class UserInterface {
         return node;
     }
 
-    public toggleExpanded(outside = false): void {
+    public toggleBuffer(state: boolean): void {
+        const classList = this.buffer.classList;
+        if (classList.contains("expanded") === state) return;
+
+        if (state) {
+            this.buffer.classList.add("expanded");
+        } else {
+            this.buffer.classList.remove("expanded");
+        }
+    }
+
+    public toggleSelection(outside = false): void {
         if (!this.toggleable) return;
         if (outside && !this.expanded) return;
         this.toggleable = false;
@@ -128,9 +145,6 @@ export class UserInterface {
 
         setTimeout(() => this.toggleable = true, 400);
         toggleClass(this.body, "expanded");
-
-        const bufferHeader = getElementById("buffer-interface");
-        toggleClass(bufferHeader, "expanded");
     }
 
     private getAudio(state: string): HTMLAudioElement {
