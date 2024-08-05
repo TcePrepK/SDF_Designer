@@ -38,8 +38,8 @@ export class TemplateEnvironment {
         // TODO: When node connections are implemented, move this to there!!! Debug only
         const test = new TemplateNode(0, 0);
         this.mouse.onMouseMove.add(() => {
-            test.x = this.mouse.x - this.width / 2;
-            test.y = this.mouse.y - this.height / 2;
+            test.x = this.mouse.x - this.width / 2 - this.x;
+            test.y = this.mouse.y - this.height / 2 - this.y;
         });
         this.nodeConnections.push(new NodeConnection(new TemplateNode(0, 0), test));
     }
