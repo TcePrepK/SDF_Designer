@@ -29,6 +29,9 @@ export class UserInterface {
             attachedMouse.onMouseButtonDown.add(() => this.grabbingSelection = true);
             attachedMouse.onMouseMove.add(this.selectionDrag.bind(this));
             window.addEventListener("mouseup", () => this.grabbingSelection = false);
+
+            this.selection.addEventListener("scroll", this.fixScrollFading.bind(this));
+            window.addEventListener("resize", this.fixScrollFading.bind(this));
         }
 
         { // Playground
@@ -71,10 +74,11 @@ export class UserInterface {
             const node = this.createNode("Node", inputAmount, 1);
             this.allNodes.push(node);
         }
-
         this.fixScrollFading();
-        this.selection.addEventListener("scroll", this.fixScrollFading.bind(this));
-        window.addEventListener("resize", this.fixScrollFading.bind(this));
+
+        for (let i = 0; i < 15; i++) {
+            this.createNewTemplate();
+        }
     }
 
     private selectionDrag(button: ButtonType, _: number, dy: number): void {

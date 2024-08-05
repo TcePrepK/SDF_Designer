@@ -1,5 +1,5 @@
 import { Logger } from "../../core/logger";
-import { getElementByQuery } from "../../core/utils";
+import { getElementsByClass } from "../../core/utils";
 
 export enum Browser {
     Chrome,
@@ -25,8 +25,10 @@ export class BrowserSupport {
 
     private selectorScrollbar(): void {
         if (this.browser !== Browser.Firefox) return;
-        const selection = getElementByQuery("#user-interface #selection");
-        if (selection) selection.style.scrollbarWidth = "none";
+        const selection = getElementsByClass("scrollable");
+        for (const element of selection) {
+            element.style.scrollbarWidth = "none";
+        }
     }
 
     private detectBrowser(): Browser {
