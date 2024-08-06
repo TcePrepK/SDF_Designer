@@ -1,5 +1,5 @@
-import { Logger } from "../../core/logger";
-import { getElementsByClass } from "../../core/utils";
+import {Logger} from "../../core/logger";
+import {getElementsByClass} from "../../core/utils";
 
 export enum Browser {
     Chrome,
@@ -27,7 +27,7 @@ export class BrowserSupport {
         if (this.browser !== Browser.Firefox) return;
         const selection = getElementsByClass("scrollable");
         for (const element of selection) {
-            element.style.scrollbarWidth = "none";
+            // element.style.scrollbarWidth = "none";
         }
     }
 

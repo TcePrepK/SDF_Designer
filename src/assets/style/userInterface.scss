@@ -67,7 +67,9 @@
         animation: node-collapse 0.5s;
     }
 
-    transform: translateX(calc(1rem - 100%));
+    & {
+        transform: translateX(calc(1rem - 100%));
+    }
 
     &.expanded {
         animation: ui-expand 0.5s;

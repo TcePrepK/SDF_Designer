@@ -1,48 +1,54 @@
 {
-  "name": "electronwebgl",
+  "name": "sdf_studio",
+  "productName": "sdf_studio",
   "version": "1.0.0",
-  "description": "",
-  "main": "build/main/electron.js",
+  "description": "My Electron application description",
+  "main": ".webpack/main",
   "scripts": {
-    "build": "webpack --output-path dist && electron-builder -c.extraMetadata.main=dist/main/electron.js",
-    "start": "webpack & concurrently \"webpack --watch\" \"electron .\""
+    "start": "electron-forge start",
+    "build": "webpack",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "eslint --ext .ts,.tsx ."
   },
-  "build": {
-    "extends": null,
-    "appId": "com.example.electronwebgl",
-    "files": [
-      "dist/**/*",
-      "node_modules/**/*",
-      "package.json"
-    ],
-    "directories": {
-      "buildResources": "assets"
-    }
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron-forge/plugin-webpack": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
     "@types/electron": "^1.6.10",
-    "@types/node": "^20.12.12",
-    "@typescript-eslint/eslint-plugin": "^7.10.0",
-    "@typescript-eslint/parser": "^7.16.1",
-    "concurrently": "^8.2.2",
-    "css-loader": "^7.1.2",
-    "electron": "^30.0.8",
-    "electron-builder": "^24.13.3",
+    "@types/node": "^22.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "@vercel/webpack-asset-relocator-loader": "1.7.3",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^6.11.0",
+    "electron": "31.3.1",
     "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
+    "fork-ts-checker-webpack-plugin": "^7.3.0",
+    "node-loader": "^2.0.0",
     "sass": "^1.77.8",
     "sass-loader": "^16.0.0",
-    "style-loader": "^4.0.0",
+    "style-loader": "^3.3.4",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.5.3",
-    "webpack": "^5.91.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~4.5.4",
     "webpack-cli": "^5.1.4"
   },
+  "keywords": [],
+  "author": {
+    "name": "TcePrepK",
+    "email": "a.s.arda.simsek@gmail.com"
+  },
+  "license": "MIT",
   "dependencies": {
-    "chokidar": "^3.6.0",
-    "copy-webpack-plugin": "^12.0.2",
+    "electron-squirrel-startup": "^1.0.1",
     "webpack-node-externals": "^3.0.0"
   }
 }

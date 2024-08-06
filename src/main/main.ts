@@ -1,14 +1,14 @@
-import { Canvas } from "./core/canvas";
-import { FPSCounter } from "./core/fpsCounter";
-import { GlobalVariables } from "./core/globalVariables";
-import { fixEveryPreload } from "./core/utils";
-import { VectorI2D } from "./core/vector2D";
-import { UniformRegistry } from "./core/webgl/uniformRegistry";
-import { MainRenderer } from "./simulation/renderer/mainRenderer";
-import { Root } from "./simulation/root";
-import { BrowserSupport } from "./simulation/ui/BrowserSupport";
-import { UserInterface } from "./simulation/ui/UserInterface";
-import "../../res/style/style.scss";
+import {Canvas} from "./core/canvas";
+import {FPSCounter} from "./core/fpsCounter";
+import {GlobalVariables} from "./core/globalVariables";
+import {fixEveryPreload} from "./core/utils";
+import {VectorI2D} from "./core/vector2D";
+import {UniformRegistry} from "./core/webgl/uniformRegistry";
+import {MainRenderer} from "./simulation/renderer/mainRenderer";
+import {Root} from "./simulation/root";
+import {BrowserSupport} from "./simulation/ui/BrowserSupport";
+import {UserInterface} from "./simulation/ui/UserInterface";
+import "../assets/style/style.scss";
 
 export class Main {
     private readonly browserSupport = new BrowserSupport();

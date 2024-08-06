@@ -1,8 +1,8 @@
-import { ButtonType } from "../../../core/mouse";
-import { getElementById, getElementByQuery } from "../../../core/utils";
-import { AttachedMouse } from "../../utils/AttachedMouse";
-import { NodeConnection } from "../nodes/NodeConnection";
-import { TemplateNode } from "../nodes/TemplateNode";
+import {ButtonType} from "../../../core/mouse";
+import {getElementById, getElementByQuery} from "../../../core/utils";
+import {AttachedMouse} from "../../utils/AttachedMouse";
+import {NodeConnection} from "../nodes/NodeConnection";
+import {TemplateNode} from "../nodes/TemplateNode";
 
 export class TemplateEnvironment {
     public readonly canvas: HTMLCanvasElement;
@@ -11,7 +11,7 @@ export class TemplateEnvironment {
 
     private readonly background: HTMLDivElement;
 
-    private activeState: boolean = false;
+    private activeState = false;
 
     private width = 0;
     private height = 0;
@@ -23,7 +23,7 @@ export class TemplateEnvironment {
 
     public constructor() {
         this.canvas = getElementById("playground-canvas");
-        this.ctx = this.canvas.getContext("2d")!;
+        this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
         this.background = getElementByQuery("#node-playground #background");
 
         const playground = getElementById("node-playground");
@@ -51,10 +51,10 @@ export class TemplateEnvironment {
                 this.height = window.innerHeight;
                 this.canvas.width = this.width;
                 this.canvas.height = this.height;
-                this.ctx.reset();
+                // this.ctx.reset();
                 this.ctx.translate(this.width / 2, this.height / 2);
             });
-            this.ctx.reset();
+            // this.ctx.reset();
             this.ctx.translate(this.width / 2, this.height / 2);
         }
 
