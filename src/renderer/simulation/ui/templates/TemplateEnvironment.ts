@@ -51,7 +51,10 @@ export class TemplateEnvironment {
                 this.height = window.innerHeight;
                 this.canvas.width = this.width;
                 this.canvas.height = this.height;
+                this.ctx.reset();
+                this.ctx.translate(this.width / 2, this.height / 2);
             });
+            this.ctx.reset();
             this.ctx.translate(this.width / 2, this.height / 2);
         }
 
