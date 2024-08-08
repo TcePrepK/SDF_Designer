@@ -50,13 +50,13 @@ export class TemplateEnvironment {
         }
 
         { // Mouse
-            this.mouse.onMouseDrag.add((button, dx, dy) => {
+            this.mouse.onDrag = (button, dx, dy) => {
                 if (!this.activeState) return;
                 if (button !== ButtonType.RIGHT) return;
 
                 this.x += dx;
                 this.y += dy;
-            });
+            };
         }
     }
 

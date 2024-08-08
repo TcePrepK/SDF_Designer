@@ -20,8 +20,8 @@ export class TemplateInterface {
         this.plus = getElementById("buffer-more");
 
         const bufferMouse = new AttachedMouse().attachElement(this.hitBox);
-        bufferMouse.onMouseEnter = this.toggleBuffer.bind(this, true);
-        bufferMouse.onMouseLeave = this.toggleBuffer.bind(this, false);
+        bufferMouse.onEnter = this.toggleBuffer.bind(this, true);
+        bufferMouse.onLeave = this.toggleBuffer.bind(this, false);
 
         this.plus.addEventListener("click", () => this.createNewTemplate());
 

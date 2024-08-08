@@ -21,8 +21,9 @@ export class NodeInterface {
 
         { // Selection
             const attachedMouse = new AttachedMouse().attachElement(this.selection);
-            attachedMouse.onMouseButtonDown = () => this.grabbingSelection = true;
-            attachedMouse.onMouseMove = this.selectionDrag.bind(this);
+            attachedMouse.onDown = () => this.grabbingSelection = true;
+            attachedMouse.onMove = this.selectionDrag.bind(this);
+
             window.addEventListener("mouseup", () => this.grabbingSelection = false);
 
             this.selection.addEventListener("scroll", this.fixScrollFading.bind(this));
@@ -32,8 +33,8 @@ export class NodeInterface {
         { // Playground
             const playground = getElementById("node-playground");
             const playgroundMouse = new AttachedMouse().attachElement(playground);
-            playgroundMouse.onMouseButtonUp = () => !this.grabbingSelection ? this.toggleSelection(true) : null;
-            playgroundMouse.onMouseMove = this.selectionDrag.bind(this);
+            playgroundMouse.onUp = () => !this.grabbingSelection ? this.toggleSelection(true) : null;
+            playgroundMouse.onMove = this.selectionDrag.bind(this);
         }
 
         { // Handle

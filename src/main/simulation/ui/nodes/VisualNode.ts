@@ -1,4 +1,5 @@
 import {createDiv} from "../../../core/utils";
+import {AttachedMouse} from "../../utils/AttachedMouse";
 
 export const PossibleColors: Array<string> = [
     "#FF5733", // Red-Orange
@@ -74,7 +75,10 @@ export class VisualNode {
     public inputs: number;
     public outputs: number;
 
-    private body: HTMLElement;
+    private readonly body: HTMLElement;
+    private dragging = false;
+
+    private readonly attachedMouse = new AttachedMouse();
 
     public constructor(name: string, inputs: number, outputs: number, parent: HTMLElement) {
         this.name = name;
@@ -82,7 +86,7 @@ export class VisualNode {
         this.outputs = outputs;
 
         const nodeHolder = createDiv({classes: ["holder"], parent: parent});
-        this.body = createDiv({classes: ["node", "preload"], parent: nodeHolder},
+        this.body = createDiv({classes: ["node", "preload"], draggable: true, parent: nodeHolder},
             createDiv({classes: ["name"], innerText: name})
         );
 
@@ -101,6 +105,34 @@ export class VisualNode {
         for (let i = 0; i < outputs; i++) {
             createDiv({classes: ["output"], parent: outputPort});
         }
+
+        this.initialize();
+    }
+
+    private initialize(): void {
+        const mouse = this.attachedMouse.attachElement(this.body);
+
+        // mouse.onDragStart = button => {
+        //     if (button !== ButtonType.LEFT) return;
+        //     this.dragging = true;
+        //     this.body.classList.add("dragging");
+        // };
+        //
+        // mouse.onDragStop = button => {
+        //     if (button !== ButtonType.LEFT) return;
+        //     this.dragging = false;
+        //     this.body.classList.remove("dragging");
+        // };
+
+        // this.body.addEventListener("drag", e => {
+        //     console.log(e);
+        // });
+
+        // this.attachedMouse.onMove = (button, dx, dy) => {
+        //     if (!this.dragging) return;
+        //     this.body.style.setProperty("--node-x", String(this.x + dx));
+        //     this.body.style.setProperty("--node-y", String(this.y + dy));
+        // };
     }
 
     public setScaleMultiplier(opacity: number): void {

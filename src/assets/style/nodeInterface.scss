@@ -1,4 +1,4 @@
-@import "variables.scss";
+@import "node.scss";
 
 @keyframes ui-expand {
     0% {
@@ -21,24 +21,6 @@
     }
     100% {
         transform: translateX(calc(1rem - 100%));
-    }
-}
-
-@keyframes node-expand {
-    25% {
-        scale: calc(var(--node-scale-multiplier) * 0.85);
-    }
-    100% {
-        scale: var(--node-scale-multiplier);
-    }
-}
-
-@keyframes node-collapse {
-    0% {
-        scale: var(--node-scale-multiplier);
-    }
-    75% {
-        scale: calc(var(--node-scale-multiplier) * 0.85);
     }
 }
 
@@ -124,133 +106,6 @@
             &:hover {
                 background: $scrollbar-hover;
                 cursor: pointer;
-            }
-        }
-
-        .holder {
-            position: relative;
-
-            &:first-child {
-                margin-top: 1.25rem;
-            }
-
-            &:last-child {
-                margin-bottom: 1.25rem;
-            }
-
-            &::before, &:last-child::after {
-                content: " ";
-                position: absolute;
-                top: calc(-2.5px - 0.675rem);
-                width: 100%;
-                height: 5px;
-                background: $scrollbar-background;
-                box-shadow: 0 0 10px $background inset;
-            }
-
-            &:last-child::after {
-                top: auto;
-                bottom: -0.675rem;
-            }
-
-            .node {
-                position: relative;
-
-                width: 80%;
-                background: color-mix(in oklab, var(--node-color) 60%, #000);
-
-                border-radius: $node-radius;
-                margin: 0 auto 0 auto;
-
-                box-shadow: 0 0 10px $background;
-                pointer-events: all;
-                cursor: grab;
-
-                &::before, &::after {
-                    content: " ";
-                    position: absolute;
-
-                    top: 0;
-
-                    width: 1.25rem;
-                    height: 100%;
-
-                    background: color-mix(in oklab, var(--node-color) 80%, #000);
-                }
-
-                &::before {
-                    left: 0;
-
-                    border-radius: $node-radius 0 0 $node-radius;
-                }
-
-                &::after {
-                    right: 0;
-
-                    border-radius: 0 $node-radius $node-radius 0;
-                }
-
-                .name {
-                    position: absolute;
-
-                    width: calc(100% - 1rem);
-                    border-top-left-radius: $node-radius;
-                    user-select: none;
-
-                    background: var(--node-color);
-                    text-align: center;
-
-                    color: var(--node-name-color);
-                    text-transform: uppercase;
-                    font-size: 1.2rem;
-                    font-family: Arial, Helvetica, sans-serif;
-                }
-
-                .input_ports, .output_ports {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 0.5rem;
-
-                    position: relative;
-
-                    width: 1rem;
-
-                    > * {
-                        position: relative;
-
-                        width: 0.5rem;
-                        height: 0.5rem;
-
-                        background: #fff;
-                        border: 2px solid #ccc;
-                        border-radius: 40%;
-
-                        cursor: pointer;
-                    }
-                }
-
-                .input_ports {
-                    padding-top: 2.5rem;
-                    padding-bottom: 1rem;
-
-                    left: -0.5rem;
-                }
-
-                .output_ports {
-                    justify-content: center;
-
-                    position: absolute;
-                    right: -0.5rem;
-
-                    //height: calc(100% - 1.5rem);
-                    //margin: 1.5rem auto 0 auto;
-                    margin-top: auto;
-                    padding: 0;
-
-                    bottom: 1rem;
-                    z-index: 1;
-                }
             }
         }
     }
