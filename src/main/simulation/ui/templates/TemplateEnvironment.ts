@@ -2,7 +2,6 @@ import {ButtonType} from "../../../core/mouse";
 import {getElementById, getElementByQuery} from "../../../core/utils";
 import {AttachedMouse} from "../../utils/AttachedMouse";
 import {NodeConnection} from "../nodes/NodeConnection";
-import {TemplateNode} from "../nodes/TemplateNode";
 
 export class TemplateEnvironment {
     public readonly canvas: HTMLCanvasElement;
@@ -34,14 +33,6 @@ export class TemplateEnvironment {
         this.canvas.width = this.width;
         this.canvas.height = this.height;
         this.initialize();
-
-        // TODO: When node connections are implemented, move this to there!!! Debug only
-        const test = new TemplateNode(0, 0);
-        this.mouse.onMouseMove = () => {
-            test.x = this.mouse.x - this.width / 2 - this.x;
-            test.y = this.mouse.y - this.height / 2 - this.y;
-        };
-        this.nodeConnections.push(new NodeConnection(new TemplateNode(0, 0), test));
     }
 
     public initialize(): void {

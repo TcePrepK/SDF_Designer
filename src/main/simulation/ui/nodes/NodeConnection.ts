@@ -1,10 +1,10 @@
-import { TemplateNode } from "./TemplateNode";
+import {VisualNode} from "./VisualNode";
 
 export class NodeConnection {
-    private from: TemplateNode;
-    private to: TemplateNode;
+    private from: VisualNode;
+    private to: VisualNode;
 
-    public constructor(from: TemplateNode, to: TemplateNode) {
+    public constructor(from: VisualNode, to: VisualNode) {
         this.from = from;
         this.to = to;
     }

@@ -26,19 +26,19 @@
 
 @keyframes node-expand {
     25% {
-        scale: calc(var(--node-max-scale) * 0.85);
+        scale: calc(var(--node-scale-multiplier) * 0.85);
     }
     100% {
-        scale: var(--node-max-scale);
+        scale: var(--node-scale-multiplier);
     }
 }
 
 @keyframes node-collapse {
     0% {
-        scale: var(--node-max-scale);
+        scale: var(--node-scale-multiplier);
     }
     75% {
-        scale: calc(var(--node-max-scale) * 0.85);
+        scale: calc(var(--node-scale-multiplier) * 0.85);
     }
 }
 
@@ -63,7 +63,7 @@
     box-shadow: 5px 0 13px -3px $shadow-color;
 
     #selection .node {
-        scale: var(--node-max-scale);
+        scale: var(--node-scale-multiplier);
         animation: node-collapse 0.5s;
     }
 

@@ -28,6 +28,9 @@ export class TemplateInterface {
         this.createMainTemplate();
     }
 
+    public update(): void {
+    }
+
     public updateFrame(): void {
         this.activeTemplate.getEnvironment().updateFrame();
     }

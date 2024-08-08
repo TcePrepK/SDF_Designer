@@ -1,4 +1,4 @@
-import { NodeConnection } from "./NodeConnection";
+import {createDiv} from "../../../core/utils";
 
 export const PossibleColors: Array<string> = [
     "#FF5733", // Red-Orange
@@ -69,13 +69,45 @@ export function calculateFontColor(color: string): string {
     return luminance > 0.5 ? "#000" : "#fff";
 }
 
-export class TemplateNode {
-    public x: number;
-    public y: number;
-    private readonly connections: NodeConnection[] = [];
+export class VisualNode {
+    public name: string;
+    public inputs: number;
+    public outputs: number;
 
-    public constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
+    private body: HTMLElement;
+
+    public constructor(name: string, inputs: number, outputs: number, parent: HTMLElement) {
+        this.name = name;
+        this.inputs = inputs;
+        this.outputs = outputs;
+
+        const nodeHolder = createDiv({classes: ["holder"], parent: parent});
+        this.body = createDiv({classes: ["node", "preload"], parent: nodeHolder},
+            createDiv({classes: ["name"], innerText: name})
+        );
+
+        const color = PossibleColors[Math.floor(Math.random() * PossibleColors.length)];
+        const textColor = calculateFontColor(color);
+        this.body.style.setProperty("--node-name-color", textColor);
+        this.body.style.setProperty("--node-color", color);
+
+        const inputPort = createDiv({classes: ["input_ports"], parent: this.body});
+        const outputPort = createDiv({classes: ["output_ports"], parent: this.body});
+
+        for (let i = 0; i < inputs; i++) {
+            createDiv({classes: ["input"], parent: inputPort});
+        }
+
+        for (let i = 0; i < outputs; i++) {
+            createDiv({classes: ["output"], parent: outputPort});
+        }
+    }
+
+    public setScaleMultiplier(opacity: number): void {
+        this.body.style.setProperty("--node-scale-multiplier", String(opacity));
+    }
+
+    public getHitBox(): DOMRect {
+        return this.body.getBoundingClientRect();
     }
 }
