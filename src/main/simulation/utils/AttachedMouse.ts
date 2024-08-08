@@ -4,9 +4,6 @@ export class AttachedMouse {
     public x = 0;
     public y = 0;
 
-    private isDragging = false;
-    private draggingButton!: ButtonType;
-
     private element!: HTMLElement;
 
     public attachElement(element: HTMLElement): AttachedMouse {
@@ -16,17 +13,6 @@ export class AttachedMouse {
             this.x += dx;
             this.y += dy;
         };
-
-        this.onDown = b => {
-            if (this.isDragging) return;
-            this.isDragging = true;
-            this.draggingButton = b as ButtonType;
-        };
-
-        this.onUp = b => {
-            if (b === this.draggingButton) this.isDragging = false;
-        };
-        this.onLeave = () => this.isDragging = false;
 
         return this;
     }
@@ -47,24 +33,20 @@ export class AttachedMouse {
         this.element.addEventListener("mousemove", e => fun(e.button, e.movementX, e.movementY));
     }
 
-    set onDrag(fun: (button: ButtonType | never, dx: number, dy: number) => unknown) {
-        this.onMove = (_, dx, dy) => {
-            if (this.isDragging) fun(this.draggingButton, dx, dy);
-        };
+    set onDrag(fun: (dx: number, dy: number) => unknown) {
+        this.element.addEventListener("drag", e => fun(e.movementX, e.movementY));
     }
 
-    set onDragStart(fun: (button: ButtonType | never) => unknown) {
-        this.onDown = () => {
-            if (this.isDragging) return;
-            fun(this.draggingButton);
-        };
+    set onDragStart(fun: () => unknown) {
+        this.element.addEventListener("dragstart", () => fun());
     }
 
-    set onDragStop(fun: (button: ButtonType | never) => unknown) {
-        this.onUp = b => {
-            if (b === this.draggingButton) fun(this.draggingButton);
-        };
-        this.onLeave = () => fun(this.draggingButton);
+    set onDragStop(fun: () => unknown) {
+        this.element.addEventListener("dragend", () => fun());
+    }
+
+    set onDragOver(fun: () => unknown) {
+        this.element.addEventListener("dragover", () => fun());
     }
 
     set onEnter(fun: () => unknown) {

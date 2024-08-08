@@ -1,5 +1,6 @@
 import {getElementById, getElementByQuery, toggleClass} from "../../../core/utils";
 import {VisualNode} from "./VisualNode";
+import {AttachedMouse} from "../../utils/AttachedMouse";
 
 export class NodeInterface {
     private body!: HTMLDivElement;
@@ -30,14 +31,31 @@ export class NodeInterface {
     private removeLater(): void {
         for (let i = 0; i < 15; i++) {
             const inputAmount = Math.floor(Math.random() * 3) + 1;
-            const node = new VisualNode("Node", inputAmount, 1, this.selection);
-            this.allNodes.push(node);
+            this.setupNode("Node", inputAmount, 1);
         }
         this.fixScrollFading();
 
         // for (let i = 0; i < 15; i++) {
         //     this.createNewTemplate();
         // }
+    }
+
+    private setupNode(name: string, inputAmount: number, outputAmount): VisualNode {
+        const node = new VisualNode(name, inputAmount, outputAmount, this.selection);
+        this.allNodes.push(node);
+
+        const nodeBody = node.getBody();
+        const nodeAttached = new AttachedMouse().attachElement(nodeBody);
+        nodeAttached.onDown = () => {
+            nodeBody.classList.add("dragging");
+        };
+
+        nodeAttached.onUp = () => {
+            nodeBody.classList.remove("dragging");
+            // When stopped, check position and depending on it add it to the screen!!!
+        };
+
+        return node;
     }
 
     private fixScrollFading(): void {

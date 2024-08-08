@@ -82,6 +82,10 @@
             border-radius: 0 $node-radius $node-radius 0;
         }
 
+        &.dragging {
+            cursor: grabbing;
+        }
+
         .name {
             position: absolute;
 
