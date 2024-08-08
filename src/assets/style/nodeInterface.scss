@@ -89,6 +89,10 @@
         user-select: none;
         -webkit-user-drag: none;
 
+        &.firefox-scrollbar {
+            scrollbar-color: $scrollbar-foreground mix($scrollbar-background, black, 85%);
+        }
+
         &::-webkit-scrollbar {
             width: 1.25rem;
             background: $scrollbar-background;

@@ -84,7 +84,9 @@
             overflow-x: auto;
             overflow-y: hidden;
 
-            //scrollbar-width: none;
+            &.firefox-scrollbar {
+                scrollbar-color: $scrollbar-foreground mix($scrollbar-background, black, 85%);
+            }
 
             &::-webkit-scrollbar {
                 height: 1.25rem;

@@ -11,8 +11,8 @@ export class UserInterface {
     }
 
     public update(): void {
-        this.nodeInterface.update();
-        this.templateInterface.update();
+        // this.nodeInterface.update();
+        // this.templateInterface.update();
     }
 
     public updateFrame(): void {

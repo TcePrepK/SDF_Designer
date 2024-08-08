@@ -20,14 +20,15 @@ export class BrowserSupport {
         this.browser = this.detectBrowser();
         logger.log("Browser: " + Browser[this.browser]);
 
-        this.selectorScrollbar();
+        this.updateScrollbars();
     }
 
-    private selectorScrollbar(): void {
-        if (this.browser !== Browser.Firefox) return;
+    private updateScrollbars(): void {
+        // if (this.browser !== Browser.Firefox) return;
         const selection = getElementsByClass("scrollable");
         for (const element of selection) {
-            // element.style.scrollbarWidth = "none";
+            element.classList.remove("scrollable");
+            element.classList.add("firefox-scrollbar");
         }
     }
 
