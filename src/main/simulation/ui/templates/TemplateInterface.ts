@@ -1,6 +1,6 @@
-import { createDiv, getElementById } from "../../../core/utils";
-import { AttachedMouse } from "../../utils/AttachedMouse";
-import { Template } from "./Template";
+import {createDiv, getElementById} from "../../../core/utils";
+import {AttachedMouse} from "../../utils/AttachedMouse";
+import {Template} from "./Template";
 
 export class TemplateInterface {
     private buffer!: HTMLDivElement;
@@ -20,8 +20,8 @@ export class TemplateInterface {
         this.plus = getElementById("buffer-more");
 
         const bufferMouse = new AttachedMouse().attachElement(this.hitBox);
-        bufferMouse.onMouseEnter.add(this.toggleBuffer.bind(this, true));
-        bufferMouse.onMouseLeave.add(this.toggleBuffer.bind(this, false));
+        bufferMouse.onMouseEnter = this.toggleBuffer.bind(this, true);
+        bufferMouse.onMouseLeave = this.toggleBuffer.bind(this, false);
 
         this.plus.addEventListener("click", () => this.createNewTemplate());
 
@@ -48,7 +48,7 @@ export class TemplateInterface {
 
     public createNewTemplate(): void {
         this.container.removeChild(this.plus);
-        const template = createDiv({ classes: ["buffer"], contentEditable: "true", parent: this.container });
+        const template = createDiv({classes: ["buffer"], contentEditable: "true", parent: this.container});
         this.container.appendChild(this.plus);
 
         template.addEventListener("keypress", e => {

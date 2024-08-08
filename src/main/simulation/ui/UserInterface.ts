@@ -1,8 +1,8 @@
-import { ButtonType } from "../../core/mouse";
-import { createDiv, getElementById, getElementByQuery, toggleClass } from "../../core/utils";
-import { AttachedMouse } from "../utils/AttachedMouse";
-import { calculateFontColor, PossibleColors } from "./nodes/TemplateNode";
-import { TemplateInterface } from "./templates/TemplateInterface";
+import {ButtonType} from "../../core/mouse";
+import {createDiv, getElementById, getElementByQuery, toggleClass} from "../../core/utils";
+import {AttachedMouse} from "../utils/AttachedMouse";
+import {calculateFontColor, PossibleColors} from "./nodes/TemplateNode";
+import {TemplateInterface} from "./templates/TemplateInterface";
 
 export class UserInterface {
     private body!: HTMLDivElement;
@@ -20,13 +20,13 @@ export class UserInterface {
     public initialize(): void {
         this.templateUI.initialize();
 
-        this.body = getElementById("user-interface");
-        this.selection = getElementByQuery("#user-interface #selection");
+        this.body = getElementById("node-interface");
+        this.selection = getElementByQuery("#node-interface #selection");
 
         { // Selection
             const attachedMouse = new AttachedMouse().attachElement(this.selection);
-            attachedMouse.onMouseButtonDown.add(() => this.grabbingSelection = true);
-            attachedMouse.onMouseMove.add(this.selectionDrag.bind(this));
+            attachedMouse.onMouseButtonDown = () => this.grabbingSelection = true;
+            attachedMouse.onMouseMove = this.selectionDrag.bind(this);
             window.addEventListener("mouseup", () => this.grabbingSelection = false);
 
             this.selection.addEventListener("scroll", this.fixScrollFading.bind(this));
@@ -36,8 +36,8 @@ export class UserInterface {
         { // Playground
             const playground = getElementById("node-playground");
             const playgroundMouse = new AttachedMouse().attachElement(playground);
-            playgroundMouse.onMouseButtonUp.add(() => !this.grabbingSelection ? this.toggleSelection(true) : null);
-            playgroundMouse.onMouseMove.add(this.selectionDrag.bind(this));
+            playgroundMouse.onMouseButtonUp = () => !this.grabbingSelection ? this.toggleSelection(true) : null;
+            playgroundMouse.onMouseMove = this.selectionDrag.bind(this);
         }
 
         { // Handle
@@ -101,9 +101,9 @@ export class UserInterface {
     }
 
     private createNode(name: string, inputs: number, outputs: number): HTMLElement {
-        const nodeHolder = createDiv({ classes: ["holder"], parent: this.selection });
-        const node = createDiv({ classes: ["node", "preload"], parent: nodeHolder },
-            createDiv({ classes: ["name"], innerText: name })
+        const nodeHolder = createDiv({classes: ["holder"], parent: this.selection});
+        const node = createDiv({classes: ["node", "preload"], parent: nodeHolder},
+            createDiv({classes: ["name"], innerText: name})
         );
 
         const color = PossibleColors[Math.floor(Math.random() * PossibleColors.length)];
@@ -111,15 +111,15 @@ export class UserInterface {
         node.style.setProperty("--node-name-color", textColor);
         node.style.setProperty("--node-color", color);
 
-        const inputPort = createDiv({ classes: ["input_ports"], parent: node });
-        const outputPort = createDiv({ classes: ["output_ports"], parent: node });
+        const inputPort = createDiv({classes: ["input_ports"], parent: node});
+        const outputPort = createDiv({classes: ["output_ports"], parent: node});
 
         for (let i = 0; i < inputs; i++) {
-            createDiv({ classes: ["input"], parent: inputPort });
+            createDiv({classes: ["input"], parent: inputPort});
         }
 
         for (let i = 0; i < outputs; i++) {
-            createDiv({ classes: ["output"], parent: outputPort });
+            createDiv({classes: ["output"], parent: outputPort});
         }
 
         return node;

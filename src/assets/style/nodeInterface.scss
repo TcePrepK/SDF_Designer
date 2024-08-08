@@ -42,7 +42,7 @@
     }
 }
 
-#user-interface {
+#node-interface {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -154,8 +154,6 @@
             }
 
             .node {
-                --node-color: #000;
-
                 position: relative;
 
                 width: 80%;
@@ -165,6 +163,8 @@
                 margin: 0 auto 0 auto;
 
                 box-shadow: 0 0 10px $background;
+                pointer-events: all;
+                cursor: grab;
 
                 &::before, &::after {
                     content: " ";
