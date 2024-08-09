@@ -20,6 +20,8 @@ export class TemplateEnvironment {
 
     private readonly nodeConnections: NodeConnection[] = [];
 
+    private grabbing = false;
+
     public constructor() {
         this.canvas = getElementById("playground-canvas");
         this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -50,10 +52,20 @@ export class TemplateEnvironment {
         }
 
         { // Mouse
-            this.mouse.onDrag = (button, dx, dy) => {
-                if (!this.activeState) return;
-                if (button !== ButtonType.RIGHT) return;
+            this.mouse.onDown = (button: ButtonType) => {
+                if (this.activeState && button === ButtonType.RIGHT) this.grabbing = true;
+            };
 
+            this.mouse.onUp = (button: ButtonType) => {
+                if (this.activeState && button === ButtonType.RIGHT) this.grabbing = false;
+            };
+
+            this.mouse.onLeave = () => {
+                this.grabbing = false;
+            };
+
+            this.mouse.onMove = (_, dx: number, dy: number) => {
+                if (!this.activeState || !this.grabbing) return;
                 this.x += dx;
                 this.y += dy;
             };

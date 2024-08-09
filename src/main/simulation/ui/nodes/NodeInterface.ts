@@ -40,7 +40,7 @@ export class NodeInterface {
         // }
     }
 
-    private setupNode(name: string, inputAmount: number, outputAmount): VisualNode {
+    private setupNode(name: string, inputAmount: number, outputAmount: number): VisualNode {
         const node = new VisualNode(name, inputAmount, outputAmount, this.selection);
         this.allNodes.push(node);
 
