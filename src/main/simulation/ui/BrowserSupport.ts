@@ -24,7 +24,7 @@ export class BrowserSupport {
     }
 
     private updateScrollbars(): void {
-        // if (this.browser !== Browser.Firefox) return;
+        if (this.browser !== Browser.Firefox) return;
         const selection = getElementsByClass("scrollable");
         for (const element of selection) {
             element.classList.remove("scrollable");

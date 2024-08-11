@@ -1,4 +1,5 @@
-import { TemplateEnvironment } from "./TemplateEnvironment";
+import {TemplateEnvironment} from "./TemplateEnvironment";
+import {TemplateNode} from "../nodes/TemplateNode";
 
 export class Template {
     public body: HTMLDivElement;
@@ -9,6 +10,14 @@ export class Template {
     public constructor(body: HTMLDivElement, name: string) {
         this.body = body;
         this.name = name;
+    }
+
+    public addNode(node: TemplateNode): void {
+        this.environment.addNode(node);
+    }
+
+    public removeNode(node: TemplateNode): void {
+        this.environment.removeNode(node);
     }
 
     public activate(): void {

@@ -1,11 +1,8 @@
-import { VectorI2D } from "./vector2D";
-import { Canvas } from "./canvas";
-import { Mouse } from "./mouse";
+import {VectorI2D} from "./vector2D";
+import {Canvas} from "./canvas";
 
 export class GlobalVariables {
-    public static time: number = 0;
-
-    public static mouse: Mouse;
+    public static time = 0;
 
     public static resolution: VectorI2D;
 

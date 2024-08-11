@@ -44,108 +44,125 @@
         top: auto;
         bottom: -0.675rem;
     }
+}
 
-    .node {
-        position: relative;
+.node {
+    position: relative;
 
-        width: 80%;
-        background: color-mix(in oklab, var(--node-color) 60%, #000);
+    width: 80%;
+    background: color-mix(in oklab, var(--node-color) 60%, #000);
 
-        border-radius: $node-radius;
-        margin: 0 auto 0 auto;
+    border-radius: $node-radius;
+    margin: 0 auto 0 auto;
 
-        box-shadow: 0 0 10px $background;
-        pointer-events: all;
-        cursor: grab;
+    box-shadow: 0 0 10px $background;
+    pointer-events: all;
+    cursor: grab;
 
-        &::before, &::after {
-            content: " ";
-            position: absolute;
+    &::before, &::after {
+        content: " ";
+        position: absolute;
 
-            top: 0;
+        top: 0;
 
-            width: 1.25rem;
-            height: 100%;
+        width: 1.25rem;
+        height: 100%;
 
-            background: color-mix(in oklab, var(--node-color) 80%, #000);
-        }
+        background: color-mix(in oklab, var(--node-color) 80%, #000);
+    }
 
-        &::before {
-            left: 0;
+    &::before {
+        left: 0;
 
-            border-radius: $node-radius 0 0 $node-radius;
-        }
+        border-radius: $node-radius 0 0 $node-radius;
+    }
 
-        &::after {
-            right: 0;
+    &::after {
+        right: 0;
 
-            border-radius: 0 $node-radius $node-radius 0;
-        }
+        border-radius: 0 $node-radius $node-radius 0;
+    }
+
+    & {
+        transition: transform 0.2s ease-in-out;
+    }
+
+    &:hover:not(.template) {
+        transform: scale(1.1);
+    }
+
+    &.template {
+        position: fixed;
+        transform: translate(-50%, -50%);
+
+        transform-origin: top left;
+        transition: scale 0.2s ease-in-out;
 
         &.dragging {
+            scale: 1.1;
             cursor: grabbing;
         }
+    }
 
-        .name {
-            position: absolute;
+    .name {
+        position: absolute;
 
-            width: calc(100% - 1rem);
-            border-top-left-radius: $node-radius;
-            user-select: none;
+        width: calc(100% - 1rem);
+        border-top-left-radius: $node-radius;
+        user-select: none;
 
-            background: var(--node-color);
-            text-align: center;
+        background: var(--node-color);
+        text-align: center;
 
-            color: var(--node-name-color);
-            text-transform: uppercase;
-            font-size: 1.2rem;
-            font-family: Arial, Helvetica, sans-serif;
-        }
+        color: var(--node-name-color);
+        text-transform: uppercase;
+        font-size: 1.2rem;
+        font-family: Arial, Helvetica, sans-serif;
+    }
 
-        .input_ports, .output_ports {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
+    .input_ports, .output_ports {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
 
+        position: relative;
+
+        width: 1rem;
+
+        > * {
             position: relative;
 
-            width: 1rem;
+            width: 0.5rem;
+            height: 0.5rem;
 
-            > * {
-                position: relative;
+            background: #fff;
+            border: 2px solid #ccc;
+            border-radius: 40%;
 
-                width: 0.5rem;
-                height: 0.5rem;
-
-                background: #fff;
-                border: 2px solid #ccc;
-                border-radius: 40%;
-
-                cursor: pointer;
-            }
+            cursor: pointer;
         }
+    }
 
-        .input_ports {
-            padding-top: 2.5rem;
-            padding-bottom: 1rem;
+    .input_ports {
+        padding-top: 2.5rem;
+        padding-bottom: 1rem;
 
-            left: -0.5rem;
-        }
+        left: -0.5rem;
+    }
 
-        .output_ports {
-            justify-content: center;
+    .output_ports {
+        justify-content: center;
 
-            position: absolute;
-            right: -0.5rem;
+        position: absolute;
+        right: -0.5rem;
 
-            //height: calc(100% - 1.5rem);
-            //margin: 1.5rem auto 0 auto;
-            margin-top: auto;
-            padding: 0;
+        //height: calc(100% - 1.5rem);
+        //margin: 1.5rem auto 0 auto;
+        margin-top: auto;
+        padding: 0;
 
-            bottom: 1rem;
-            z-index: 1;
-        }
+        bottom: 1rem;
+        z-index: 1;
     }
 }

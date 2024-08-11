@@ -1,6 +1,7 @@
 import {createDiv, getElementById} from "../../../core/utils";
 import {AttachedMouse} from "../../utils/AttachedMouse";
 import {Template} from "./Template";
+import {TemplateNode} from "../nodes/TemplateNode";
 
 export class TemplateInterface {
     private buffer!: HTMLDivElement;
@@ -30,6 +31,14 @@ export class TemplateInterface {
 
     public updateFrame(): void {
         this.activeTemplate.getEnvironment().updateFrame();
+    }
+
+    public addTemplateNode(node: TemplateNode): void {
+        this.activeTemplate.addNode(node);
+    }
+
+    public removeTemplateNode(node: TemplateNode): void {
+        this.activeTemplate.removeNode(node);
     }
 
     private createMainTemplate(): void {

@@ -1,11 +1,17 @@
-import { Mouse } from "../core/mouse";
-import { GlobalVariables } from "../core/globalVariables";
+import {AttachedMouse} from "./utils/AttachedMouse";
+import {NodeInterface} from "./ui/nodes/NodeInterface";
+import {TemplateInterface} from "./ui/templates/TemplateInterface";
 
 export class Root {
-    public mouse!: Mouse;
+    public windowMouse!: AttachedMouse;
+
+    public nodeInterface = new NodeInterface();
+    public templateInterface = new TemplateInterface();
 
     public initialize(): void {
-        this.mouse = new Mouse();
-        GlobalVariables.mouse = this.mouse;
+        this.windowMouse = new AttachedMouse().attachElement(document.body);
+
+        this.nodeInterface.initialize(this);
+        this.templateInterface.initialize();
     }
 }

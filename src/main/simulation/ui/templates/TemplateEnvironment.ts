@@ -2,13 +2,15 @@ import {ButtonType} from "../../../core/mouse";
 import {getElementById, getElementByQuery} from "../../../core/utils";
 import {AttachedMouse} from "../../utils/AttachedMouse";
 import {NodeConnection} from "../nodes/NodeConnection";
+import {TemplateNode} from "../nodes/TemplateNode";
 
 export class TemplateEnvironment {
+    private readonly playground: HTMLDivElement;
     public readonly canvas: HTMLCanvasElement;
     public readonly ctx: CanvasRenderingContext2D;
-    private readonly mouse = new AttachedMouse();
-
     private readonly background: HTMLDivElement;
+
+    private readonly mouse = new AttachedMouse();
 
     private activeState = false;
 
@@ -18,11 +20,13 @@ export class TemplateEnvironment {
     private x = 0;
     private y = 0;
 
+    private readonly templateNodes: TemplateNode[] = [];
     private readonly nodeConnections: NodeConnection[] = [];
 
     private grabbing = false;
 
     public constructor() {
+        this.playground = getElementById("node-playground");
         this.canvas = getElementById("playground-canvas");
         this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
         this.background = getElementByQuery("#node-playground #background");
@@ -60,14 +64,14 @@ export class TemplateEnvironment {
                 if (this.activeState && button === ButtonType.RIGHT) this.grabbing = false;
             };
 
-            this.mouse.onLeave = () => {
-                this.grabbing = false;
-            };
+            this.mouse.onLeave = () => this.grabbing = false;
 
-            this.mouse.onMove = (_, dx: number, dy: number) => {
+            this.mouse.onMove = (dx: number, dy: number) => {
                 if (!this.activeState || !this.grabbing) return;
                 this.x += dx;
                 this.y += dy;
+
+                this.templateNodes.forEach(node => node.updateRelative(dx, dy));
             };
         }
     }
@@ -81,6 +85,19 @@ export class TemplateEnvironment {
         this.nodeConnections.forEach(connection => connection.render(this.ctx));
 
         this.ctx.restore();
+    }
+
+    public addNode(node: TemplateNode): void {
+        if (this.templateNodes.includes(node)) return;
+        this.playground.appendChild(node.body);
+        this.templateNodes.push(node);
+        // this.nodeConnections.push(new NodeConnection(node, this));
+    }
+
+    public removeNode(node: TemplateNode): void {
+        if (!this.templateNodes.includes(node)) return;
+        this.playground.removeChild(node.body);
+        this.templateNodes.splice(this.templateNodes.indexOf(node), 1);
     }
 
     private handleBackground(): void {

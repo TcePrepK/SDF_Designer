@@ -1,21 +1,18 @@
-import {TemplateInterface} from "./templates/TemplateInterface";
-import {NodeInterface} from "./nodes/NodeInterface";
+import {Root} from "../root";
 
 export class UserInterface {
-    private nodeInterface = new NodeInterface();
-    private templateInterface = new TemplateInterface();
+    private root = new Root();
 
     public initialize(): void {
-        this.nodeInterface.initialize();
-        this.templateInterface.initialize();
+        this.root.initialize();
     }
 
     public update(): void {
-        // this.nodeInterface.update();
-        // this.templateInterface.update();
+        // this.root.nodeInterface.update();
+        // this.root.templateInterface.update();
     }
 
     public updateFrame(): void {
-        this.templateInterface.updateFrame();
+        this.root.templateInterface.updateFrame();
     }
 }

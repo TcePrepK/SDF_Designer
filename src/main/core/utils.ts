@@ -56,7 +56,9 @@ export function toggleClass(element: HTMLElement, className: string): void {
 }
 
 export function getElementById<T extends HTMLElement>(id: string): T {
-    return document.getElementById(id) as T;
+    const element = document.getElementById(id);
+    checkFor(element, `Element with id "${id}" not found.`);
+    return element as T;
 }
 
 export function getElementsByClass<T extends HTMLElement>(className: string): T[] {

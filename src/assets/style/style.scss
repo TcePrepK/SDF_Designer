@@ -11,6 +11,8 @@ html, body {
     margin: 0;
     overflow: hidden;
     background: $background;
+
+    user-select: none;
 }
 
 #main-screen {

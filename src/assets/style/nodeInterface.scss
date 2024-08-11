@@ -44,7 +44,7 @@
     border-radius: 0 $interface-radius $interface-radius 0;
     box-shadow: 5px 0 13px -3px $shadow-color;
 
-    #selection .node {
+    #selection .node:not(:hover) {
         scale: var(--node-scale-multiplier);
         animation: node-collapse 0.5s;
     }

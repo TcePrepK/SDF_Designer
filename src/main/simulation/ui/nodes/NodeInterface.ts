@@ -1,8 +1,13 @@
 import {getElementById, getElementByQuery, toggleClass} from "../../../core/utils";
 import {VisualNode} from "./VisualNode";
 import {AttachedMouse} from "../../utils/AttachedMouse";
+import {Root} from "../../root";
+import {TemplateNode} from "./TemplateNode";
+import {ButtonType} from "../../../core/mouse";
 
 export class NodeInterface {
+    private root!: Root;
+
     private body!: HTMLDivElement;
     private selection!: HTMLDivElement;
 
@@ -11,7 +16,12 @@ export class NodeInterface {
     private expanded = false;
     private toggleable = true;
 
-    public initialize(): void {
+    private draggingRoot: HTMLDivElement | null = null;
+    private dragging: TemplateNode | null = null;
+
+    public initialize(root: Root): void {
+        this.root = root;
+
         this.body = getElementById("node-interface");
         this.selection = getElementByQuery("#node-interface #selection");
 
@@ -23,6 +33,22 @@ export class NodeInterface {
         { // Handle
             const handle = getElementById("drawer-handle");
             handle.addEventListener("click", () => this.toggleSelection());
+        }
+
+        { // Closing Selection
+            const playground = getElementById("node-playground");
+            const attach = new AttachedMouse().attachElement(playground);
+            attach.onUp = this.toggleSelection.bind(this, true);
+        }
+
+        { // Dragging Node
+            const windowMouse = this.root.windowMouse;
+            windowMouse.onLeave = () => {
+                if (!this.dragging || !this.draggingRoot) return;
+                this.dragging.stopDragging();
+                this.dragging = null;
+                this.draggingRoot = null;
+            };
         }
 
         this.removeLater();
@@ -44,15 +70,21 @@ export class NodeInterface {
         const node = new VisualNode(name, inputAmount, outputAmount, this.selection);
         this.allNodes.push(node);
 
+        let interval: NodeJS.Timeout | null = null;
         const nodeBody = node.getBody();
         const nodeAttached = new AttachedMouse().attachElement(nodeBody);
-        nodeAttached.onDown = () => {
-            nodeBody.classList.add("dragging");
+        nodeAttached.onDown = (button) => {
+            if (button !== ButtonType.LEFT) return;
+            interval = setTimeout(() => {
+                this.draggingRoot = nodeBody;
+                this.dragging = node.getTemplateNode();
+                this.dragging.initialize(this.root);
+                this.toggleSelection(false);
+            }, 100);
         };
 
-        nodeAttached.onUp = () => {
-            nodeBody.classList.remove("dragging");
-            // When stopped, check position and depending on it add it to the screen!!!
+        nodeAttached.onClick = () => {
+            if (interval) clearInterval(interval);
         };
 
         return node;

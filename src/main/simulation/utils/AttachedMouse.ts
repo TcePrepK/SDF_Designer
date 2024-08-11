@@ -9,10 +9,10 @@ export class AttachedMouse {
     public attachElement(element: HTMLElement): AttachedMouse {
         this.element = element;
 
-        this.onMove = (_, dx, dy) => {
-            this.x += dx;
-            this.y += dy;
-        };
+        this.element.addEventListener("mousemove", e => {
+            this.x = e.clientX;
+            this.y = e.clientY;
+        });
 
         return this;
     }
@@ -29,8 +29,8 @@ export class AttachedMouse {
         this.element.addEventListener("click", e => fun(e.button));
     }
 
-    set onMove(fun: (button: ButtonType | never, dx: number, dy: number) => unknown) {
-        this.element.addEventListener("mousemove", e => fun(e.button, e.movementX, e.movementY));
+    set onMove(fun: (dx: number, dy: number) => unknown) {
+        this.element.addEventListener("mousemove", e => fun(e.movementX, e.movementY));
     }
 
     set onDrag(fun: (dx: number, dy: number) => unknown) {

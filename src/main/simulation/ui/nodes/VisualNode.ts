@@ -1,4 +1,5 @@
 import {createDiv} from "../../../core/utils";
+import {TemplateNode} from "./TemplateNode";
 
 export const PossibleColors: Array<string> = [
     "#FF5733", // Red-Orange
@@ -74,9 +75,9 @@ export class VisualNode {
     public inputs: number;
     public outputs: number;
 
-    private readonly body: HTMLElement;
+    private readonly body: HTMLDivElement;
 
-    public constructor(name: string, inputs: number, outputs: number, parent: HTMLElement) {
+    public constructor(name: string, inputs: number, outputs: number, parent: HTMLElement | undefined = undefined) {
         this.name = name;
         this.inputs = inputs;
         this.outputs = outputs;
@@ -103,6 +104,18 @@ export class VisualNode {
         }
     }
 
+    public getTemplateNode(): TemplateNode {
+        const box = this.getHitBox();
+        const centerX = box.left + box.width / 2;
+        const centerY = box.top + box.height / 2;
+        const width = box.width;
+
+        const clone = this.body.cloneNode(true) as HTMLElement;
+        clone.style.width = `${width}px`;
+
+        return new TemplateNode(this.name, clone, centerX, centerY);
+    }
+
     public setScaleMultiplier(opacity: number): void {
         this.body.style.setProperty("--node-scale-multiplier", String(opacity));
     }
@@ -111,7 +124,7 @@ export class VisualNode {
         return this.body.getBoundingClientRect();
     }
 
-    public getBody(): HTMLElement {
+    public getBody(): HTMLDivElement {
         return this.body;
     }
 }
