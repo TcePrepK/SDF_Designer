@@ -2,7 +2,6 @@ import type {Configuration} from "webpack";
 
 import {rules} from "./webpack.rules";
 import {plugins} from "./webpack.plugins";
-// eslint-disable-next-line import/default
 
 rules.push({
     test: /\.css$/,

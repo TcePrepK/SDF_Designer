@@ -1,19 +1,18 @@
-import { createDiv, createElement, getElementById } from "../../core/utils";
-import { Logger } from "../../core/logger";
+import {getElementById, getElementByQuery} from "../../core/utils";
+import {Logger} from "../../core/logger";
 
 const logger = new Logger("Error Screen", "❌");
 
 export class ErrorScreen {
-    public constructor(msg: string) {
+    static setInactive(): void {
+        getElementById("error-screen").remove();
+    }
+
+    static setActive(msg: string | null = null): void {
+        if (msg) getElementByQuery("#error-screen .error").innerHTML = msg;
+        getElementById("main-screen").remove();
+
         logger.toggleName();
         logger.error(msg);
-
-        const mainScreen = getElementById("main-screen");
-        mainScreen.style.display = "none";
-
-        const errorScreen = createDiv({ parent: document.body, id: "error-screen" },
-            createElement("h1", { classes: ["top"], innerText: "UH OH!" }),
-            createDiv({ classes: ["error"], innerText: msg })
-        );
     }
 }

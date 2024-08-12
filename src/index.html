@@ -6,6 +6,13 @@
     <title>SDF Studio</title>
 </head>
 <body>
+<div id="error-screen">
+    <link rel="stylesheet" href="static://assets/style/errorPage.css">
+    <h1 class="top">UH OH!</h1>
+    <p class="error">
+        <span>Error: </span>You are not supposed to be here.
+    </p>
+</div>
 <div id="main-screen">
     <div id="interface-hit-box">
         <div id="template-interface" class="preload">
@@ -54,10 +61,15 @@
     if (!isElectron()) {
         console.log("Non electron application!");
 
-        const everything = [...document.getElementsByTagName("*")];
-        const everySrc = everything.filter(e => e.getAttribute("src") !== null);
-        for (const element of everySrc) {
-            element.setAttribute("src", element.getAttribute("src").replace("static://", ""));
+        const everyElement = [...document.getElementsByTagName("*")];
+        for (const /** @type {HTMLElement} */ element of everyElement) {
+            const length = element.attributes.length;
+            for (let i = 0; i < length; i++) {
+                const attribute = element.attributes[i];
+                if (attribute.value.startsWith("static://")) {
+                    element.setAttribute(attribute.name, attribute.value.replace("static://", ""));
+                }
+            }
         }
         const script = document.createElement("script");
         script.src = "bundle.js";

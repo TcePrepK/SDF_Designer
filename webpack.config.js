@@ -35,10 +35,12 @@ module.exports = {
                 {from: "src/assets/audio", to: "assets/audio"},
                 {from: "src/assets/svg", to: "assets/svg"},
                 {from: "src/assets/images", to: "assets/images"},
-                // { from: "libs", to: "libs" },
-                // { from: 'index.html' },
-                // { from: 'src/preload.js' },
-                // { from: 'src/renderer.js' },
+                {
+                    from: "src/assets/style/*.css",
+                    to({context, absoluteFilename}) {
+                        return "assets/style/[name][ext]";
+                    }
+                },
                 {from: "src/index.html"}
             ]
         })

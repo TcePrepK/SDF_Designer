@@ -15,5 +15,5 @@ try {
 } catch (error) {
     let msg = error;
     if (error instanceof Error) msg = error.message;
-    new ErrorScreen(msg as string);
+    ErrorScreen.setActive(msg as string);
 }

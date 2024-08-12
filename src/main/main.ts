@@ -8,6 +8,7 @@ import {MainRenderer} from "./simulation/renderer/mainRenderer";
 import {BrowserSupport} from "./simulation/ui/BrowserSupport";
 import "../assets/style/style.scss";
 import {UserInterface} from "./simulation/ui/UserInterface";
+import {ErrorScreen} from "./simulation/ui/ErrorScreen";
 
 export class Main {
     private readonly browserSupport = new BrowserSupport();
@@ -30,8 +31,13 @@ export class Main {
         UniformRegistry.initialize();
         this.mainRenderer.initialize();
 
-        fixEveryPreload();
+        this.preload();
         this.startRunning();
+    }
+
+    private preload(): void {
+        fixEveryPreload();
+        ErrorScreen.setInactive();
     }
 
     public startRunning(): void {
