@@ -12,8 +12,6 @@ export class TemplateEnvironment {
     public readonly canvas: HTMLCanvasElement;
     public readonly ctx: CanvasRenderingContext2D;
 
-    private readonly mouse = new AttachedMouse();
-
     private activeState = false;
 
     private width = 0;
@@ -34,9 +32,6 @@ export class TemplateEnvironment {
 
         this.canvas = getElementById("playground-canvas");
         this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-
-        const playground = getElementById("node-playground");
-        this.mouse.attachElement(playground);
 
         this.width = window.innerWidth;
         this.height = window.innerHeight;
@@ -59,18 +54,21 @@ export class TemplateEnvironment {
             this.ctx.translate(this.width / 2, this.height / 2);
         }
 
-        { // Mouse
-            this.mouse.onDown = (button: ButtonType) => {
+        { // Canvas movement
+            const playground = getElementById("node-playground");
+            const attachment = AttachedMouse.getAttachment(playground);
+
+            attachment.onDown = (button: ButtonType) => {
                 if (this.activeState && button === ButtonType.RIGHT) this.grabbing = true;
             };
 
-            this.mouse.onUp = (button: ButtonType) => {
+            attachment.onUp = (button: ButtonType) => {
                 if (this.activeState && button === ButtonType.RIGHT) this.grabbing = false;
             };
 
-            this.mouse.onLeave = () => this.grabbing = false;
+            attachment.onLeave = () => this.grabbing = false;
 
-            this.mouse.onMove = (dx: number, dy: number) => {
+            attachment.onMove = (dx: number, dy: number) => {
                 if (!this.activeState || !this.grabbing) return;
                 this.x += dx;
                 this.y += dy;

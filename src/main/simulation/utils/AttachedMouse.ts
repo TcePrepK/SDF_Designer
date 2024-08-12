@@ -1,20 +1,25 @@
 import {ButtonType} from "../../core/mouse";
 
 export class AttachedMouse {
+    private static instances: Map<HTMLElement, AttachedMouse> = new Map();
+
     public x = 0;
     public y = 0;
 
     private element!: HTMLElement;
 
-    public attachElement(element: HTMLElement): AttachedMouse {
+    private constructor(element: HTMLElement) {
         this.element = element;
 
         this.element.addEventListener("mousemove", e => {
             this.x = e.clientX;
             this.y = e.clientY;
         });
+    }
 
-        return this;
+    static getAttachment(element: HTMLElement): AttachedMouse {
+        if (AttachedMouse.instances.has(element)) return AttachedMouse.instances.get(element)!;
+        return new AttachedMouse(element);
     }
 
     //-------------------------- Listener Methods --------------------------//

@@ -2,13 +2,14 @@ import {AttachedMouse} from "../../utils/AttachedMouse";
 import {ButtonType} from "../../../core/mouse";
 import {Root} from "../../root";
 import {getElementById} from "../../../core/utils";
+import {NodeData} from "./NodeData";
 
 export class TemplateNode {
     public readonly body!: HTMLElement;
     private dragDiv!: HTMLDivElement;
 
     private root!: Root;
-    private name: string;
+    private data: NodeData;
 
     private relativeX = 0;
     private relativeY = 0;
@@ -19,8 +20,10 @@ export class TemplateNode {
     private dragX = 0;
     private dragY = 0;
 
-    public constructor(name: string, body: HTMLElement, x: number, y: number) {
-        this.name = name;
+    public constructor(data: NodeData, body: HTMLDivElement, x: number, y: number) {
+        this.dragDiv = getElementById("node-drag");
+
+        this.data = data;
         this.body = body;
 
         this.centerX = x;
@@ -33,26 +36,39 @@ export class TemplateNode {
     public initialize(root: Root, event: MouseEvent): void {
         this.root = root;
 
-        this.dragDiv = getElementById("node-drag");
-        this.startDragging(event);
-
-        const attach = new AttachedMouse().attachElement(this.body);
-        attach.onUp = button => {
-            if (button !== ButtonType.LEFT) return;
-            this.stopDragging();
-        };
-
-        attach.onDownRaw = event => {
-            if (event.button !== ButtonType.LEFT) return;
-            this.root.nodeInterface.toggleSelection(true);
+        { // Dragging
             this.startDragging(event);
-        };
 
-        const windowMouse = root.windowMouse;
-        windowMouse.onMoveRaw = event => {
-            if (!this.dragging) return;
-            this.updatePosition(event.clientX + this.dragX, event.clientY + this.dragY);
-        };
+            const attach = AttachedMouse.getAttachment(this.body);
+            attach.onUp = button => {
+                if (button !== ButtonType.LEFT) return;
+                this.stopDragging();
+            };
+
+            attach.onDownRaw = event => {
+                if (event.button !== ButtonType.LEFT) return;
+                this.root.nodeInterface.toggleSelection(true);
+                this.startDragging(event);
+            };
+
+            const windowMouse = root.windowMouse;
+            windowMouse.onMoveRaw = event => {
+                if (!this.dragging) return;
+                this.updatePosition(event.clientX + this.dragX, event.clientY + this.dragY);
+            };
+        }
+
+        { // Ports
+            const allPorts = [...this.data.inputs, ...this.data.outputs];
+            allPorts.forEach(port => {
+                const attach = AttachedMouse.getAttachment(port);
+                attach.onDownRaw = event => {
+                    if (event.button !== ButtonType.LEFT) return;
+                    this.root.nodeInterface.toggleSelection(true);
+                    this.startDragging(event);
+                };
+            });
+        }
     }
 
     public startDragging(event: MouseEvent): void {

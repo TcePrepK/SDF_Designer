@@ -36,8 +36,8 @@ export class NodeInterface {
 
         { // Closing Selection
             const playground = getElementById("node-playground");
-            const attach = new AttachedMouse().attachElement(playground);
-            attach.onUp = this.toggleSelection.bind(this, true);
+            const attachment = AttachedMouse.getAttachment(playground);
+            attachment.onUp = this.toggleSelection.bind(this, true);
         }
 
         { // Dragging Node
@@ -70,7 +70,7 @@ export class NodeInterface {
 
         let interval: NodeJS.Timeout | null = null;
         const nodeBody = node.getBody();
-        const nodeAttached = new AttachedMouse().attachElement(nodeBody);
+        const nodeAttached = AttachedMouse.getAttachment(nodeBody);
         nodeAttached.onDownRaw = event => {
             if (event.button !== ButtonType.LEFT) return;
             interval = setTimeout(() => {

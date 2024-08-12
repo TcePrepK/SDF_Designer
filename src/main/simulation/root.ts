@@ -9,7 +9,7 @@ export class Root {
     public templateInterface = new TemplateInterface();
 
     public initialize(): void {
-        this.windowMouse = new AttachedMouse().attachElement(document.body);
+        this.windowMouse = AttachedMouse.getAttachment(document.body);
 
         this.nodeInterface.initialize(this);
         this.templateInterface.initialize();

@@ -1,5 +1,6 @@
 import {createDiv} from "../../../core/utils";
 import {TemplateNode} from "./TemplateNode";
+import {NodeData} from "./NodeData";
 
 export const PossibleColors: Array<string> = [
     "#FF5733", // Red-Orange
@@ -71,16 +72,11 @@ export function calculateFontColor(color: string): string {
 }
 
 export class VisualNode {
-    public name: string;
-    public inputs: number;
-    public outputs: number;
+    private readonly data: NodeData;
 
     private readonly body: HTMLDivElement;
 
-    public constructor(name: string, inputs: number, outputs: number, parent: HTMLElement | undefined = undefined) {
-        this.name = name;
-        this.inputs = inputs;
-        this.outputs = outputs;
+    public constructor(name: string, inputCount: number, outputCount: number, parent: HTMLElement | undefined = undefined) {
 
         const nodeHolder = createDiv({classes: ["holder"], parent: parent});
         this.body = createDiv({classes: ["node", "preload"], parent: nodeHolder},
@@ -95,13 +91,18 @@ export class VisualNode {
         const inputPort = createDiv({classes: ["input_ports"], parent: this.body});
         const outputPort = createDiv({classes: ["output_ports"], parent: this.body});
 
-        for (let i = 0; i < inputs; i++) {
-            createDiv({classes: ["input"], parent: inputPort});
+        const inputs: Array<HTMLDivElement> = [];
+        const outputs: Array<HTMLDivElement> = [];
+
+        for (let i = 0; i < inputCount; i++) {
+            inputs.push(createDiv({classes: ["input"], parent: inputPort}));
         }
 
-        for (let i = 0; i < outputs; i++) {
-            createDiv({classes: ["output"], parent: outputPort});
+        for (let i = 0; i < outputCount; i++) {
+            outputs.push(createDiv({classes: ["output"], parent: outputPort}));
         }
+
+        this.data = {name, inputs, outputs};
     }
 
     public getTemplateNode(): TemplateNode {
@@ -110,10 +111,10 @@ export class VisualNode {
         const centerY = box.top + box.height / 2;
         const width = box.width;
 
-        const clone = this.body.cloneNode(true) as HTMLElement;
+        const clone = this.body.cloneNode(true) as HTMLDivElement;
         clone.style.width = `${width}px`;
 
-        return new TemplateNode(this.name, clone, centerX, centerY);
+        return new TemplateNode(this.data, clone, centerX, centerY);
     }
 
     public setScaleMultiplier(opacity: number): void {
