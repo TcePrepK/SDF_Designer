@@ -16,7 +16,6 @@ export class NodeInterface {
     private expanded = false;
     private toggleable = true;
 
-    private draggingRoot: HTMLDivElement | null = null;
     private dragging: TemplateNode | null = null;
 
     public initialize(root: Root): void {
@@ -44,10 +43,9 @@ export class NodeInterface {
         { // Dragging Node
             const windowMouse = this.root.windowMouse;
             windowMouse.onLeave = () => {
-                if (!this.dragging || !this.draggingRoot) return;
+                if (!this.dragging) return;
                 this.dragging.stopDragging();
                 this.dragging = null;
-                this.draggingRoot = null;
             };
         }
 
@@ -73,12 +71,12 @@ export class NodeInterface {
         let interval: NodeJS.Timeout | null = null;
         const nodeBody = node.getBody();
         const nodeAttached = new AttachedMouse().attachElement(nodeBody);
-        nodeAttached.onDown = (button) => {
-            if (button !== ButtonType.LEFT) return;
+        nodeAttached.onDownRaw = event => {
+            if (event.button !== ButtonType.LEFT) return;
             interval = setTimeout(() => {
-                this.draggingRoot = nodeBody;
                 this.dragging = node.getTemplateNode();
-                this.dragging.initialize(this.root);
+                this.dragging.initialize(this.root, event);
+
                 this.toggleSelection(false);
             }, 100);
         };

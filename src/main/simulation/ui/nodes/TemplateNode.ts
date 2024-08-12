@@ -16,6 +16,8 @@ export class TemplateNode {
     private centerY: number;
 
     private dragging = false;
+    private dragX = 0;
+    private dragY = 0;
 
     public constructor(name: string, body: HTMLElement, x: number, y: number) {
         this.name = name;
@@ -28,34 +30,32 @@ export class TemplateNode {
         this.body.classList.add("template");
     }
 
-    public initialize(root: Root): void {
+    public initialize(root: Root, event: MouseEvent): void {
         this.root = root;
 
         this.dragDiv = getElementById("node-drag");
-        this.startDragging();
+        this.startDragging(event);
 
         const attach = new AttachedMouse().attachElement(this.body);
-        attach.onUp = (button) => {
+        attach.onUp = button => {
             if (button !== ButtonType.LEFT) return;
             this.stopDragging();
         };
 
-        attach.onLeave = this.stopDragging.bind(this);
-
-        attach.onDown = (button) => {
-            if (button !== ButtonType.LEFT) return;
+        attach.onDownRaw = event => {
+            if (event.button !== ButtonType.LEFT) return;
             this.root.nodeInterface.toggleSelection(true);
-            this.startDragging();
+            this.startDragging(event);
         };
 
         const windowMouse = root.windowMouse;
-        windowMouse.onMove = (dx, dy) => {
+        windowMouse.onMoveRaw = event => {
             if (!this.dragging) return;
-            this.updatePosition(dx, dy);
+            this.updatePosition(event.clientX + this.dragX, event.clientY + this.dragY);
         };
     }
 
-    public startDragging(): void {
+    public startDragging(event: MouseEvent): void {
         if (this.dragging) return;
 
         this.root.templateInterface.removeTemplateNode(this);
@@ -63,6 +63,9 @@ export class TemplateNode {
 
         this.body.classList.add("dragging");
         this.dragging = true;
+
+        this.dragX = this.centerX - event.clientX;
+        this.dragY = this.centerY - event.clientY;
     }
 
     public stopDragging(): void {
@@ -76,8 +79,8 @@ export class TemplateNode {
     }
 
     public updatePosition(dx: number, dy: number): void {
-        this.centerX += dx;
-        this.centerY += dy;
+        this.centerX = dx;
+        this.centerY = dy;
         this.updateTransform();
     }
 

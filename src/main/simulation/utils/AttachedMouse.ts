@@ -17,6 +17,8 @@ export class AttachedMouse {
         return this;
     }
 
+    //-------------------------- Listener Methods --------------------------//
+
     set onDown(fun: (button: ButtonType | never) => unknown) {
         this.element.addEventListener("mousedown", e => fun(e.button));
     }
@@ -59,5 +61,51 @@ export class AttachedMouse {
 
     set onWheel(fun: (delta: number) => unknown) {
         this.element.addEventListener("wheel", e => fun(e.deltaY));
+    }
+
+    //-------------------------- Raw Methods --------------------------//
+
+    set onDownRaw(fun: (event: MouseEvent) => unknown) {
+        this.element.addEventListener("mousedown", fun);
+    }
+
+    set onUpRaw(fun: (event: MouseEvent) => unknown) {
+        this.element.addEventListener("mouseup", fun);
+    }
+
+    set onClickRaw(fun: (event: MouseEvent) => unknown) {
+        this.element.addEventListener("click", fun);
+    }
+
+    set onMoveRaw(fun: (event: MouseEvent) => unknown) {
+        this.element.addEventListener("mousemove", fun);
+    }
+
+    set onDragRaw(fun: (event: DragEvent) => unknown) {
+        this.element.addEventListener("drag", fun);
+    }
+
+    set onDragStartRaw(fun: (event: DragEvent) => unknown) {
+        this.element.addEventListener("dragstart", fun);
+    }
+
+    set onDragStopRaw(fun: (event: DragEvent) => unknown) {
+        this.element.addEventListener("dragend", fun);
+    }
+
+    set onDragOverRaw(fun: (event: DragEvent) => unknown) {
+        this.element.addEventListener("dragover", fun);
+    }
+
+    set onEnterRaw(fun: (event: MouseEvent) => unknown) {
+        this.element.addEventListener("mouseenter", fun);
+    }
+
+    set onLeaveRaw(fun: (event: MouseEvent) => unknown) {
+        this.element.addEventListener("mouseleave", fun);
+    }
+
+    set onWheelRaw(fun: (event: WheelEvent) => unknown) {
+        this.element.addEventListener("wheel", fun);
     }
 }
