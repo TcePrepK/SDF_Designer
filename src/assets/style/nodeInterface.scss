@@ -34,7 +34,7 @@
 
     position: relative;
     width: 15rem;
-    height: calc(100% - 6rem);
+    height: calc(100% - 13rem);
 
     padding: 1rem;
     margin: auto 0;
@@ -42,7 +42,7 @@
     animation: ui-collapse 0.5s ease-out;
 
     border-radius: 0 $interface-radius $interface-radius 0;
-    box-shadow: 5px 0 13px -3px $shadow-color;
+    box-shadow: 3px 0 10px 0 $shadow-color;
 
     #selection .node:not(:hover) {
         scale: var(--node-scale-multiplier);

@@ -37,7 +37,7 @@
 
         border-radius: 0 0 $interface-radius $interface-radius;
         background: $buffer-foreground;
-        box-shadow: 0 0 10px 0 $shadow-color;
+        box-shadow: 0 0 7px 0 $shadow-color;
 
         transform: translateY(calc(1rem - 100%));
         animation: buffer-collapse 0.2s;
