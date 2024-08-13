@@ -38,6 +38,7 @@ export class TemplateNode {
     public initialize(root: Root, event: MouseEvent): void {
         this.root = root;
 
+        const windowMouse = root.windowMouse;
         { // Dragging
             // When initialize called, the node is already in dragging state
             this.startDragging(event);
@@ -49,17 +50,12 @@ export class TemplateNode {
             };
 
             attach.onDownRaw = event => {
-                if (event.button !== ButtonType.LEFT) return;
-                if (this.grabBlock) {
-                    this.grabBlock = false;
-                    return;
-                }
-                
+                if (event.button !== ButtonType.LEFT || this.grabBlock) return;
+
                 this.root.nodeInterface.toggleSelection(true);
                 this.startDragging(event);
             };
 
-            const windowMouse = root.windowMouse;
             windowMouse.onMoveRaw = event => {
                 if (!this.dragging) return;
                 this.updatePosition(event.clientX + this.dragX, event.clientY + this.dragY);
@@ -77,6 +73,12 @@ export class TemplateNode {
                     const template = this.root.activeTemplate;
                     const connectionManager = template.getConnectionManager();
                     connectionManager.toggleConnection(port);
+                    event.stopPropagation();
+                };
+
+                windowMouse.onUp = button => {
+                    if (button !== ButtonType.LEFT) return;
+                    this.grabBlock = false;
                 };
             });
         }

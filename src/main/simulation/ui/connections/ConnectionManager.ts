@@ -2,6 +2,7 @@ import {VisualConnection} from "./VisualConnection";
 import {NodePort} from "../nodes/NodeCreator";
 import {Vector2D} from "../../../core/vector2D";
 import {Root} from "../../root";
+import {ButtonType} from "../../../core/mouse";
 
 export class ConnectionManager {
     private root!: Root;
@@ -13,6 +14,13 @@ export class ConnectionManager {
 
     public initialize(root: Root): void {
         this.root = root;
+
+        const mouse = this.root.windowMouse;
+        mouse.onDown = button => {
+            if (button !== ButtonType.LEFT) return;
+            this.currentlyConnecting = false;
+            this.port = null;
+        };
     }
 
     /**
