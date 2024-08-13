@@ -2,14 +2,14 @@ import {AttachedMouse} from "../../utils/AttachedMouse";
 import {ButtonType} from "../../../core/mouse";
 import {Root} from "../../root";
 import {getElementById} from "../../../core/utils";
-import {NodeData} from "./NodeData";
+import {NodeData} from "./NodeCreator";
 
 export class TemplateNode {
-    public readonly body!: HTMLElement;
+    private data: NodeData;
+    public body: HTMLDivElement;
     private dragDiv!: HTMLDivElement;
 
     private root!: Root;
-    private data: NodeData;
 
     private relativeX = 0;
     private relativeY = 0;
@@ -20,11 +20,13 @@ export class TemplateNode {
     private dragX = 0;
     private dragY = 0;
 
-    public constructor(data: NodeData, body: HTMLDivElement, x: number, y: number) {
+    private grabBlock = false;
+
+    public constructor(data: NodeData, x: number, y: number) {
         this.dragDiv = getElementById("node-drag");
 
         this.data = data;
-        this.body = body;
+        this.body = data.body;
 
         this.centerX = x;
         this.centerY = y;
@@ -37,9 +39,10 @@ export class TemplateNode {
         this.root = root;
 
         { // Dragging
+            // When initialize called, the node is already in dragging state
             this.startDragging(event);
 
-            const attach = AttachedMouse.getAttachment(this.body);
+            const attach = AttachedMouse.getAttachment(this.data.body);
             attach.onUp = button => {
                 if (button !== ButtonType.LEFT) return;
                 this.stopDragging();
@@ -47,6 +50,11 @@ export class TemplateNode {
 
             attach.onDownRaw = event => {
                 if (event.button !== ButtonType.LEFT) return;
+                if (this.grabBlock) {
+                    this.grabBlock = false;
+                    return;
+                }
+                
                 this.root.nodeInterface.toggleSelection(true);
                 this.startDragging(event);
             };
@@ -61,11 +69,14 @@ export class TemplateNode {
         { // Ports
             const allPorts = [...this.data.inputs, ...this.data.outputs];
             allPorts.forEach(port => {
-                const attach = AttachedMouse.getAttachment(port);
+                const attach = AttachedMouse.getAttachment(port.body);
                 attach.onDownRaw = event => {
                     if (event.button !== ButtonType.LEFT) return;
-                    this.root.nodeInterface.toggleSelection(true);
-                    this.startDragging(event);
+                    this.grabBlock = true;
+
+                    const template = this.root.activeTemplate;
+                    const connectionManager = template.getConnectionManager();
+                    connectionManager.toggleConnection(port);
                 };
             });
         }
@@ -111,5 +122,13 @@ export class TemplateNode {
         const centerY = this.centerY + this.relativeY;
         this.body.style.left = `${centerX}px`;
         this.body.style.top = `${centerY}px`;
+    }
+
+    public activate(): void {
+        this.body.style.display = "flex";
+    }
+
+    public deactivate(): void {
+        this.body.style.display = "none";
     }
 }

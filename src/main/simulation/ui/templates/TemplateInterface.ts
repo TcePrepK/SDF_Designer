@@ -2,8 +2,11 @@ import {createDiv, getElementById} from "../../../core/utils";
 import {AttachedMouse} from "../../utils/AttachedMouse";
 import {Template} from "./Template";
 import {TemplateNode} from "../nodes/TemplateNode";
+import {Root} from "../../root";
 
 export class TemplateInterface {
+    private root!: Root;
+
     private buffer!: HTMLDivElement;
     private hitBox!: HTMLDivElement;
     private container!: HTMLDivElement;
@@ -14,7 +17,9 @@ export class TemplateInterface {
 
     private namingTemplate = false;
 
-    public initialize(): void {
+    public initialize(root: Root): void {
+        this.root = root;
+
         this.buffer = getElementById("template-interface");
         this.hitBox = getElementById("interface-hit-box");
         this.container = getElementById("container");
@@ -57,7 +62,7 @@ export class TemplateInterface {
 
     public createNewTemplate(): void {
         this.container.removeChild(this.plus);
-        const template = createDiv({classes: ["buffer"], contentEditable: "true", parent: this.container});
+        const template = createDiv({ classes: ["buffer"], contentEditable: "true", parent: this.container });
         this.container.appendChild(this.plus);
 
         template.addEventListener("keypress", e => {
@@ -65,10 +70,12 @@ export class TemplateInterface {
             e.preventDefault();
             template.blur();
         });
+
         template.addEventListener("focus", () => {
             this.buffer.classList.add("expanded-edit");
             this.namingTemplate = true;
         });
+
         template.addEventListener("blur", () => {
             this.namingTemplate = false;
 
@@ -100,7 +107,7 @@ export class TemplateInterface {
         template.contentEditable = "false";
 
         const name = template.innerText;
-        const templateInstance = new Template(template, name);
+        const templateInstance = new Template(this.root, template, name);
         this.templates.push(templateInstance);
 
         template.addEventListener("click", () => this.switchTemplate(templateInstance));
@@ -111,6 +118,7 @@ export class TemplateInterface {
         if (this.activeTemplate === template) return;
         this.activeTemplate?.deactivate();
         this.activeTemplate = template;
+        this.root.activeTemplate = template;
         template.activate();
     }
 }

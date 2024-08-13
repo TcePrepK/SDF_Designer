@@ -1,11 +1,13 @@
 import {ButtonType} from "../../../core/mouse";
 import {getElementById} from "../../../core/utils";
 import {AttachedMouse} from "../../utils/AttachedMouse";
-import {NodeConnection} from "../nodes/NodeConnection";
 import {TemplateNode} from "../nodes/TemplateNode";
+import {ConnectionManager} from "../connections/ConnectionManager";
+import {Root} from "../../root";
 
 export class TemplateEnvironment {
-    private readonly playground: HTMLDivElement;
+    private root!: Root;
+
     private readonly background: HTMLDivElement;
     private readonly nodeHolder: HTMLDivElement;
 
@@ -21,12 +23,11 @@ export class TemplateEnvironment {
     private y = 0;
 
     private readonly templateNodes: TemplateNode[] = [];
-    private readonly nodeConnections: NodeConnection[] = [];
+    public readonly connectionManager = new ConnectionManager();
 
     private grabbing = false;
 
     public constructor() {
-        this.playground = getElementById("node-playground");
         this.background = getElementById("background");
         this.nodeHolder = getElementById("node-holder");
 
@@ -37,10 +38,12 @@ export class TemplateEnvironment {
         this.height = window.innerHeight;
         this.canvas.width = this.width;
         this.canvas.height = this.height;
-        this.initialize();
     }
 
-    public initialize(): void {
+    public initialize(root: Root): void {
+        this.root = root;
+        this.connectionManager.initialize(this.root);
+
         { // Window resize
             window.addEventListener("resize", () => {
                 this.width = window.innerWidth;
@@ -79,21 +82,32 @@ export class TemplateEnvironment {
     }
 
     public updateFrame(): void {
+        // Clear canvas
         this.ctx.clearRect(-this.width / 2, -this.height / 2, this.width, this.height);
-        this.ctx.save();
-        this.ctx.translate(this.x, this.y);
 
-        this.handleBackground();
-        this.nodeConnections.forEach(connection => connection.render(this.ctx));
+        { // Render background lines
+            this.ctx.save();
+            this.ctx.translate(this.x, this.y);
 
-        this.ctx.restore();
+            this.renderGrids();
+
+            this.ctx.restore();
+        }
+
+        { // Render connections
+            this.ctx.save();
+            this.ctx.translate(-this.width / 2, -this.height / 2);
+
+            this.connectionManager.render(this.ctx);
+
+            this.ctx.restore();
+        }
     }
 
     public addNode(node: TemplateNode): void {
         if (this.templateNodes.includes(node)) return;
         this.nodeHolder.appendChild(node.body);
         this.templateNodes.push(node);
-        // this.nodeConnections.push(new NodeConnection(node, this));
     }
 
     public removeNode(node: TemplateNode): void {
@@ -102,7 +116,7 @@ export class TemplateEnvironment {
         this.templateNodes.splice(this.templateNodes.indexOf(node), 1);
     }
 
-    private handleBackground(): void {
+    private renderGrids(): void {
         this.background.style.left = `${this.x}px`;
         this.background.style.top = `${this.y}px`;
 
@@ -140,9 +154,11 @@ export class TemplateEnvironment {
 
     public activate(): void {
         this.activeState = true;
+        this.templateNodes.forEach(node => node.activate());
     }
 
     public deactivate(): void {
         this.activeState = false;
+        this.templateNodes.forEach(node => node.deactivate());
     }
 }

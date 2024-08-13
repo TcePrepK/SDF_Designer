@@ -102,6 +102,21 @@
             scale: 1.1;
             cursor: grabbing;
         }
+
+        .input_ports *, .output_ports * {
+            &::after {
+                content: "";
+
+                position: absolute;
+                left: calc(50% - 15px);
+                top: calc(50% - 15px);
+
+                width: 30px;
+                aspect-ratio: 1;
+
+                cursor: pointer;
+            }
+        }
     }
 
     .name {
@@ -134,13 +149,11 @@
             position: relative;
 
             width: 0.5rem;
-            height: 0.5rem;
+            aspect-ratio: 1;
 
             background: #fff;
             border: 2px solid #ccc;
             border-radius: 40%;
-
-            cursor: pointer;
         }
     }
 

@@ -1,15 +1,22 @@
 import {TemplateEnvironment} from "./TemplateEnvironment";
 import {TemplateNode} from "../nodes/TemplateNode";
+import {ConnectionManager} from "../connections/ConnectionManager";
+import {Root} from "../../root";
 
 export class Template {
+    private root!: Root;
+
     public body: HTMLDivElement;
     public name: string;
 
     private environment = new TemplateEnvironment();
 
-    public constructor(body: HTMLDivElement, name: string) {
+    public constructor(root: Root, body: HTMLDivElement, name: string) {
+        this.body = body;
         this.body = body;
         this.name = name;
+
+        this.environment.initialize(root);
     }
 
     public addNode(node: TemplateNode): void {
@@ -32,5 +39,9 @@ export class Template {
 
     public getEnvironment(): TemplateEnvironment {
         return this.environment;
+    }
+
+    public getConnectionManager(): ConnectionManager {
+        return this.environment.connectionManager;
     }
 }

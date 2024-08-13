@@ -1,9 +1,10 @@
 import {getElementById, getElementByQuery, toggleClass} from "../../../core/utils";
-import {VisualNode} from "./VisualNode";
+import {NodeCreator} from "./NodeCreator";
 import {AttachedMouse} from "../../utils/AttachedMouse";
 import {Root} from "../../root";
 import {TemplateNode} from "./TemplateNode";
 import {ButtonType} from "../../../core/mouse";
+import {NodeData} from "./NodeData";
 
 export class NodeInterface {
     private root!: Root;
@@ -11,7 +12,7 @@ export class NodeInterface {
     private body!: HTMLDivElement;
     private selection!: HTMLDivElement;
 
-    private allNodes: VisualNode[] = [];
+    private allNodes: NodeData[] = [];
 
     private expanded = false;
     private toggleable = true;
@@ -64,17 +65,17 @@ export class NodeInterface {
         // }
     }
 
-    private setupNode(name: string, inputAmount: number, outputAmount: number): VisualNode {
-        const node = new VisualNode(name, inputAmount, outputAmount, this.selection);
+    private setupNode(name: string, inputAmount: number, outputAmount: number): NodeData {
+        const node = NodeCreator.createData(name, inputAmount, outputAmount, this.selection);
         this.allNodes.push(node);
 
         let interval: NodeJS.Timeout | null = null;
-        const nodeBody = node.getBody();
+        const nodeBody = node.body;
         const nodeAttached = AttachedMouse.getAttachment(nodeBody);
         nodeAttached.onDownRaw = event => {
             if (event.button !== ButtonType.LEFT) return;
             interval = setTimeout(() => {
-                this.dragging = node.getTemplateNode();
+                this.dragging = NodeCreator.createTemplateNode(node);
                 this.dragging.initialize(this.root, event);
 
                 this.toggleSelection(false);
@@ -91,7 +92,7 @@ export class NodeInterface {
     private fixScrollFading(): void {
         const selectionRect = this.selection.getBoundingClientRect();
         for (const node of this.allNodes) {
-            const nodeRect = node.getHitBox();
+            const nodeRect = node.body.getBoundingClientRect();
             const topDiff = selectionRect.top - nodeRect.top;
             const bottomDiff = nodeRect.bottom - selectionRect.bottom;
             const diff = Math.max(topDiff, bottomDiff);
@@ -99,9 +100,9 @@ export class NodeInterface {
             if (diff > 0) {
                 let alpha = diff / nodeRect.height / 0.6;
                 alpha = Math.min(1, Math.max(0, alpha));
-                node.setScaleMultiplier(1 - alpha * 0.15);
+                node.body.style.setProperty("--node-scale-multiplier", String(1 - alpha * 0.15));
             } else {
-                node.setScaleMultiplier(1);
+                node.body.style.setProperty("--node-scale-multiplier", "1");
             }
         }
     }
