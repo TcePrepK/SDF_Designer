@@ -4,7 +4,6 @@ import {NodeConnection} from "./NodeConnection";
 import {NodePort, PortType} from "../nodes/NodePort";
 import {VisualConnection} from "./VisualConnection";
 import {Vector2D} from "../../../core/vector2D";
-import {ButtonType} from "../../../core/mouse";
 
 export class ConnectionManager {
     private root!: Root;
@@ -18,8 +17,7 @@ export class ConnectionManager {
         this.root = root;
 
         const mouse = this.root.windowMouse;
-        mouse.onDown = button => {
-            if (button !== ButtonType.LEFT) return;
+        mouse.onDown = () => {
             this.currentlyConnecting = false;
             this.port = null;
         };
@@ -33,10 +31,10 @@ export class ConnectionManager {
     public toggleConnection(port: NodePort): boolean {
         if (this.currentlyConnecting && this.port) {
             if (this.port.type === port.type) return false;
+            if (this.findTheNodeInNetwork(this.port.parent, port.parent)) return false;
 
             const connection = port.network;
             if (connection) this.cutConnection(connection);
-            if (this.findTheNodeInNetwork(this.port.parent, port.parent)) return false;
 
             if (port.type === PortType.OUTPUT) {
                 const from = port as NodePort<PortType.OUTPUT>;
@@ -78,6 +76,13 @@ export class ConnectionManager {
      * @private
      */
     private findTheNodeInNetwork(from: NodeData, to: NodeData): boolean {
+        if (to === from) return true;
+        for (const output of to.outputs) {
+            const [node] = output.getNextNode();
+            if (!node) continue;
+            if (this.findTheNodeInNetwork(from, node)) return true;
+        }
+
         return false;
     }
 

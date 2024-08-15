@@ -23,11 +23,13 @@ export class NodePort<T = PortType> {
         this.type = type;
     }
 
-    public getNextNode(): [NodeData, NodePort<PortType.INPUT>] | undefined {
-        return this.network?.getNext();
+    public getNextNode(): [NodeData, NodePort<PortType.INPUT>] | [] {
+        if (!this.network) return [];
+        return this.network.getNext();
     }
 
-    public getPreviousNode(): [NodeData, NodePort<PortType.OUTPUT>] | undefined {
+    public getPreviousNode(): [NodeData, NodePort<PortType.OUTPUT>] | [] {
+        if (!this.network) return [];
         return this.network?.getPrevious();
     }
 }
