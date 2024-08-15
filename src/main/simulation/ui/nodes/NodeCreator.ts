@@ -94,8 +94,10 @@ export class NodeCreator {
         body.style.setProperty("--node-name-color", textColor);
         body.style.setProperty("--node-color", color);
 
-        const inputPort = createDiv({ classes: ["input_ports"], parent: body });
-        const outputPort = createDiv({ classes: ["output_ports"], parent: body });
+        const inputPort = createDiv({ classes: ["inputs"], parent: body });
+        const outputPort = createDiv({ classes: ["outputs"], parent: body });
+
+        // body.style.height = `${1.25 * Math.max(inputCount, outputCount) + 3}rem`;
 
         const finalData: NodeData = {
             body: body,
@@ -119,8 +121,8 @@ export class NodeCreator {
         body.style.setProperty("--node-color", data.color);
         body.style.setProperty("--node-name-color", data.textColor);
 
-        const inputPort = createDiv({ classes: ["input_ports"], parent: body });
-        const outputPort = createDiv({ classes: ["output_ports"], parent: body });
+        const inputPort = createDiv({ classes: ["inputs"], parent: body });
+        const outputPort = createDiv({ classes: ["outputs"], parent: body });
 
         const finalData: NodeData = { ...data, body: body, inputs: [], outputs: [] };
         finalData.inputs = this.createPorts(data.inputs.length, PortType.INPUT, finalData, inputPort);
@@ -145,10 +147,9 @@ export class NodeCreator {
         const box = data.body.getBoundingClientRect();
         const centerX = box.left + box.width / 2;
         const centerY = box.top + box.height / 2;
-        const width = box.width;
 
         const clone = this.cloneData(data);
-        clone.body.style.width = `${width}px`;
+        clone.body.style.width = `${box.width}px`;
 
         return new TemplateNode(clone, centerX, centerY);
     }

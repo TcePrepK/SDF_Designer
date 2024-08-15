@@ -47,6 +47,10 @@
 }
 
 .node {
+    display: grid;
+    grid-template-areas: "in mid out";
+    grid-template-columns: 1.25rem auto 1.25rem;
+
     position: relative;
 
     width: 80%;
@@ -61,25 +65,16 @@
 
     &::before, &::after {
         content: " ";
-        position: absolute;
-
-        top: 0;
-
-        width: 1.25rem;
-        height: 100%;
-
         background: color-mix(in oklab, var(--node-color) 80%, #000);
     }
 
     &::before {
-        left: 0;
-
+        grid-area: in;
         border-radius: $node-radius 0 0 $node-radius;
     }
 
     &::after {
-        right: 0;
-
+        grid-area: out;
         border-radius: 0 $node-radius $node-radius 0;
     }
 
@@ -103,7 +98,7 @@
             cursor: grabbing;
         }
 
-        .input_ports *, .output_ports * {
+        .inputs *, .outputs * {
             &::after {
                 content: "";
 
@@ -122,7 +117,7 @@
     .name {
         position: absolute;
 
-        width: calc(100% - 1rem);
+        width: calc(100% - 1.25rem);
         border-top-left-radius: $node-radius;
         user-select: none;
 
@@ -135,7 +130,10 @@
         font-family: Arial, Helvetica, sans-serif;
     }
 
-    .input_ports, .output_ports {
+    //.data_body {
+    //
+    //}
+    .inputs, .outputs {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -143,7 +141,8 @@
 
         position: relative;
 
-        width: 1rem;
+        margin-top: auto;
+        bottom: 0;
 
         > * {
             position: relative;
@@ -155,27 +154,29 @@
             border: 2px solid #ccc;
             border-radius: 40%;
         }
+
+        :first-child {
+            margin-top: 2.5rem;
+        }
+
+        :last-child {
+            margin-bottom: 1rem;
+        }
     }
 
-    .input_ports {
-        padding-top: 2.5rem;
-        padding-bottom: 1rem;
+    .inputs {
+        grid-area: in;
 
-        left: -0.5rem;
+        left: -0.6rem;
     }
 
-    .output_ports {
-        justify-content: center;
+    .outputs {
+        grid-area: out;
 
-        position: absolute;
-        right: -0.5rem;
+        //position: absolute;
+        right: -0.6rem;
 
-        //height: calc(100% - 1.5rem);
-        //margin: 1.5rem auto 0 auto;
-        margin-top: auto;
-        padding: 0;
-
-        bottom: 1rem;
-        z-index: 1;
+        //z-index: 1;
     }
+
 }

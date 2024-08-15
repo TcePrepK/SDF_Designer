@@ -55,7 +55,8 @@ export class NodeInterface {
     private removeLater(): void {
         for (let i = 0; i < 15; i++) {
             const inputAmount = Math.floor(Math.random() * 4);
-            const outputAmount = Math.floor(Math.random() * 2) + 1;
+            let outputAmount = Math.floor(Math.random() * 3);
+            if (inputAmount + outputAmount === 0) outputAmount = 1;
             this.setupNode("Node", inputAmount, outputAmount);
         }
         this.fixScrollFading();
