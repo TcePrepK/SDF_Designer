@@ -5,11 +5,16 @@ const logger = new Logger("Error Screen", "❌");
 
 export class ErrorScreen {
     static setInactive(): void {
-        getElementById("error-screen").remove();
+        const screen = getElementById("error-screen");
+        screen.style.display = "none";
     }
 
     static setActive(msg: string | null = null): void {
-        if (msg) getElementByQuery("#error-screen .error").innerHTML = msg;
+        if (msg) {
+            getElementById("error-screen")!.style.display = "flex";
+            getElementByQuery("#error-screen .error").innerHTML = `<span>Error: </span> ${msg}`;
+        }
+
         getElementById("main-screen").remove();
 
         logger.toggleName();

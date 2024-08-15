@@ -1,13 +1,15 @@
-import {VisualConnection} from "./VisualConnection";
-import {NodePort} from "../nodes/NodeCreator";
-import {Vector2D} from "../../../core/vector2D";
+import {NodeData} from "../nodes/NodeCreator";
 import {Root} from "../../root";
+import {NodeConnection} from "./NodeConnection";
+import {NodePort, PortType} from "../nodes/NodePort";
+import {VisualConnection} from "./VisualConnection";
+import {Vector2D} from "../../../core/vector2D";
 import {ButtonType} from "../../../core/mouse";
 
 export class ConnectionManager {
     private root!: Root;
 
-    private readonly allConnections: Array<VisualConnection> = [];
+    private readonly allConnections: Array<NodeConnection> = [];
 
     private currentlyConnecting = false;
     private port: NodePort | null = null;
@@ -26,30 +28,57 @@ export class ConnectionManager {
     /**
      * Either starts a connection or connects the currently selected port to the given port
      * @param port
+     * @return Whether the connection should be stopped
      */
-    public toggleConnection(port: NodePort): void {
-        this.currentlyConnecting ? this.connect(port) : this.start(port);
-    }
+    public toggleConnection(port: NodePort): boolean {
+        if (this.currentlyConnecting && this.port) {
+            if (this.port.type === port.type) return false;
 
-    /**
-     * Starts the connection process
-     * @param port
-     * @private
-     */
-    private start(port: NodePort): void {
+            const connection = port.network;
+            if (connection) this.cutConnection(connection);
+            if (this.findTheNodeInNetwork(this.port.parent, port.parent)) return false;
+
+            if (port.type === PortType.OUTPUT) {
+                const from = port as NodePort<PortType.OUTPUT>;
+                const to = this.port as NodePort<PortType.INPUT>;
+                this.allConnections.push(new NodeConnection(port.parent, this.port.parent, from, to));
+            } else {
+                const from = this.port as NodePort<PortType.OUTPUT>;
+                const to = port as NodePort<PortType.INPUT>;
+                this.allConnections.push(new NodeConnection(this.port.parent, port.parent, from, to));
+            }
+
+            return true;
+        }
+
+        // If we are not connecting, then we are just starting a connection
+        const connection = port.network;
+        if (connection) this.cutConnection(connection);
+
         this.currentlyConnecting = true;
         this.port = port;
+
+        return false;
     }
 
     /**
-     * Connects the currently selected port to the given port
-     * @param port
+     * Cuts the connection and removes from the list
+     * @param connection
      * @private
      */
-    private connect(port: NodePort): void {
-        this.allConnections.push(new VisualConnection(this.port!, port));
-        this.currentlyConnecting = false;
-        this.port = null;
+    private cutConnection(connection: NodeConnection): void {
+        this.allConnections.splice(this.allConnections.indexOf(connection), 1);
+        connection.cutConnection();
+    }
+
+    /**
+     * Checks the network to see if from exists in it or not!
+     * @param from
+     * @param to
+     * @private
+     */
+    private findTheNodeInNetwork(from: NodeData, to: NodeData): boolean {
+        return false;
     }
 
     /**

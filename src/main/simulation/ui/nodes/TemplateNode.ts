@@ -72,8 +72,8 @@ export class TemplateNode {
 
                     const template = this.root.activeTemplate;
                     const connectionManager = template.getConnectionManager();
-                    connectionManager.toggleConnection(port);
-                    event.stopPropagation();
+                    const stopConnection = connectionManager.toggleConnection(port);
+                    if (!stopConnection) event.stopPropagation();
                 };
 
                 windowMouse.onUp = button => {

@@ -1,10 +1,9 @@
 import {getElementById, getElementByQuery, toggleClass} from "../../../core/utils";
-import {NodeCreator} from "./NodeCreator";
+import {NodeCreator, NodeData} from "./NodeCreator";
 import {AttachedMouse} from "../../utils/AttachedMouse";
 import {Root} from "../../root";
 import {TemplateNode} from "./TemplateNode";
 import {ButtonType} from "../../../core/mouse";
-import {NodeData} from "./NodeData";
 
 export class NodeInterface {
     private root!: Root;
@@ -55,8 +54,9 @@ export class NodeInterface {
 
     private removeLater(): void {
         for (let i = 0; i < 15; i++) {
-            const inputAmount = Math.floor(Math.random() * 3) + 1;
-            this.setupNode("Node", inputAmount, 1);
+            const inputAmount = Math.floor(Math.random() * 4);
+            const outputAmount = Math.floor(Math.random() * 2) + 1;
+            this.setupNode("Node", inputAmount, outputAmount);
         }
         this.fixScrollFading();
 

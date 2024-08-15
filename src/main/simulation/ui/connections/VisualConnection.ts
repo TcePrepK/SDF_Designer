@@ -1,23 +1,7 @@
-import {NodePort} from "../nodes/NodeCreator";
 import {Vector2D} from "../../../core/vector2D";
+import {NodePort} from "../nodes/NodePort";
 
 export class VisualConnection {
-    private readonly from: NodePort;
-    private readonly to: NodePort;
-
-    public constructor(from: NodePort, to: NodePort) {
-        this.from = from;
-        this.to = to;
-    }
-
-    /**
-     * Renders the connection from A to B
-     * @param ctx
-     */
-    public render(ctx: CanvasRenderingContext2D): void {
-        VisualConnection.drawAtoB(ctx, VisualConnection.positionFromPort(this.from), VisualConnection.positionFromPort(this.to));
-    }
-
     /**
      * Calculates the position of a port
      * @param port
