@@ -5,6 +5,12 @@ import {Root} from "../../root";
 import {TemplateNode} from "./TemplateNode";
 import {ButtonType} from "../../../core/mouse";
 
+export enum Category {
+    ALL = "All",
+    LOGIC = "Logic",
+    MATH = "Math",
+}
+
 export class NodeInterface {
     private root!: Root;
 
@@ -12,6 +18,9 @@ export class NodeInterface {
     private selection!: HTMLDivElement;
 
     private allNodes: NodeData[] = [];
+    private categoryToNodes: Map<Category, NodeData[]> = new Map();
+    private currentCategory: Category = Category.ALL;
+    private visibleNodes: NodeData[] = [];
 
     private expanded = false;
     private toggleable = true;
@@ -49,17 +58,54 @@ export class NodeInterface {
             };
         }
 
+        { // Catergories
+            this.setupCategory("all", Category.ALL);
+            this.setupCategory("logic", Category.LOGIC);
+            this.setupCategory("math", Category.MATH);
+        }
+
         this.removeLater();
     }
 
+    private setupCategory(name: string, category: Category): void {
+        this.categoryToNodes.set(category, []);
+
+        let timeout: NodeJS.Timeout | null = null;
+        const element = getElementById(`category-${name}`);
+        element.addEventListener("click", () => {
+            for (const node of this.allNodes) {
+                node.holder!.classList.add("hidden");
+                node.body.classList.add("wobble");
+            }
+
+            const nodes = this.categoryToNodes.get(category)!;
+            for (const node of nodes) {
+                const classes = node.holder!.classList;
+                classes.remove("hidden");
+            }
+
+            if (timeout) clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                for (const node of this.allNodes) {
+                    node.body.classList.remove("wobble");
+                }
+            }, 0);
+            this.fixScrollFading();
+        });
+    }
+
     private removeLater(): void {
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 10; i++) {
             const inputAmount = Math.floor(Math.random() * 4);
             let outputAmount = Math.floor(Math.random() * 3);
             if (inputAmount + outputAmount === 0) outputAmount = 1;
 
+            const random2 = Math.floor(Math.random() * 2);
+            const categories = [Category.LOGIC, Category.MATH];
+
+            const random4 = Math.floor(Math.random() * 4);
             const names = ["Node", "End", "A ∩ B", "A ∪ B"];
-            this.setupNode(names[Math.floor(Math.random() * names.length)], inputAmount, outputAmount);
+            this.setupNode(names[random4], inputAmount, outputAmount, categories[random2]);
         }
         this.fixScrollFading();
 
@@ -68,33 +114,41 @@ export class NodeInterface {
         // }
     }
 
-    private setupNode(name: string, inputAmount: number, outputAmount: number): NodeData {
+    private setupNode(name: string, inputAmount: number, outputAmount: number, category: Category): NodeData {
         const node = NodeCreator.createData(name, inputAmount, outputAmount, this.selection);
-        this.allNodes.push(node);
 
-        let interval: NodeJS.Timeout | null = null;
-        const nodeBody = node.body;
-        const nodeAttached = AttachedMouse.getAttachment(nodeBody);
-        nodeAttached.onDownRaw = event => {
-            if (event.button !== ButtonType.LEFT) return;
-            interval = setTimeout(() => {
-                this.dragging = NodeCreator.createTemplateNode(node);
-                this.dragging.initialize(this.root, event);
+        { // Categories
+            this.allNodes.push(node);
+            this.categoryToNodes.get(Category.ALL)!.push(node);
+            this.categoryToNodes.get(category)!.push(node);
+        }
 
-                this.toggleSelection(false);
-            }, 100);
-        };
+        { // Dragging
+            let interval: NodeJS.Timeout | null = null;
+            const nodeBody = node.body;
+            const nodeAttached = AttachedMouse.getAttachment(nodeBody);
+            nodeAttached.onDownRaw = event => {
+                if (event.button !== ButtonType.LEFT) return;
+                interval = setTimeout(() => {
+                    this.dragging = NodeCreator.createTemplateNode(node);
+                    this.dragging.initialize(this.root, event);
 
-        nodeAttached.onClick = () => {
-            if (interval) clearInterval(interval);
-        };
+                    this.toggleSelection(false);
+                }, 100);
+            };
+
+            nodeAttached.onClick = () => {
+                if (interval) clearInterval(interval);
+            };
+        }
 
         return node;
     }
 
     private fixScrollFading(): void {
+        const nodes = this.categoryToNodes.get(this.currentCategory)!;
         const selectionRect = this.selection.getBoundingClientRect();
-        for (const node of this.allNodes) {
+        for (const node of nodes) {
             const nodeRect = node.body.getBoundingClientRect();
             const topDiff = selectionRect.top - nodeRect.top;
             const bottomDiff = nodeRect.bottom - selectionRect.bottom;

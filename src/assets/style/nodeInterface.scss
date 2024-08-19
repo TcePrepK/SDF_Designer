@@ -33,7 +33,7 @@
     background: $drawer-foreground;
 
     position: relative;
-    width: 15rem;
+    width: min-content;
     height: calc(100% - 13rem);
 
     padding: 1rem;
@@ -44,9 +44,15 @@
     border-radius: 0 $interface-radius $interface-radius 0;
     box-shadow: 3px 0 10px 0 $shadow-color;
 
-    #selection .node:not(:hover) {
-        scale: var(--node-scale-multiplier);
-        animation: node-collapse 0.5s;
+    #selection {
+        .wobble {
+            scale: var(--node-scale-multiplier);
+        }
+
+        .node:not(.wobble) {
+            scale: var(--node-scale-multiplier);
+            animation: node-wobble 0.5s cubic-bezier(0.5, 0, 0.5, 1) !important;
+        }
     }
 
     & {
@@ -56,16 +62,12 @@
     &.expanded {
         animation: ui-expand 0.5s;
         transform: translateX(0);
-
-        #selection .node {
-            animation: node-expand 0.5s;
-        }
     }
 
     #selection {
         display: flex;
         flex-direction: column;
-        gap: 1.25rem;
+        //gap: 1.25rem;
 
         width: 100%;
         height: calc(100% - 6rem);
@@ -103,6 +105,11 @@
                 cursor: pointer;
             }
         }
+
+        //
+        //&.wobble > * > * {
+        //    animation: node-expand 0.5s;
+        //}
     }
 
     #visuals {

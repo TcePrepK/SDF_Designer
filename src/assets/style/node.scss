@@ -1,7 +1,10 @@
 @import "variables.scss";
 
-@keyframes node-expand {
-    25% {
+@keyframes node-wobble {
+    0% {
+        scale: var(--node-scale-multiplier);
+    }
+    50% {
         scale: calc(var(--node-scale-multiplier) * 0.85);
     }
     100% {
@@ -9,28 +12,14 @@
     }
 }
 
-@keyframes node-collapse {
-    0% {
-        scale: var(--node-scale-multiplier);
-    }
-    75% {
-        scale: calc(var(--node-scale-multiplier) * 0.85);
-    }
-}
-
 .holder {
     position: relative;
     pointer-events: none;
 
-    &:first-child {
-        margin-top: 1.25rem;
-    }
+    width: 13rem;
+    margin-top: 1.25rem;
 
-    &:last-child {
-        margin-bottom: 1.25rem;
-    }
-
-    &::before, &:last-child::after {
+    &::before, &::after {
         content: " ";
         position: absolute;
         top: calc(-2.5px - 0.675rem);
@@ -40,9 +29,13 @@
         box-shadow: 0 0 10px $background inset;
     }
 
-    &:last-child::after {
+    &::after {
         top: auto;
         bottom: -0.675rem;
+    }
+
+    &.hidden {
+        display: none;
     }
 }
 
@@ -90,6 +83,7 @@
 
     &:hover:not(.template) {
         transform: scale(1.1);
+        animation: none;
     }
 
     &.template {
@@ -251,62 +245,4 @@
             border-radius: 40%;
         }
     }
-
-    //.inputs {
-    //    grid-area: in;
-    //
-    //    width: 8.75rem;
-    //    left: -0.6rem;
-    //}
-    //
-    //.outputs {
-    //    grid-area: out;
-    //
-    //    width: 1.25rem;
-    //    right: -0.6rem;
-    //}
-
-    //.input_data {
-    //    display: flex;
-    //    flex-direction: column;
-    //    gap: 0.5rem;
-    //
-    //    //height: calc(100% - 2.5rem);
-    //    margin: auto 0 1rem 0;
-    //
-    //    grid-area: mid;
-    //
-    //    .data {
-    //        display: flex;
-    //        flex-direction: row;
-    //        align-items: center;
-    //        gap: 0.2rem;
-    //
-    //        width: 100%;
-    //        height: 0.75rem;
-    //
-    //        padding: 0 0.2rem;
-    //
-    //        #input {
-    //            width: 2.5rem;
-    //
-    //            border-radius: 0.25rem;
-    //            border: none;
-    //            background: color-mix(in oklab, var(--node-color) 50%, #000);
-    //        }
-    //
-    //        #name {
-    //            width: 1rem;
-    //            color: color-mix(in oklab, var(--node-color) 40%, #000);
-    //
-    //            bottom: -5px;
-    //            padding-top: 2.5px;
-    //
-    //            text-align: center;
-    //            font-family: Arial, Helvetica, sans-serif;
-    //            font-weight: bold;
-    //        }
-    //    }
-    //
-    //}
 }

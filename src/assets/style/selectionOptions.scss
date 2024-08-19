@@ -1,6 +1,6 @@
 @import "variables.scss";
 
-#selection-options {
+#category-selection {
     display: flex;
     flex-direction: row;
 
@@ -9,11 +9,11 @@
     margin: 0 auto;
 
     background: $drawer-background;
-    border: 0.5rem solid $drawer-foreground;
+    border: solid $drawer-foreground;
     border-radius: 1.5rem;
     box-shadow: 0 0 15px #000 inset;
 
-    .option {
+    .category {
         position: relative;
 
         width: 4rem;

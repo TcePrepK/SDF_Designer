@@ -62,6 +62,7 @@ export const PossibleColors: Array<string> = [
 ];
 
 export interface NodeData {
+    holder: HTMLDivElement | null;
     body: HTMLDivElement;
 
     name: string;
@@ -85,6 +86,7 @@ export class NodeCreator {
         const outputPort = createDiv({ classes: ["outputs"], parent: body });
 
         const finalData: NodeData = {
+            holder: nodeHolder,
             body: body,
             name: name,
             inputs: [],
@@ -110,6 +112,7 @@ export class NodeCreator {
         const finalData: NodeData = { ...data, body: body, inputs: [], outputs: [] };
         finalData.inputs = this.createPorts(data.inputs.length, PortType.INPUT, finalData, inputPort, forTemplate);
         finalData.outputs = this.createPorts(data.outputs.length, PortType.OUTPUT, finalData, outputPort, forTemplate);
+        finalData.holder = null;
 
         return finalData;
     }
