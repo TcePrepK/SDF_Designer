@@ -57,7 +57,9 @@ export class NodeInterface {
             const inputAmount = Math.floor(Math.random() * 4);
             let outputAmount = Math.floor(Math.random() * 3);
             if (inputAmount + outputAmount === 0) outputAmount = 1;
-            this.setupNode("Node", inputAmount, outputAmount);
+
+            const names = ["Node", "End", "A ∩ B", "A ∪ B"];
+            this.setupNode(names[Math.floor(Math.random() * names.length)], inputAmount, outputAmount);
         }
         this.fixScrollFading();
 

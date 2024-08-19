@@ -1,4 +1,4 @@
-import {createDiv} from "../../../core/utils";
+import {createDiv, createElement, createInput} from "../../../core/utils";
 import {TemplateNode} from "./TemplateNode";
 import {NodePort, PortType} from "./NodePort";
 
@@ -61,16 +61,6 @@ export const PossibleColors: Array<string> = [
     "#4169E1" // Royal Blue
 ];
 
-export function calculateFontColor(color: string): string {
-    const rgb = parseInt(color.slice(1), 16);
-    const r = (rgb >> 16) & 0xFF;
-    const g = (rgb >> 8) & 0xFF;
-    const b = rgb & 0xFF;
-
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return luminance > 0.5 ? "#000" : "#fff";
-}
-
 export interface NodeData {
     body: HTMLDivElement;
 
@@ -79,7 +69,6 @@ export interface NodeData {
     outputs: Array<NodePort<PortType.OUTPUT>>;
 
     color: string;
-    textColor: string;
 }
 
 export class NodeCreator {
@@ -90,22 +79,17 @@ export class NodeCreator {
         );
 
         const color = PossibleColors[Math.floor(Math.random() * PossibleColors.length)];
-        const textColor = calculateFontColor(color);
-        body.style.setProperty("--node-name-color", textColor);
         body.style.setProperty("--node-color", color);
 
         const inputPort = createDiv({ classes: ["inputs"], parent: body });
         const outputPort = createDiv({ classes: ["outputs"], parent: body });
-
-        // body.style.height = `${1.25 * Math.max(inputCount, outputCount) + 3}rem`;
 
         const finalData: NodeData = {
             body: body,
             name: name,
             inputs: [],
             outputs: [],
-            color: color,
-            textColor: textColor
+            color: color
         };
         finalData.inputs = this.createPorts(inputCount, PortType.INPUT, finalData, inputPort);
         finalData.outputs = this.createPorts(outputCount, PortType.OUTPUT, finalData, outputPort);
@@ -113,31 +97,44 @@ export class NodeCreator {
         return finalData;
     }
 
-    public static cloneData(data: NodeData): NodeData {
+    public static cloneData(data: NodeData, forTemplate = false): NodeData {
         const body = createDiv({ classes: ["node", "preload"] },
             createDiv({ classes: ["name"], innerText: data.name })
         );
 
         body.style.setProperty("--node-color", data.color);
-        body.style.setProperty("--node-name-color", data.textColor);
 
         const inputPort = createDiv({ classes: ["inputs"], parent: body });
         const outputPort = createDiv({ classes: ["outputs"], parent: body });
 
         const finalData: NodeData = { ...data, body: body, inputs: [], outputs: [] };
-        finalData.inputs = this.createPorts(data.inputs.length, PortType.INPUT, finalData, inputPort);
-        finalData.outputs = this.createPorts(data.outputs.length, PortType.OUTPUT, finalData, outputPort);
+        finalData.inputs = this.createPorts(data.inputs.length, PortType.INPUT, finalData, inputPort, forTemplate);
+        finalData.outputs = this.createPorts(data.outputs.length, PortType.OUTPUT, finalData, outputPort, forTemplate);
 
         return finalData;
     }
 
-    private static createPorts<T = NodePort>(times: number, type: PortType.INPUT | PortType.OUTPUT, data: NodeData, parent: HTMLDivElement): Array<T> {
+    private static createPorts<T = NodePort>(times: number, type: PortType.INPUT | PortType.OUTPUT, data: NodeData, parent: HTMLDivElement, forTemplate = false): Array<T> {
         const ports: Array<T> = [];
 
         for (let i = 0; i < times; i++) {
-            const typeClass = PortType[type].toLowerCase();
-            const element = createDiv({ classes: [typeClass], parent: parent });
-            ports.push(new NodePort(data, element, `${type} ${i}`, type) as unknown as T);
+            const name = String.fromCharCode(65 + i);
+
+            let element: HTMLDivElement;
+            let port: HTMLDivElement;
+            if (type === PortType.INPUT) {
+                port = createDiv({ classes: ["input"] }),
+                element = createDiv({ classes: ["input_data"], parent: parent },
+                    port,
+                    createElement("label", { classes: ["input_name"], innerText: name }),
+                    createInput({ classes: ["input_value"], type: "number", disabled: !forTemplate })
+                );
+            } else {
+                port = createDiv({ classes: ["output"], parent: parent });
+                element = port;
+            }
+
+            ports.push(new NodePort(data, element, port, name, type) as unknown as T);
         }
 
         return ports;
@@ -148,7 +145,7 @@ export class NodeCreator {
         const centerX = box.left + box.width / 2;
         const centerY = box.top + box.height / 2;
 
-        const clone = this.cloneData(data);
+        const clone = this.cloneData(data, true);
         clone.body.style.width = `${box.width}px`;
 
         return new TemplateNode(clone, centerX, centerY);

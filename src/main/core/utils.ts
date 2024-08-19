@@ -41,6 +41,10 @@ export function createButton(data?: Partial<HTMLButtonElement> & ElementArgs, ..
     return createElement<HTMLButtonElement>("button", data, ...args);
 }
 
+export function createInput(data?: Partial<HTMLInputElement> & ElementArgs, ...args: PossibleChildren[]): HTMLInputElement {
+    return createElement<HTMLInputElement>("input", data, ...args);
+}
+
 export function createCanvas(data?: Partial<HTMLCanvasElement> & ElementArgs, ...args: PossibleChildren[]): HTMLCanvasElement {
     return createElement<HTMLCanvasElement>("canvas", data, ...args);
 }

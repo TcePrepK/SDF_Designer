@@ -65,7 +65,7 @@ export class TemplateNode {
         { // Ports
             const allPorts = [...this.data.inputs, ...this.data.outputs];
             allPorts.forEach(port => {
-                const attach = AttachedMouse.getAttachment(port.body);
+                const attach = AttachedMouse.getAttachment(port.port);
                 attach.onDownRaw = event => {
                     if (event.button !== ButtonType.LEFT) return;
                     this.grabBlock = true;
