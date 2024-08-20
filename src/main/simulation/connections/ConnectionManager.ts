@@ -1,9 +1,9 @@
 import {NodeData} from "../nodes/NodeCreator";
-import {Root} from "../../root";
+import {Root} from "../root";
 import {NodeConnection} from "./NodeConnection";
 import {NodePort, PortType} from "../nodes/NodePort";
 import {VisualConnection} from "./VisualConnection";
-import {Vector2D} from "../../../core/vector2D";
+import {Vector2D} from "../../core/vector2D";
 
 export class ConnectionManager {
     private root!: Root;

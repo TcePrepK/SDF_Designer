@@ -1,7 +1,7 @@
 import {AttachedMouse} from "./utils/AttachedMouse";
-import {NodeInterface} from "./ui/nodes/NodeInterface";
-import {TemplateInterface} from "./ui/templates/TemplateInterface";
-import {Template} from "./ui/templates/Template";
+import {NodeInterface} from "./nodes/NodeInterface";
+import {TemplateInterface} from "./templates/TemplateInterface";
+import {Template} from "./templates/Template";
 
 export class Root {
     public windowMouse!: AttachedMouse;

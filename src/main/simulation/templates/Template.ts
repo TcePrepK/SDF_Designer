@@ -1,7 +1,7 @@
 import {TemplateEnvironment} from "./TemplateEnvironment";
 import {TemplateNode} from "../nodes/TemplateNode";
 import {ConnectionManager} from "../connections/ConnectionManager";
-import {Root} from "../../root";
+import {Root} from "../root";
 
 export class Template {
     private root!: Root;

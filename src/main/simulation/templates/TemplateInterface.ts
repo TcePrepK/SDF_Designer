@@ -1,8 +1,8 @@
-import {createDiv, getElementById} from "../../../core/utils";
-import {AttachedMouse} from "../../utils/AttachedMouse";
+import {createDiv, getElementById} from "../../core/utils";
+import {AttachedMouse} from "../utils/AttachedMouse";
 import {Template} from "./Template";
 import {TemplateNode} from "../nodes/TemplateNode";
-import {Root} from "../../root";
+import {Root} from "../root";
 
 export class TemplateInterface {
     private root!: Root;

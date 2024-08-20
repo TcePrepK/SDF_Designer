@@ -1,9 +1,9 @@
-import {ButtonType} from "../../../core/mouse";
-import {getElementById} from "../../../core/utils";
-import {AttachedMouse} from "../../utils/AttachedMouse";
+import {ButtonType} from "../../core/mouse";
+import {getElementById} from "../../core/utils";
+import {AttachedMouse} from "../utils/AttachedMouse";
 import {TemplateNode} from "../nodes/TemplateNode";
 import {ConnectionManager} from "../connections/ConnectionManager";
-import {Root} from "../../root";
+import {Root} from "../root";
 
 export class TemplateEnvironment {
     private root!: Root;

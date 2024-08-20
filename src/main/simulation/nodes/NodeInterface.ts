@@ -1,9 +1,9 @@
-import {getElementById, getElementByQuery, toggleClass} from "../../../core/utils";
+import {getElementById, getElementByQuery, toggleClass} from "../../core/utils";
 import {NodeCreator, NodeData} from "./NodeCreator";
-import {AttachedMouse} from "../../utils/AttachedMouse";
-import {Root} from "../../root";
+import {AttachedMouse} from "../utils/AttachedMouse";
+import {Root} from "../root";
 import {TemplateNode} from "./TemplateNode";
-import {ButtonType} from "../../../core/mouse";
+import {ButtonType} from "../../core/mouse";
 
 export enum Category {
     ALL = "All",

@@ -1,7 +1,7 @@
-import {AttachedMouse} from "../../utils/AttachedMouse";
-import {ButtonType} from "../../../core/mouse";
-import {Root} from "../../root";
-import {getElementById} from "../../../core/utils";
+import {AttachedMouse} from "../utils/AttachedMouse";
+import {ButtonType} from "../../core/mouse";
+import {Root} from "../root";
+import {getElementById} from "../../core/utils";
 import {NodeData} from "./NodeCreator";
 
 export class TemplateNode {

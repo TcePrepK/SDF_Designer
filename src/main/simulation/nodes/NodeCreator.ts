@@ -1,4 +1,4 @@
-import {createDiv, createElement, createInput} from "../../../core/utils";
+import {createDiv, createElement, createInput} from "../../core/utils";
 import {TemplateNode} from "./TemplateNode";
 import {NodePort, PortType} from "./NodePort";
 

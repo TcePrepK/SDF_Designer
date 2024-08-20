@@ -1,4 +1,4 @@
-import {Vector2D} from "../../../core/vector2D";
+import {Vector2D} from "../../core/vector2D";
 import {NodePort} from "../nodes/NodePort";
 
 export class VisualConnection {
