@@ -2,6 +2,7 @@ import {AttachedMouse} from "./utils/AttachedMouse";
 import {NodeInterface} from "./nodes/NodeInterface";
 import {TemplateInterface} from "./templates/TemplateInterface";
 import {Template} from "./templates/Template";
+import {BaseNodes} from "./nodes/BaseNodes";
 
 export class Root {
     public windowMouse!: AttachedMouse;
@@ -16,5 +17,6 @@ export class Root {
 
         this.nodeInterface.initialize(this);
         this.templateInterface.initialize(this);
+        BaseNodes.initialize(this);
     }
 }

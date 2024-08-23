@@ -2,8 +2,8 @@ import {NodeConnection} from "../connections/NodeConnection";
 import {NodeData} from "./NodeCreator";
 
 export enum PortType {
-    INPUT,
-    OUTPUT
+    INPUT = "input",
+    OUTPUT = "output"
 }
 
 export class NodePort<T = PortType> {

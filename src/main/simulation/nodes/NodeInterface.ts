@@ -7,9 +7,17 @@ import {ButtonType} from "../../core/mouse";
 
 export enum Category {
     ALL = "All",
+    NONE = "None",
     LOGIC = "Logic",
     MATH = "Math",
 }
+
+export type NodeParams = {
+    name: string;
+    inputs: Array<string | null>;
+    outputs: Array<string>;
+    category: Exclude<Category, Category.ALL>;
+};
 
 export class NodeInterface {
     private root!: Root;
@@ -20,7 +28,6 @@ export class NodeInterface {
     private allNodes: NodeData[] = [];
     private categoryToNodes: Map<Category, NodeData[]> = new Map();
     private currentCategory: Category = Category.ALL;
-    private visibleNodes: NodeData[] = [];
 
     private expanded = false;
     private toggleable = true;
@@ -63,8 +70,6 @@ export class NodeInterface {
             this.setupCategory("logic", Category.LOGIC);
             this.setupCategory("math", Category.MATH);
         }
-
-        this.removeLater();
     }
 
     private setupCategory(name: string, category: Category): void {
@@ -94,33 +99,15 @@ export class NodeInterface {
         });
     }
 
-    private removeLater(): void {
-        for (let i = 0; i < 10; i++) {
-            const inputAmount = Math.floor(Math.random() * 4);
-            let outputAmount = Math.floor(Math.random() * 3);
-            if (inputAmount + outputAmount === 0) outputAmount = 1;
-
-            const random2 = Math.floor(Math.random() * 2);
-            const categories = [Category.LOGIC, Category.MATH];
-
-            const random4 = Math.floor(Math.random() * 4);
-            const names = ["Node", "End", "A ∩ B", "A ∪ B"];
-            this.setupNode(names[random4], inputAmount, outputAmount, categories[random2]);
-        }
-        this.fixScrollFading();
-
-        // for (let i = 0; i < 15; i++) {
-        //     this.createNewTemplate();
-        // }
-    }
-
-    private setupNode(name: string, inputAmount: number, outputAmount: number, category: Category): NodeData {
-        const node = NodeCreator.createData(name, inputAmount, outputAmount, this.selection);
+    public setupNode(params: NodeParams): NodeData {
+        const node = NodeCreator.createData(params, this.selection);
 
         { // Categories
             this.allNodes.push(node);
-            this.categoryToNodes.get(Category.ALL)!.push(node);
-            this.categoryToNodes.get(category)!.push(node);
+            if (params.category !== Category.NONE) {
+                this.categoryToNodes.get(Category.ALL)!.push(node);
+                this.categoryToNodes.get(params.category)!.push(node);
+            }
         }
 
         { // Dragging

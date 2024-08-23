@@ -161,64 +161,76 @@
         > :last-child {
             margin-bottom: 1rem;
         }
-    }
 
-    .inputs {
-        width: calc(100% - 1.1rem);
+        &:empty {
+            margin-left: calc(1.925rem / 2);
+            margin-right: calc(1.925rem / 2);
+        }
 
-        left: -0.4rem;
-        margin-top: auto;
-
-        .input_data {
+        .port_data {
             display: flex;
             flex-direction: row;
             align-items: center;
-            //gap: 0.2rem;
 
             width: 100%;
             height: 0.75rem;
 
-            padding: 0 0.2rem;
+            .port_name {
+                height: 1rem;
 
+                color: color-mix(in oklab, var(--node-color) 40%, #000);
+
+                background: color-mix(in oklab, var(--node-color) 65%, #000);
+                border-radius: 0.25rem;
+
+                padding: 1px;
+                margin: 0 0.1rem 0 0;
+
+                line-height: 100%;
+                text-align: center;
+                font-family: Arial, Helvetica, sans-serif;
+                font-weight: bold;
+                white-space: nowrap;
+
+                &:has(+ .port_value) {
+                    border-radius: 0.25rem 0 0 0.25rem;
+
+                    + .port_value {
+                        border-radius: 0 0.25rem 0.25rem 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .inputs {
+        //width: 7.5rem;
+
+        left: -0.4rem;
+        margin-top: auto;
+        margin-right: -0.8rem;
+
+        .input_data {
             .input {
                 position: relative;
 
                 min-width: 0.5rem;
                 aspect-ratio: 1;
 
+                margin-right: 1.1rem;
+
                 background: #fff;
                 border: 2px solid #ccc;
                 border-radius: 40%;
             }
 
-            .input_name {
-                height: 1rem;
-
-                color: color-mix(in oklab, var(--node-color) 65%, #000);
-
-                background: color-mix(in oklab, var(--node-color) 55%, #000);
-
-                padding: 1px;
-                margin: 0 0.1rem 0 1.1rem;
-                border-radius: 0.25rem 0 0 0.25rem;
-
-                line-height: 100%;
-                text-align: center;
-                font-family: Arial, Helvetica, sans-serif;
-                font-weight: bold;
-
-                //&::after {
-                //    content: "";
-                //}
-            }
-
-            .input_value {
+            .port_value {
                 width: 100%;
                 height: 1rem;
 
                 padding: 1px;
 
-                border-radius: 0 0.25rem 0.25rem 0;
+                border-radius: 0.25rem;
                 border: none;
                 background: color-mix(in oklab, var(--node-color) 50%, #000);
 
@@ -228,21 +240,32 @@
     }
 
     .outputs {
-        width: 1.25rem;
+        //width: 3rem;
 
-        //position: absolute;
-        right: -0.6rem;
+        margin-left: auto;
+
+        right: -0.4rem;
         z-index: 1;
 
-        .output {
-            position: relative;
+        .output_data {
+            justify-content: flex-end;
 
-            width: 0.5rem;
-            aspect-ratio: 1;
+            .port_name {
+                margin-left: 0.25rem;
+            }
 
-            background: #fff;
-            border: 2px solid #ccc;
-            border-radius: 40%;
+            .output {
+                position: relative;
+
+                margin-left: 1.1rem;
+
+                min-width: 0.5rem;
+                aspect-ratio: 1;
+
+                background: #fff;
+                border: 2px solid #ccc;
+                border-radius: 40%;
+            }
         }
     }
 }
