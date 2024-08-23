@@ -18,6 +18,11 @@ export class ConnectionManager {
 
         const mouse = this.root.windowMouse;
         mouse.onDown = () => {
+            if (!this.currentlyConnecting || !this.port) return;
+
+            const network = this.port.network;
+            if (network) network.overrideColor = null;
+
             this.currentlyConnecting = false;
             this.port = null;
         };
@@ -31,30 +36,35 @@ export class ConnectionManager {
     public toggleConnection(port: NodePort): boolean {
         if (this.currentlyConnecting && this.port) {
             if (this.port.type === port.type) return false;
-            if (this.findTheNodeInNetwork(this.port.parent, port.parent)) return false;
 
-            const connection = port.network;
-            if (connection) this.cutConnection(connection);
-
-            if (port.type === PortType.OUTPUT) {
-                const from = port as NodePort<PortType.OUTPUT>;
-                const to = this.port as NodePort<PortType.INPUT>;
-                this.allConnections.push(new NodeConnection(port.parent, this.port.parent, from, to));
-            } else {
-                const from = this.port as NodePort<PortType.OUTPUT>;
-                const to = port as NodePort<PortType.INPUT>;
-                this.allConnections.push(new NodeConnection(this.port.parent, port.parent, from, to));
+            let from = this.port;
+            let to = port;
+            if (to.type === PortType.OUTPUT) {
+                // from = port as NodePort<PortType.OUTPUT>;
+                // to = this.port as NodePort<PortType.INPUT>;
+                [from, to] = [to, from];
             }
+
+            if (this.findTheNodeInNetwork(from.parent, to.parent)) return false;
+
+            const fromNetwork = from.network;
+            const toNetwork = to.network;
+            if (fromNetwork && toNetwork) {
+                this.cutConnection(fromNetwork);
+                return true;
+            } else if (fromNetwork) this.cutConnection(fromNetwork);
+            else if (toNetwork) this.cutConnection(toNetwork);
+
+            this.allConnections.push(new NodeConnection(this.port.parent, port.parent, from as NodePort<PortType.OUTPUT>, to as NodePort<PortType.INPUT>));
 
             return true;
         }
 
-        // If we are not connecting, then we are just starting a connection
-        const connection = port.network;
-        if (connection) this.cutConnection(connection);
-
         this.currentlyConnecting = true;
         this.port = port;
+
+        const network = this.port.network;
+        if (network) network.overrideColor = "#f23";
 
         return false;
     }
@@ -92,9 +102,9 @@ export class ConnectionManager {
      */
     public render(ctx: CanvasRenderingContext2D): void {
         this.allConnections.forEach(connection => connection.render(ctx));
-        if (!this.currentlyConnecting) return;
+        if (!this.currentlyConnecting || !this.port) return;
 
-        const position = VisualConnection.positionFromPort(this.port!);
+        const position = VisualConnection.positionFromPort(this.port);
         const mouse = this.root.windowMouse;
         VisualConnection.drawAtoB(ctx, position, new Vector2D(mouse.x, mouse.y));
     }

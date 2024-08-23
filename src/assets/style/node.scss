@@ -200,6 +200,22 @@
                     }
                 }
             }
+
+            .port {
+                position: relative;
+
+                min-width: 0.5rem;
+                aspect-ratio: 1;
+
+                background: #fff;
+                border: 2px solid #ccc;
+                border-radius: 40%;
+
+                &.connected {
+                    background: color-mix(in oklab, var(--node-color) 50%, #fff);
+                    border: 2px solid color-mix(in oklab, var(--node-color) 40%, #fff);
+                }
+            }
         }
     }
 
@@ -212,16 +228,7 @@
 
         .input_data {
             .input {
-                position: relative;
-
-                min-width: 0.5rem;
-                aspect-ratio: 1;
-
                 margin-right: 1.1rem;
-
-                background: #fff;
-                border: 2px solid #ccc;
-                border-radius: 40%;
             }
 
             .port_value {
@@ -255,16 +262,7 @@
             }
 
             .output {
-                position: relative;
-
                 margin-left: 1.1rem;
-
-                min-width: 0.5rem;
-                aspect-ratio: 1;
-
-                background: #fff;
-                border: 2px solid #ccc;
-                border-radius: 40%;
             }
         }
     }

@@ -9,22 +9,24 @@ export class NodeConnection {
     private readonly fromPort: NodePort<PortType.OUTPUT>;
     private readonly toPort: NodePort<PortType.INPUT>;
 
+    public overrideColor: string | null = "#999";
+
     constructor(fromNode: NodeData, toNode: NodeData, fromPort: NodePort<PortType.OUTPUT>, toPort: NodePort<PortType.INPUT>) {
         this.fromNode = fromNode;
         this.toNode = toNode;
         this.fromPort = fromPort;
         this.toPort = toPort;
 
-        this.fromPort.network = this;
-        this.toPort.network = this;
+        this.fromPort.connectNetwork(this);
+        this.toPort.connectNetwork(this);
     }
 
     /**
      * Basically removes the connection from both nodes
      */
     public cutConnection(): void {
-        this.fromPort.network = undefined;
-        this.toPort.network = undefined;
+        this.fromPort.disconnectNetwork();
+        this.toPort.disconnectNetwork();
     }
 
     /**
@@ -32,7 +34,7 @@ export class NodeConnection {
      * @param ctx
      */
     public render(ctx: CanvasRenderingContext2D): void {
-        VisualConnection.drawAtoB(ctx, VisualConnection.positionFromPort(this.fromPort), VisualConnection.positionFromPort(this.toPort));
+        VisualConnection.drawAtoB(ctx, VisualConnection.positionFromPort(this.fromPort), VisualConnection.positionFromPort(this.toPort), this.overrideColor);
     }
 
     /**

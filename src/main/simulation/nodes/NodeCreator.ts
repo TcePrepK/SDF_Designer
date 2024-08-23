@@ -126,7 +126,7 @@ export class NodeCreator {
 
             const portData = createDiv({ classes: [`${type}_data`, "port_data"], parent: parent });
 
-            const port = createDiv({ classes: [type] });
+            const port = createDiv({ classes: [type, "port"] });
             const label = name ? createElement("label", { classes: ["port_name"], innerText: name }) : "";
             const input = createInput({ classes: ["port_value"], type: "number", disabled: !forTemplate });
 
