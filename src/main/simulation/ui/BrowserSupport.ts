@@ -14,16 +14,16 @@ export enum Browser {
 const logger = new Logger("Browser Support", "✔️");
 
 export class BrowserSupport {
-    private readonly browser: Browser;
+    private static browser: Browser;
 
-    public constructor() {
+    public static initialize(): void {
         this.browser = this.detectBrowser();
         logger.log("Browser: " + Browser[this.browser]);
 
         this.updateScrollbars();
     }
 
-    private updateScrollbars(): void {
+    private static updateScrollbars(): void {
         if (this.browser !== Browser.Firefox) return;
         const selection = getElementsByClass("scrollable");
         for (const element of selection) {
@@ -32,7 +32,7 @@ export class BrowserSupport {
         }
     }
 
-    private detectBrowser(): Browser {
+    private static detectBrowser(): Browser {
         const userAgent = navigator.userAgent;
 
         if (/chrome|crios|crmo/i.test(userAgent)) {

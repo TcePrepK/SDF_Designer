@@ -1,5 +1,4 @@
 import {createDiv, getElementById} from "../../core/utils";
-import {AttachedMouse} from "../utils/AttachedMouse";
 import {Template} from "./Template";
 import {TemplateNode} from "../nodes/TemplateNode";
 import {Root} from "../root";
@@ -24,10 +23,6 @@ export class TemplateInterface {
         this.hitBox = getElementById("interface-hit-box");
         this.container = getElementById("container");
         this.plus = getElementById("buffer-more");
-
-        const bufferMouse = AttachedMouse.getAttachment(this.hitBox);
-        bufferMouse.onEnter = this.toggleBuffer.bind(this, true);
-        bufferMouse.onLeave = this.toggleBuffer.bind(this, false);
 
         this.plus.addEventListener("click", () => this.createNewTemplate());
 
@@ -72,11 +67,12 @@ export class TemplateInterface {
         });
 
         template.addEventListener("focus", () => {
-            this.buffer.classList.add("expanded-edit");
+            this.buffer.classList.add("edit");
             this.namingTemplate = true;
         });
 
         template.addEventListener("blur", () => {
+            this.buffer.classList.remove("edit");
             this.namingTemplate = false;
 
             if (template.innerText === "") {
@@ -84,23 +80,10 @@ export class TemplateInterface {
                 return;
             }
 
-            this.buffer.classList.remove("expanded-edit");
             this.finalizeTemplate(template);
         });
 
-        template.addEventListener("click", () => {
-            if (this.namingTemplate) return;
-        });
-
         template.focus();
-    }
-
-    public toggleBuffer(state: boolean): void {
-        const classList = this.buffer.classList;
-        if (classList.contains("expanded") === state) return;
-
-        if (state) classList.add("expanded");
-        else classList.remove("expanded");
     }
 
     public finalizeTemplate(template: HTMLDivElement): Template {

@@ -1,8 +1,8 @@
 export class FPSCounter {
     private lastTime: number = performance.now();
-    public FPS: number = 0;
+    public FPS = 0;
 
-    public start(): number {
+    public update(): number {
         const now = performance.now();
         const dt = now - this.lastTime;
 

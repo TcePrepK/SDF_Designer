@@ -1,23 +1,5 @@
 @import "variables.scss";
 
-@keyframes buffer-expand {
-    0% {
-        transform: translateY(calc(1rem - 100%));
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
-
-@keyframes buffer-collapse {
-    0% {
-        transform: translateY(0);
-    }
-    100% {
-        transform: translateY(calc(1rem - 100%));
-    }
-}
-
 #interface-hit-box {
     position: absolute;
 
@@ -29,6 +11,10 @@
 
     z-index: 1;
 
+    &:hover > #template-interface {
+        transform: translateY(0);
+    }
+
     #template-interface {
         min-height: calc(100% - 4rem);
         padding: 0 1rem 1rem 1rem;
@@ -39,11 +25,10 @@
         background: $buffer-foreground;
         box-shadow: 0 0 7px 0 $shadow-color;
 
+        transition: transform 0.2s;
         transform: translateY(calc(1rem - 100%));
-        animation: buffer-collapse 0.2s;
 
-        &.expanded, &.expanded-edit {
-            animation: buffer-expand 0.2s;
+        &.edit {
             transform: translateY(0);
         }
 

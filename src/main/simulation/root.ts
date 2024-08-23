@@ -19,4 +19,12 @@ export class Root {
         this.templateInterface.initialize(this);
         BaseNodes.initialize(this);
     }
+
+    public update(): void {
+        
+    }
+
+    public updateFrame(): void {
+        this.templateInterface.updateFrame();
+    }
 }

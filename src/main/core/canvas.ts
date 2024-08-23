@@ -1,5 +1,5 @@
 import {Signal} from "./signal";
-import {checkFor, createCanvas, ElementArgs} from "./utils";
+import {createCanvas, ElementArgs} from "./utils";
 
 export type DrawParameters = {
     width: number;
@@ -18,19 +18,5 @@ export class Canvas {
     public initialize(data: Partial<HTMLCanvasElement> & ElementArgs = {}): void {
         if (!data.parent) data.parent = document.body;
         this.mainCanvas = createCanvas();
-
-        checkFor(this.getWebGLContext(), "Unable to initialize WebGL. Your browser or machine may not support it.");
-    }
-
-    public getWebGLContext(): WebGL2RenderingContext {
-        return this.mainCanvas.getContext("webgl2")!;
-    }
-
-    public getWebGLDrawParameters(): DrawParameters {
-        return {
-            width: this.mainCanvas.width,
-            height: this.mainCanvas.height,
-            ctx: this.getWebGLContext()
-        };
     }
 }

@@ -7,5 +7,4 @@ export class GlobalVariables {
     public static resolution: VectorI2D;
 
     public static canvas: Canvas;
-    public static ctx: WebGL2RenderingContext;
 }
