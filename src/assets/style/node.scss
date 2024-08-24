@@ -42,7 +42,7 @@
 
 .node {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 
     position: relative;
 
@@ -52,6 +52,7 @@
     border-radius: $node-radius;
     margin: 0 auto 0 auto;
 
+    transition: transform 0.2s ease-in-out;
     box-shadow: 0 0 10px $background;
     pointer-events: all;
     cursor: grab;
@@ -79,13 +80,11 @@
         border-radius: 0 $node-radius $node-radius 0;
     }
 
-    & {
-        transition: transform 0.2s ease-in-out;
-    }
-
     &:hover:not(.template) {
         transform: scale(1.1);
         animation: none;
+
+        z-index: 1;
     }
 
     &:has(.ports:empty) {
@@ -126,6 +125,12 @@
 
             text-indent: 0;
             text-align: center;
+        }
+
+        .canvas {
+            width: calc(100% - 1.5rem);
+
+            margin-left: 0.75rem;
         }
 
         .ports {
@@ -193,6 +198,22 @@
         }
     }
 
+    .canvas {
+        width: calc(100% - 2.5rem);
+        aspect-ratio: 1;
+
+        margin-left: 1.25rem;
+        margin-bottom: 5px;
+
+        border-top: 1rem solid color-mix(in oklab, var(--node-color) 80%, #000);
+
+        z-index: 1;
+    }
+
+    &:has(.canvas) {
+        margin-bottom: -0.8rem;
+    }
+
     .name {
         position: absolute;
 
@@ -211,6 +232,13 @@
         font-size: 1.2rem;
         font-weight: bold;
         font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .port-holder {
+        position: relative;
+
+        display: flex;
+        flex-direction: row;
     }
 
     .ports {

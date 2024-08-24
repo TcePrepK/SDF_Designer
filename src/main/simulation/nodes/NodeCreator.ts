@@ -1,4 +1,4 @@
-import {createDiv, createElement, createInput} from "../../core/utils";
+import {createCanvas, createDiv, createElement, createInput} from "../../core/utils";
 import {TemplateNode} from "./TemplateNode";
 import {NodePort, PortType} from "./NodePort";
 import {NodeParams} from "./NodeInterface";
@@ -65,10 +65,13 @@ export const PossibleColors: Array<string> = [
 export interface NodeData {
     holder: HTMLDivElement | null;
     body: HTMLDivElement;
+    canvas: HTMLCanvasElement | null;
 
     name: string;
     inputs: Array<NodePort<PortType.INPUT>>;
     outputs: Array<NodePort<PortType.OUTPUT>>;
+
+    hasCanvas: boolean;
 
     color: string;
 }
@@ -80,21 +83,21 @@ export class NodeCreator {
             createDiv({ classes: ["name"], innerText: params.name })
         );
 
-        const short = params.inputs.length === 0 || params.outputs.length === 0;
-        if (short) body.classList.add("short");
-
         const color = PossibleColors[Math.floor(Math.random() * PossibleColors.length)];
         body.style.setProperty("--node-color", color);
 
-        const inputPort = createDiv({ classes: ["inputs", "ports"], parent: body });
-        const outputPort = createDiv({ classes: ["outputs", "ports"], parent: body });
+        const portHolder = createDiv({ classes: ["port-holder"], parent: body });
+        const inputPort = createDiv({ classes: ["inputs", "ports"], parent: portHolder });
+        const outputPort = createDiv({ classes: ["outputs", "ports"], parent: portHolder });
 
         const finalData: NodeData = {
             holder: nodeHolder,
             body: body,
+            canvas: null,
             name: params.name,
             inputs: [],
             outputs: [],
+            hasCanvas: params.hasCanvas,
             color: color
         };
         const onlyOutput = params.inputs.length === 0;
@@ -103,24 +106,37 @@ export class NodeCreator {
 
         createDiv({ classes: ["footer"], parent: body });
 
+        // TODO: Remove this part after making the canvas functional!
+        let canvas: HTMLCanvasElement | null = null;
+        if (params.hasCanvas) {
+            canvas = createCanvas({ classes: ["canvas"], parent: body });
+            canvas.width = 256;
+            canvas.height = 256;
+        }
+
         return finalData;
     }
 
     public static createTemplateData(data: NodeData, forTemplate = false): NodeData {
-        const body = createDiv({ classes: ["node", "preload"] },
+        const body = createDiv({ classes: ["node"] },
             createDiv({ classes: ["name"], innerText: data.name })
         );
 
-        const short = data.inputs.length === 0 || data.outputs.length === 0;
-        if (short) body.classList.add("short");
-
         body.style.setProperty("--node-color", data.color);
 
-        const inputPort = createDiv({ classes: ["inputs", "ports"], parent: body });
-        const outputPort = createDiv({ classes: ["outputs", "ports"], parent: body });
+        let canvas: HTMLCanvasElement | null = null;
+        if (data.hasCanvas) {
+            canvas = createCanvas({ classes: ["canvas"], parent: body });
+            canvas.width = 256;
+            canvas.height = 256;
+        }
+
+        const portHolder = createDiv({ classes: ["port-holder"], parent: body });
+        const inputPort = createDiv({ classes: ["inputs", "ports"], parent: portHolder });
+        const outputPort = createDiv({ classes: ["outputs", "ports"], parent: portHolder });
 
         const onlyOutput = data.inputs.length === 0;
-        const finalData: NodeData = { ...data, body: body, inputs: [], outputs: [] };
+        const finalData: NodeData = { ...data, body: body, canvas: canvas, inputs: [], outputs: [] };
         finalData.inputs = this.createPorts(data.inputs.map(d => d.name), PortType.INPUT, finalData, inputPort, onlyOutput, forTemplate);
         finalData.outputs = this.createPorts(data.outputs.map(d => d.name), PortType.OUTPUT, finalData, outputPort, onlyOutput, forTemplate);
         finalData.holder = null;

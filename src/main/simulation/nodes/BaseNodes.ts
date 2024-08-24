@@ -11,6 +11,7 @@ export class BaseNodes {
                 name: "Pixel",
                 inputs: [],
                 outputs: ["Px", "Py"],
+                hasCanvas: true,
                 category: category
             });
         }
@@ -20,6 +21,7 @@ export class BaseNodes {
                 name: "Min(A, B)",
                 inputs: ["", ""],
                 outputs: [""],
+                hasCanvas: false,
                 category: category
             });
 
@@ -27,6 +29,7 @@ export class BaseNodes {
                 name: "Test",
                 inputs: ["A", "B"],
                 outputs: ["O"],
+                hasCanvas: false,
                 category: category
             });
         }
@@ -37,6 +40,7 @@ export class BaseNodes {
                 name: "Const",
                 inputs: [],
                 outputs: [""],
+                hasCanvas: false,
                 category: category
             });
 
@@ -44,6 +48,7 @@ export class BaseNodes {
                 name: "End",
                 inputs: [""],
                 outputs: [],
+                hasCanvas: false,
                 category: category
             });
         }
@@ -63,6 +68,7 @@ export class BaseNodes {
                 name: names[random4],
                 inputs: new Array(inputAmount).fill(""),
                 outputs: new Array(outputAmount).fill(""),
+                hasCanvas: Math.random() > 0.5,
                 category: categories[random2]
             });
         }

@@ -16,6 +16,7 @@ export type NodeParams = {
     name: string;
     inputs: Array<string | null>;
     outputs: Array<string>;
+    hasCanvas: boolean;
     category: Exclude<Category, Category.ALL>;
 };
 
