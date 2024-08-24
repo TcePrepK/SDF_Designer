@@ -86,8 +86,8 @@ export class NodeCreator {
         const color = PossibleColors[Math.floor(Math.random() * PossibleColors.length)];
         body.style.setProperty("--node-color", color);
 
-        const inputPort = createDiv({ classes: ["inputs"], parent: body });
-        const outputPort = createDiv({ classes: ["outputs"], parent: body });
+        const inputPort = createDiv({ classes: ["inputs", "ports"], parent: body });
+        const outputPort = createDiv({ classes: ["outputs", "ports"], parent: body });
 
         const finalData: NodeData = {
             holder: nodeHolder,
@@ -116,8 +116,8 @@ export class NodeCreator {
 
         body.style.setProperty("--node-color", data.color);
 
-        const inputPort = createDiv({ classes: ["inputs"], parent: body });
-        const outputPort = createDiv({ classes: ["outputs"], parent: body });
+        const inputPort = createDiv({ classes: ["inputs", "ports"], parent: body });
+        const outputPort = createDiv({ classes: ["outputs", "ports"], parent: body });
 
         const onlyOutput = data.inputs.length === 0;
         const finalData: NodeData = { ...data, body: body, inputs: [], outputs: [] };
