@@ -80,15 +80,21 @@
         border-radius: 0 $node-radius $node-radius 0;
     }
 
-    &:hover:not(.template) {
-        transform: scale(1.1);
-        animation: none;
-
+    &:not(.template) {
         z-index: 1;
+
+        &:hover {
+            transform: scale(1.1);
+            animation: none;
+        }
     }
 
     &:has(.ports:empty) {
         width: 6.5rem;
+
+        &:has(.canvas) {
+            margin-bottom: 5.25rem;
+        }
 
         // Port at right
         &:has(.inputs:empty) {
@@ -128,9 +134,10 @@
         }
 
         .canvas {
-            width: calc(100% - 1.5rem);
+            width: calc(100% - 2rem);
 
-            margin-left: 0.75rem;
+            bottom: -5.25rem;
+            left: 0.5rem;
         }
 
         .ports {
@@ -198,20 +205,24 @@
         }
     }
 
-    .canvas {
-        width: calc(100% - 2.5rem);
-        aspect-ratio: 1;
-
-        margin-left: 1.25rem;
-        margin-bottom: 5px;
-
-        border-top: 1rem solid color-mix(in oklab, var(--node-color) 80%, #000);
-
-        z-index: 1;
+    &:has(.canvas) {
+        margin-bottom: 7.75rem;
     }
 
-    &:has(.canvas) {
-        margin-bottom: -0.8rem;
+    .canvas {
+        position: absolute;
+
+        width: 7rem;
+        aspect-ratio: 1;
+
+        bottom: -7.75rem;
+        left: 1rem;
+
+        background: red;
+        border: 0.5rem solid color-mix(in oklab, var(--node-color) 80%, #000);
+        border-radius: 0 0 $node-radius $node-radius;
+
+        z-index: 1;
     }
 
     .name {
