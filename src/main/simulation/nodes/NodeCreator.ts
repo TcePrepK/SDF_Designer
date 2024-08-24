@@ -80,6 +80,9 @@ export class NodeCreator {
             createDiv({ classes: ["name"], innerText: params.name })
         );
 
+        const short = params.inputs.length === 0 || params.outputs.length === 0;
+        if (short) body.classList.add("short");
+
         const color = PossibleColors[Math.floor(Math.random() * PossibleColors.length)];
         body.style.setProperty("--node-color", color);
 
@@ -94,31 +97,40 @@ export class NodeCreator {
             outputs: [],
             color: color
         };
-        finalData.inputs = this.createPorts(params.inputs, PortType.INPUT, finalData, inputPort);
-        finalData.outputs = this.createPorts(params.outputs, PortType.OUTPUT, finalData, outputPort);
+        const onlyOutput = params.inputs.length === 0;
+        finalData.inputs = this.createPorts(params.inputs, PortType.INPUT, finalData, inputPort, onlyOutput);
+        finalData.outputs = this.createPorts(params.outputs, PortType.OUTPUT, finalData, outputPort, onlyOutput);
+
+        createDiv({ classes: ["footer"], parent: body });
 
         return finalData;
     }
 
-    public static cloneData(data: NodeData, forTemplate = false): NodeData {
+    public static createTemplateData(data: NodeData, forTemplate = false): NodeData {
         const body = createDiv({ classes: ["node", "preload"] },
             createDiv({ classes: ["name"], innerText: data.name })
         );
+
+        const short = data.inputs.length === 0 || data.outputs.length === 0;
+        if (short) body.classList.add("short");
 
         body.style.setProperty("--node-color", data.color);
 
         const inputPort = createDiv({ classes: ["inputs"], parent: body });
         const outputPort = createDiv({ classes: ["outputs"], parent: body });
 
+        const onlyOutput = data.inputs.length === 0;
         const finalData: NodeData = { ...data, body: body, inputs: [], outputs: [] };
-        finalData.inputs = this.createPorts(data.inputs.map(d => d.name), PortType.INPUT, finalData, inputPort, forTemplate);
-        finalData.outputs = this.createPorts(data.outputs.map(d => d.name), PortType.OUTPUT, finalData, outputPort, forTemplate);
+        finalData.inputs = this.createPorts(data.inputs.map(d => d.name), PortType.INPUT, finalData, inputPort, onlyOutput, forTemplate);
+        finalData.outputs = this.createPorts(data.outputs.map(d => d.name), PortType.OUTPUT, finalData, outputPort, onlyOutput, forTemplate);
         finalData.holder = null;
+
+        createDiv({ classes: ["footer"], parent: body });
 
         return finalData;
     }
 
-    private static createPorts<T = NodePort>(names: Array<string | null>, type: PortType.INPUT | PortType.OUTPUT, data: NodeData, parent: HTMLDivElement, forTemplate = false): Array<T> {
+    private static createPorts<T = NodePort>(names: Array<string | null>, type: PortType.INPUT | PortType.OUTPUT, data: NodeData, parent: HTMLDivElement, onlyOutput: boolean, forTemplate = false): Array<T> {
         const results: Array<T> = [];
 
         for (let i = 0; i < names.length; i++) {
@@ -128,10 +140,17 @@ export class NodeCreator {
 
             const port = createDiv({ classes: [type, "port"] });
             const label = name ? createElement("label", { classes: ["port_name"], innerText: name }) : "";
-            const input = createInput({ classes: ["port_value"], type: "number", disabled: !forTemplate });
+            const input = createInput({
+                classes: ["port_value"],
+                type: "number",
+                placeholder: "Auto",
+                disabled: !forTemplate
+            });
 
             if (type === PortType.INPUT) {
                 portData.append(port, label, input);
+            } else if (onlyOutput) {
+                portData.append(input, label, port);
             } else {
                 portData.append(label, port);
             }
@@ -147,7 +166,7 @@ export class NodeCreator {
         const centerX = box.left + box.width / 2;
         const centerY = box.top + box.height / 2;
 
-        const clone = this.cloneData(data, true);
+        const clone = this.createTemplateData(data, true);
         return new TemplateNode(clone, centerX, centerY);
     }
 }

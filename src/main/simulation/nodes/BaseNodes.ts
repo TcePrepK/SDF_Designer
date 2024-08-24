@@ -39,6 +39,13 @@ export class BaseNodes {
                 outputs: [""],
                 category: category
             });
+
+            nodeInterface.setupNode({
+                name: "End",
+                inputs: [""],
+                outputs: [],
+                category: category
+            });
         }
 
         for (let i = 0; i < 10; i++) {

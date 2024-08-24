@@ -19,7 +19,8 @@
     width: 13rem;
     margin-top: 1.25rem;
 
-    &::before, &::after {
+    &::before,
+    &::after {
         content: " ";
         position: absolute;
         top: calc(-2.5px - 0.675rem);
@@ -55,7 +56,8 @@
     pointer-events: all;
     cursor: grab;
 
-    &::before, &::after {
+    &::before,
+    &::after {
         content: " ";
 
         position: absolute;
@@ -86,19 +88,89 @@
         animation: none;
     }
 
+    &.short {
+        width: 6.5rem;
+
+        // Port at right
+        &:has(.inputs:empty) {
+            .inputs {
+                margin-right: 0;
+            }
+
+            .outputs {
+                margin-left: -0.6rem;
+
+                .port {
+                    margin-left: 0.4rem;
+                }
+            }
+        }
+
+        // Port at left
+        &:has(.outputs:empty) {
+            .inputs {
+                margin-right: -0.6rem;
+
+                .port {
+                    margin-right: 0.4rem;
+                }
+            }
+
+            .outputs {
+                margin-left: 0;
+            }
+        }
+
+        .name {
+            width: 100%;
+
+            text-indent: 0;
+            text-align: center;
+        }
+
+        .inputs,
+        .outputs {
+            min-width: 1rem;
+
+            > :first-child {
+                margin-top: 2rem;
+            }
+
+            > :last-child {
+                margin-bottom: 1.4rem;
+            }
+
+            .port_value {
+                width: 5rem !important;
+            }
+        }
+
+        &::before {
+            width: 0.75rem;
+        }
+
+        &::after {
+            width: 0.75rem;
+            height: calc(100% - 1.375rem);
+
+            margin-top: 1.375rem;
+
+            border-top-right-radius: 0;
+        }
+    }
+
     &.template {
         position: fixed;
         transform: translate(-50%, -50%);
-
         transform-origin: top left;
-        transition: scale 0.2s ease-in-out;
 
         &.dragging {
             scale: 1.1;
             cursor: grabbing;
         }
 
-        .input, .output {
+        .input,
+        .output {
             &::after {
                 content: "";
 
@@ -113,11 +185,9 @@
             }
         }
 
-        .input_value {
+        .port_value {
             cursor: text;
             pointer-events: all !important;
-
-            color: color-mix(in oklab, var(--node-color) 20%, #000);
 
             &:focus {
                 outline: none;
@@ -128,8 +198,10 @@
     .name {
         position: absolute;
 
-        width: calc(100% - 1.25rem);
-        border-top-left-radius: $node-radius;
+        width: 100%;
+        height: 1.375rem;
+
+        border-radius: $node-radius $node-radius 0 0;
         user-select: none;
 
         background: var(--node-color);
@@ -139,11 +211,12 @@
         text-transform: uppercase;
         text-indent: 1.5rem;
         font-size: 1.2rem;
-        font-weight: 750;
+        font-weight: bold;
         font-family: Arial, Helvetica, sans-serif;
     }
 
-    .inputs, .outputs {
+    .inputs,
+    .outputs {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -159,12 +232,7 @@
         }
 
         > :last-child {
-            margin-bottom: 1rem;
-        }
-
-        &:empty {
-            margin-left: calc(1.925rem / 2);
-            margin-right: calc(1.925rem / 2);
+            margin-bottom: 1.85rem;
         }
 
         .port_data {
@@ -176,27 +244,26 @@
             height: 0.75rem;
 
             .port_name {
-                height: 1rem;
-
                 color: color-mix(in oklab, var(--node-color) 40%, #000);
 
-                background: color-mix(in oklab, var(--node-color) 65%, #000);
-                border-radius: 0.25rem;
+                background: color-mix(in oklab, var(--node-color) 80%, #000);
 
-                padding: 1px;
-                margin: 0 0.1rem 0 0;
+                padding: 3px;
 
                 line-height: 100%;
-                text-align: center;
                 font-family: Arial, Helvetica, sans-serif;
                 font-weight: bold;
                 white-space: nowrap;
 
+                cursor: grab;
+
                 &:has(+ .port_value) {
-                    border-radius: 0.25rem 0 0 0.25rem;
+                    border-radius: 0;
 
                     + .port_value {
+                        border: 2px solid color-mix(in oklab, var(--node-color) 80%, #000);
                         border-radius: 0 0.25rem 0.25rem 0;
+                        margin: 0;
                     }
                 }
             }
@@ -216,39 +283,71 @@
                     border: 2px solid color-mix(in oklab, var(--node-color) 40%, #fff);
                 }
             }
+
+            .port_value {
+                width: 100%;
+                min-width: 1.5rem;
+                height: 1rem;
+
+                padding: 1px;
+                margin: 0 0.1rem;
+
+                border-radius: 0.25rem;
+                border: 1px solid color-mix(in oklab, var(--node-color) 60%, #000);
+                background: color-mix(in oklab, var(--node-color) 50%, #000);
+
+                pointer-events: none;
+
+                color: color-mix(in oklab, var(--node-color) 100%, #fff);
+                text-indent: 0.1rem;
+                font-weight: 500;
+                font-size: 0.9rem;
+                font-family: Arial, Helvetica, sans-serif;
+
+                -moz-appearance: textfield;
+
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                }
+
+                &::placeholder {
+                    text-align: center;
+                    color: color-mix(in oklab, var(--node-color) 70%, #000);
+                }
+
+                &:has(+ .port_name) {
+                    border: 2px solid color-mix(in oklab, var(--node-color) 80%, #000);
+                    border-radius: 0.25rem 0 0 0.25rem;
+                    margin: 0;
+
+                    + .port_name {
+                        margin: 0;
+
+                        border-radius: 0;
+                    }
+                }
+            }
         }
     }
 
     .inputs {
-        //width: 7.5rem;
-
         left: -0.4rem;
         margin-top: auto;
         margin-right: -0.8rem;
 
-        .input_data {
-            .input {
-                margin-right: 1.1rem;
-            }
+        .input {
+            margin-right: 0.9rem;
+        }
 
-            .port_value {
-                width: 100%;
-                height: 1rem;
+        .port_name {
+            padding-left: 0;
 
-                padding: 1px;
-
-                border-radius: 0.25rem;
-                border: none;
-                background: color-mix(in oklab, var(--node-color) 50%, #000);
-
-                pointer-events: none;
-            }
+            border-radius: 0 0.25rem 0.25rem 0;
         }
     }
 
     .outputs {
-        //width: 3rem;
-
         margin-left: auto;
 
         right: -0.4rem;
@@ -258,12 +357,28 @@
             justify-content: flex-end;
 
             .port_name {
+                padding-right: 0;
                 margin-left: 0.25rem;
+
+                border-radius: 0.25rem 0 0 0.25rem;
             }
 
             .output {
-                margin-left: 1.1rem;
+                margin-left: 0.9rem;
             }
         }
+    }
+
+    .footer {
+        position: absolute;
+
+        bottom: 0;
+
+        width: 100%;
+        height: 0.75rem;
+
+        background: color-mix(in oklab, var(--node-color) 80%, #000);
+
+        border-radius: $node-radius;
     }
 }
