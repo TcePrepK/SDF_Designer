@@ -109,6 +109,7 @@ export class NodeCreator {
         // TODO: Remove this part after making the canvas functional!
         let canvas: HTMLCanvasElement | null = null;
         if (params.hasCanvas) {
+            createInput({ classes: ["canvas-toggle"], type: "checkbox", parent: body });
             canvas = createCanvas({ classes: ["canvas"], parent: body });
             canvas.width = 256;
             canvas.height = 256;
