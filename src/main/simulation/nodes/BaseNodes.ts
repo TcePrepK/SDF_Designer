@@ -68,7 +68,7 @@ export class BaseNodes {
                 name: names[random4],
                 inputs: new Array(inputAmount).fill(""),
                 outputs: new Array(outputAmount).fill(""),
-                hasCanvas: Math.random() > 0.5,
+                hasCanvas: true,
                 category: categories[random2]
             });
         }

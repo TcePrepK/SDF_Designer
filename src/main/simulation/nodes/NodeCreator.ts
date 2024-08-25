@@ -109,7 +109,14 @@ export class NodeCreator {
         // TODO: Remove this part after making the canvas functional!
         let canvas: HTMLCanvasElement | null = null;
         if (params.hasCanvas) {
-            createInput({ classes: ["canvas-toggle"], type: "checkbox", parent: body });
+            const input = createInput({
+                classes: ["canvas-toggle"],
+                type: "checkbox",
+                checked: Math.random() > 0.5,
+                parent: body
+            });
+            setInterval(() => input.checked = !input.checked, 1000);
+
             canvas = createCanvas({ classes: ["canvas"], parent: body });
             canvas.width = 256;
             canvas.height = 256;
@@ -127,6 +134,14 @@ export class NodeCreator {
 
         let canvas: HTMLCanvasElement | null = null;
         if (data.hasCanvas) {
+            const input = createInput({
+                classes: ["canvas-toggle"],
+                type: "checkbox",
+                checked: Math.random() > 0.5,
+                parent: body
+            });
+            setInterval(() => input.checked = !input.checked, 1000);
+
             canvas = createCanvas({ classes: ["canvas"], parent: body });
             canvas.width = 256;
             canvas.height = 256;
