@@ -45,6 +45,8 @@
     flex-direction: column;
 
     position: relative;
+    pointer-events: all;
+    cursor: grab;
 
     width: 10rem;
 
@@ -52,11 +54,7 @@
     padding-bottom: 0.25rem;
     margin: 0 auto 0 auto;
 
-    overflow-y: clip;
-
     transition: transform 0.2s ease-in-out;
-    pointer-events: all;
-    cursor: grab;
 
     --box-shadow-color: color-mix(in oklab, var(--node-color) 70%, #000);
 
@@ -95,19 +93,7 @@
     }
 
     &:has(.ports:empty) {
-        width: 6.75rem;
-
-        &:has(.canvas) {
-            padding-bottom: 5.75rem;
-
-            &:before {
-                height: calc(100% - 5.75rem);
-            }
-
-            &:after {
-                height: calc(100% - 1.5rem - 5.75rem);
-            }
-        }
+        width: 7rem;
 
         // Port at right
         &:has(.inputs:empty) {
@@ -146,10 +132,14 @@
             text-align: center;
         }
 
-        .canvas {
-            width: calc(100% - 2rem);
+        .canvas-wrapper {
+            width: 6rem;
 
-            left: 0.5rem;
+            left: 0.25rem;
+
+            &.enabled {
+                height: 6rem;
+            }
         }
 
         .ports {
@@ -217,54 +207,46 @@
         }
     }
 
-    &:has(.canvas) {
-        padding-bottom: 8rem;
-
-        &:before,
-        &:after {
-            height: calc(100% - 8rem);
-        }
-    }
-
-    &:has(.canvas-toggle:checked) .canvas {
-        translate: 0;
-    }
-
-    .canvas-toggle {
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 2;
-
-        width: 1rem;
-        height: 1rem;
-
-        //padding: 1rem;
-        margin: 0.25rem;
-
-        border: none;
-    }
-
-    .canvas {
+    .canvas-wrapper {
         position: absolute;
 
-        width: 7rem;
-        aspect-ratio: 1;
+        width: 9rem;
+        height: 0;
 
-        bottom: 0.25rem;
-        left: calc(1rem + 1px);
+        padding: 0.25rem;
+
+        left: 0.25rem;
         z-index: -1;
 
-        background: red;
-        border: 0.5rem solid color-mix(in oklab, var(--node-color) 80%, #000);
-        //box-shadow: 0 0 10px $background;
-        border-radius: 0 0 $node-radius $node-radius;
+        overflow-y: clip;
 
-        box-shadow: 1px 1px 1px var(--box-shadow-color),
-        1.5px 1.5px 1px var(--box-shadow-color);
+        // translate: 0 calc(0.6rem - 100%);
+        bottom: 0;
+        translate: 0 calc(100% - 0.5rem);
+        transition: height 0.2s ease-in-out;
 
-        translate: 0 calc(0.6rem - 100%);
-        transition: translate 0.2s ease-in-out;
+        &.enabled {
+            height: 9rem;
+        }
+
+        .canvas {
+            position: absolute;
+
+            width: calc(100% - 1.5rem);
+            aspect-ratio: 1;
+
+            bottom: 0.25rem;
+
+            background: red;
+            border: 0.5rem solid color-mix(in oklab, var(--node-color) 80%, #000);
+            //box-shadow: 0 0 10px $background;
+            border-radius: 0 0 $node-radius $node-radius;
+
+            box-shadow: 1px 1px 1px var(--box-shadow-color),
+            1.5px 1.5px 1px var(--box-shadow-color);
+
+            transition: translate 0.2s ease-in-out;
+        }
     }
 
     .name {

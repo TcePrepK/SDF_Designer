@@ -2,6 +2,7 @@ import {createCanvas, createDiv, createElement, createInput} from "../../core/ut
 import {TemplateNode} from "./TemplateNode";
 import {NodePort, PortType} from "./NodePort";
 import {NodeParams} from "./NodeInterface";
+import {AttachedMouse} from "../utils/AttachedMouse";
 
 export const PossibleColors: Array<string> = [
     "#FF5733", // Red-Orange
@@ -106,18 +107,10 @@ export class NodeCreator {
 
         createDiv({ classes: ["footer"], parent: body });
 
-        // TODO: Remove this part after making the canvas functional!
         let canvas: HTMLCanvasElement | null = null;
         if (params.hasCanvas) {
-            const input = createInput({
-                classes: ["canvas-toggle"],
-                type: "checkbox",
-                checked: Math.random() > 0.5,
-                parent: body
-            });
-            setInterval(() => input.checked = !input.checked, 1000);
-
-            canvas = createCanvas({ classes: ["canvas"], parent: body });
+            const canvasWrapper = createDiv({ classes: ["canvas-wrapper"], parent: body });
+            canvas = createCanvas({ classes: ["canvas"], parent: canvasWrapper });
             canvas.width = 256;
             canvas.height = 256;
         }
@@ -132,32 +125,36 @@ export class NodeCreator {
 
         body.style.setProperty("--node-color", data.color);
 
-        let canvas: HTMLCanvasElement | null = null;
-        if (data.hasCanvas) {
-            const input = createInput({
-                classes: ["canvas-toggle"],
-                type: "checkbox",
-                checked: Math.random() > 0.5,
-                parent: body
-            });
-            setInterval(() => input.checked = !input.checked, 1000);
-
-            canvas = createCanvas({ classes: ["canvas"], parent: body });
-            canvas.width = 256;
-            canvas.height = 256;
-        }
-
         const portHolder = createDiv({ classes: ["port-holder"], parent: body });
         const inputPort = createDiv({ classes: ["inputs", "ports"], parent: portHolder });
         const outputPort = createDiv({ classes: ["outputs", "ports"], parent: portHolder });
 
         const onlyOutput = data.inputs.length === 0;
-        const finalData: NodeData = { ...data, body: body, canvas: canvas, inputs: [], outputs: [] };
+        const finalData: NodeData = { ...data, body: body, inputs: [], outputs: [] };
         finalData.inputs = this.createPorts(data.inputs.map(d => d.name), PortType.INPUT, finalData, inputPort, onlyOutput, forTemplate);
         finalData.outputs = this.createPorts(data.outputs.map(d => d.name), PortType.OUTPUT, finalData, outputPort, onlyOutput, forTemplate);
         finalData.holder = null;
 
-        createDiv({ classes: ["footer"], parent: body });
+        const footer = createDiv({ classes: ["footer"], parent: body });
+
+        finalData.canvas = null;
+        if (data.hasCanvas) {
+            const canvasWrapper = createDiv({ classes: ["canvas-wrapper"], parent: body });
+            const canvas = createCanvas({ classes: ["canvas"], parent: canvasWrapper });
+            canvas.width = 256;
+            canvas.height = 256;
+            finalData.canvas = canvas;
+
+            const ctx = canvas.getContext("2d")!;
+            ctx.fillStyle = "red";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "blue";
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+
+            AttachedMouse.getAttachment(footer).onClick = () => canvasWrapper.classList.toggle("enabled");
+            AttachedMouse.getAttachment(canvas).onClick = () => canvasWrapper.classList.toggle("enabled");
+        }
 
         return finalData;
     }
