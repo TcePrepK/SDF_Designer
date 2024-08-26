@@ -206,16 +206,20 @@
             }
         }
 
+        .canvas-wrapper {
+            cursor: pointer;
+        }
+
         .footer::after {
             content: "";
             position: absolute;
 
-            top: -0.25rem;
+            top: -0.3rem;
             left: -0.5rem;
             z-index: 2;
 
             width: calc(100% + 1rem);
-            height: calc(100% + 0.75rem);
+            height: calc(100% + 1rem);
 
             pointer-events: auto;
             cursor: pointer;
@@ -226,7 +230,7 @@
         position: absolute;
 
         width: 9rem;
-        height: 0;
+        height: 0.3rem;
 
         padding: 0.25rem;
 

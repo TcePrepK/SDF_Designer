@@ -153,7 +153,7 @@ export class NodeCreator {
             ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
 
             AttachedMouse.getAttachment(footer).onDownRaw =
-                AttachedMouse.getAttachment(canvas).onDownRaw =
+                AttachedMouse.getAttachment(canvasWrapper).onDownRaw =
                     e => {
                         canvasWrapper.classList.toggle("enabled");
                         e.stopPropagation();
