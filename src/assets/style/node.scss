@@ -205,6 +205,21 @@
                 outline: none;
             }
         }
+
+        .footer::after {
+            content: "";
+            position: absolute;
+
+            top: -0.25rem;
+            left: -0.5rem;
+            z-index: 2;
+
+            width: calc(100% + 1rem);
+            height: calc(100% + 0.75rem);
+
+            pointer-events: auto;
+            cursor: pointer;
+        }
     }
 
     .canvas-wrapper {

@@ -152,8 +152,12 @@ export class NodeCreator {
             ctx.fillStyle = "blue";
             ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
 
-            AttachedMouse.getAttachment(footer).onClick = () => canvasWrapper.classList.toggle("enabled");
-            AttachedMouse.getAttachment(canvas).onClick = () => canvasWrapper.classList.toggle("enabled");
+            AttachedMouse.getAttachment(footer).onDownRaw =
+                AttachedMouse.getAttachment(canvas).onDownRaw =
+                    e => {
+                        canvasWrapper.classList.toggle("enabled");
+                        e.stopPropagation();
+                    };
         }
 
         return finalData;
