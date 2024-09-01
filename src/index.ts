@@ -13,7 +13,5 @@ try {
     const main = new Main();
     main.initialize();
 } catch (error) {
-    let msg = error;
-    if (error instanceof Error) msg = error.message;
-    ErrorScreen.setActive(msg as string);
+    ErrorScreen.setActive(error);
 }

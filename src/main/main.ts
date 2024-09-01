@@ -4,7 +4,7 @@ import {fixEveryPreload} from "./core/utils";
 import {BrowserSupport} from "./simulation/ui/BrowserSupport";
 import "../assets/style/style.scss";
 import {ErrorScreen} from "./simulation/ui/ErrorScreen";
-import {Root} from "./simulation/root";
+import {Root} from "./simulation/Root";
 
 export class Main {
     private readonly root = new Root();

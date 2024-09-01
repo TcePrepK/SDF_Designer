@@ -1,4 +1,4 @@
-export function checkFor<T>(check: T | null, message: string, error: string | null = ""): asserts check is T {
+export function checkFor<T>(check: T | undefined | null, message: string, error: string | null = ""): asserts check is T {
     if (check === null || check === undefined) {
         throw new Error(message + "\n" + error);
     }

@@ -1,14 +1,18 @@
-import {ButtonType} from "../../core/mouse";
+export enum ButtonType {
+    LEFT,
+    MIDDLE,
+    RIGHT
+}
 
-export class AttachedMouse {
-    private static instances: Map<HTMLElement, AttachedMouse> = new Map();
+export class AttachedMouse<T extends HTMLElement> {
+    private static instances: Map<HTMLElement, AttachedMouse<never>> = new Map();
 
     public x = 0;
     public y = 0;
 
-    private element!: HTMLElement;
+    private element!: T;
 
-    private constructor(element: HTMLElement) {
+    private constructor(element: T) {
         this.element = element;
 
         this.element.addEventListener("mousemove", e => {
@@ -17,7 +21,7 @@ export class AttachedMouse {
         });
     }
 
-    static getAttachment(element: HTMLElement): AttachedMouse {
+    static getAttachment<T extends HTMLElement>(element: T): AttachedMouse<T> {
         if (AttachedMouse.instances.has(element)) return AttachedMouse.instances.get(element)!;
         return new AttachedMouse(element);
     }
@@ -66,6 +70,10 @@ export class AttachedMouse {
 
     set onWheel(fun: (delta: number) => unknown) {
         this.element.addEventListener("wheel", e => fun(e.deltaY));
+    }
+
+    set onResize(fun: (width: number, height: number) => unknown) {
+        this.element.addEventListener("resize", () => fun(this.element.clientWidth, this.element.clientHeight));
     }
 
     //-------------------------- Raw Methods --------------------------//

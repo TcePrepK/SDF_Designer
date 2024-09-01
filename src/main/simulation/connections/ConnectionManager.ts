@@ -1,9 +1,9 @@
-import {NodeData} from "../nodes/NodeCreator";
-import {Root} from "../root";
+import {Root} from "../Root";
 import {NodeConnection} from "./NodeConnection";
 import {NodePort, PortType} from "../nodes/NodePort";
 import {VisualConnection} from "./VisualConnection";
 import {Vector2D} from "../../core/vector2D";
+import {TemplateNode} from "../nodes/TemplateNode";
 
 export class ConnectionManager {
     private root!: Root;
@@ -55,7 +55,7 @@ export class ConnectionManager {
             } else if (fromNetwork) this.cutConnection(fromNetwork);
             else if (toNetwork) this.cutConnection(toNetwork);
 
-            this.allConnections.push(new NodeConnection(this.port.parent, port.parent, from as NodePort<PortType.OUTPUT>, to as NodePort<PortType.INPUT>));
+            this.allConnections.push(new NodeConnection(this.root, from.parent, to.parent, from as NodePort<PortType.OUTPUT>, to as NodePort<PortType.INPUT>));
 
             return true;
         }
@@ -85,7 +85,7 @@ export class ConnectionManager {
      * @param to
      * @private
      */
-    private findTheNodeInNetwork(from: NodeData, to: NodeData): boolean {
+    private findTheNodeInNetwork(from: TemplateNode, to: TemplateNode): boolean {
         if (to === from) return true;
         for (const output of to.outputs) {
             const [node] = output.getNextNode();

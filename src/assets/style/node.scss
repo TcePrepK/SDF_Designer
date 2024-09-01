@@ -52,7 +52,7 @@
 
     border-radius: $node-radius;
     padding-bottom: 0.25rem;
-    margin: 0 auto 0 auto;
+    margin: 0 auto 0.25rem auto;
 
     transition: transform 0.2s ease-in-out;
 
@@ -102,7 +102,7 @@
             }
 
             .outputs {
-                margin-left: -0.6rem;
+                margin-left: -0.7rem;
 
                 .port {
                     margin-left: 0.4rem;
@@ -113,7 +113,7 @@
         // Port at left
         &:has(.outputs:empty) {
             .inputs {
-                margin-right: -0.6rem;
+                margin-right: -0.7rem;
 
                 .port {
                     margin-right: 0.4rem;
@@ -296,6 +296,7 @@
     .port-holder {
         display: flex;
         flex-direction: row;
+        gap: 0.1rem;
 
         position: relative;
 
@@ -317,6 +318,7 @@
 
         position: relative;
 
+        flex-grow: 1;
         margin-top: auto;
         bottom: 0;
         z-index: 2;
@@ -342,8 +344,10 @@
 
                 background: color-mix(in oklab, var(--node-color) 80%, #000);
 
+                flex-grow: 1;
                 padding: 3px;
 
+                text-align: center;
                 line-height: 100%;
                 font-family: Arial, Helvetica, sans-serif;
                 font-weight: bold;

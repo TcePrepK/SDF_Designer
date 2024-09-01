@@ -9,8 +9,11 @@ export class ErrorScreen {
         screen.style.display = "none";
     }
 
-    static setActive(msg: string | null = null): void {
-        if (msg) {
+    static setActive(error: unknown = null): void {
+        let msg = error;
+        if (error instanceof Error) msg = error.message;
+
+        if (error) {
             getElementById("error-screen")!.style.display = "flex";
             getElementByQuery("#error-screen .error").innerHTML = `<span>Error: </span> ${msg}`;
         }
@@ -18,6 +21,7 @@ export class ErrorScreen {
         getElementById("main-screen").remove();
 
         logger.toggleName();
-        logger.error(msg);
+        logger.toggleSymbol();
+        logger.error(error);
     }
 }

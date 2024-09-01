@@ -1,26 +1,22 @@
 import {createDiv, getElementById} from "../../core/utils";
 import {Template} from "./Template";
 import {TemplateNode} from "../nodes/TemplateNode";
-import {Root} from "../root";
+import {Root} from "../Root";
 
 export class TemplateInterface {
     private root!: Root;
 
     private buffer!: HTMLDivElement;
-    private hitBox!: HTMLDivElement;
     private container!: HTMLDivElement;
     private plus!: HTMLImageElement;
 
     private readonly templates: Template[] = [];
     private activeTemplate!: Template;
 
-    private namingTemplate = false;
-
     public initialize(root: Root): void {
         this.root = root;
 
         this.buffer = getElementById("template-interface");
-        this.hitBox = getElementById("interface-hit-box");
         this.container = getElementById("container");
         this.plus = getElementById("buffer-more");
 
@@ -29,8 +25,18 @@ export class TemplateInterface {
         this.createMainTemplate();
     }
 
+    public updateTemplates(): void {
+        for (const template of this.templates) {
+            template.update();
+        }
+    }
+
     public updateFrame(): void {
         this.activeTemplate.getEnvironment().updateFrame();
+    }
+
+    public addNodeUpdate(node: TemplateNode): void {
+        this.activeTemplate.addNodeUpdate(node);
     }
 
     public addTemplateNode(node: TemplateNode): void {
@@ -68,12 +74,10 @@ export class TemplateInterface {
 
         template.addEventListener("focus", () => {
             this.buffer.classList.add("edit");
-            this.namingTemplate = true;
         });
 
         template.addEventListener("blur", () => {
             this.buffer.classList.remove("edit");
-            this.namingTemplate = false;
 
             if (template.innerText === "") {
                 template.remove();

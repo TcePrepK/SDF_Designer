@@ -1,24 +1,38 @@
 import {NodePort, PortType} from "../nodes/NodePort";
-import {NodeData} from "../nodes/NodeCreator";
 import {VisualConnection} from "./VisualConnection";
+import {Root} from "../Root";
+import {PortValue, TemplateNode} from "../nodes/TemplateNode";
 
 export class NodeConnection {
-    private readonly fromNode: NodeData;
-    private readonly toNode: NodeData;
+    private root!: Root;
+
+    private readonly fromNode: TemplateNode;
+    private readonly toNode: TemplateNode;
 
     private readonly fromPort: NodePort<PortType.OUTPUT>;
     private readonly toPort: NodePort<PortType.INPUT>;
 
     public overrideColor: string | null = "#999";
 
-    constructor(fromNode: NodeData, toNode: NodeData, fromPort: NodePort<PortType.OUTPUT>, toPort: NodePort<PortType.INPUT>) {
+    constructor(root: Root, fromNode: TemplateNode, toNode: TemplateNode, fromPort: NodePort<PortType.OUTPUT>, toPort: NodePort<PortType.INPUT>) {
+        this.root = root;
+
         this.fromNode = fromNode;
         this.toNode = toNode;
         this.fromPort = fromPort;
         this.toPort = toPort;
 
+        this.connect();
+    }
+
+    /**
+     * Connects this connection to both node ports
+     */
+    public connect(): void {
         this.fromPort.connectNetwork(this);
         this.toPort.connectNetwork(this);
+
+        this.root.templateInterface.addNodeUpdate(this.toNode);
     }
 
     /**
@@ -27,6 +41,8 @@ export class NodeConnection {
     public cutConnection(): void {
         this.fromPort.disconnectNetwork();
         this.toPort.disconnectNetwork();
+
+        this.root.templateInterface.addNodeUpdate(this.toNode);
     }
 
     /**
@@ -38,16 +54,23 @@ export class NodeConnection {
     }
 
     /**
+     * Returns the value this network/connection carries
+     */
+    public getValue(): PortValue {
+        return this.fromPort.parent.currentValue;
+    }
+
+    /**
      * Returns the next node and port
      */
-    public getNext(): [NodeData, NodePort<PortType.INPUT>] {
+    public getNext(): [TemplateNode, NodePort<PortType.INPUT>] {
         return [this.toNode, this.toPort];
     }
 
     /**
      * Returns the previous node and port
      */
-    public getPrevious(): [NodeData, NodePort<PortType.OUTPUT>] {
+    public getPrevious(): [TemplateNode, NodePort<PortType.OUTPUT>] {
         return [this.fromNode, this.fromPort];
     }
 }

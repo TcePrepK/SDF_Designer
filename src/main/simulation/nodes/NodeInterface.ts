@@ -1,24 +1,36 @@
 import {getElementById, getElementByQuery, toggleClass} from "../../core/utils";
-import {NodeCreator, NodeData} from "./NodeCreator";
-import {AttachedMouse} from "../utils/AttachedMouse";
-import {Root} from "../root";
+import {AttachedMouse, ButtonType} from "../../core/AttachedMouse";
+import {Root} from "../Root";
 import {TemplateNode} from "./TemplateNode";
-import {ButtonType} from "../../core/mouse";
+import {BaseNode} from "./BaseNode";
 
 export enum Category {
     ALL = "All",
-    NONE = "None",
     LOGIC = "Logic",
     MATH = "Math",
 }
 
+export type NodeInput = {
+    name?: string;
+    manual?: boolean;
+};
+
+export type OperationFunction = (args: Record<string, number>) => number;
+export type NodeOutput = {
+    name?: string;
+    manual?: boolean;
+};
+
 export type NodeParams = {
     name: string;
-    inputs: Array<string | null>;
-    outputs: Array<string>;
-    hasCanvas: boolean;
+    color: string;
+    inputs: Array<NodeInput>;
+    outputs: Array<NodeOutput>;
+    opp?: OperationFunction;
     category: Exclude<Category, Category.ALL>;
 };
+
+export const NoName = "No Name Specified";
 
 export class NodeInterface {
     private root!: Root;
@@ -26,8 +38,8 @@ export class NodeInterface {
     private body!: HTMLDivElement;
     private selection!: HTMLDivElement;
 
-    private allNodes: NodeData[] = [];
-    private categoryToNodes: Map<Category, NodeData[]> = new Map();
+    private allNodes: BaseNode[] = [];
+    private categoryToNodes: Map<Category, BaseNode[]> = new Map();
     private currentCategory: Category = Category.ALL;
 
     private expanded = false;
@@ -76,19 +88,21 @@ export class NodeInterface {
     private setupCategory(name: string, category: Category): void {
         this.categoryToNodes.set(category, []);
 
+        // TODO: Holder is no more stored, change the css to hide the holder whenever it is empty or in this case everything is hidden.
+
         let timeout: NodeJS.Timeout | null = null;
         const element = getElementById(`category-${name}`);
         element.addEventListener("click", () => {
             for (const node of this.allNodes) {
-                node.holder!.classList.add("hidden");
+                // node.holder!.classList.add("hidden");
                 node.body.classList.add("wobble");
             }
 
-            const nodes = this.categoryToNodes.get(category)!;
-            for (const node of nodes) {
-                const classes = node.holder!.classList;
-                classes.remove("hidden");
-            }
+            // const nodes = this.categoryToNodes.get(category)!;
+            // for (const node of nodes) {
+            //     const classes = node.holder!.classList;
+            //     classes.remove("hidden");
+            // }
 
             if (timeout) clearTimeout(timeout);
             timeout = setTimeout(() => {
@@ -100,15 +114,13 @@ export class NodeInterface {
         });
     }
 
-    public setupNode(params: NodeParams): NodeData {
-        const node = NodeCreator.createData(params, this.selection);
+    public setupNode(params: NodeParams): BaseNode {
+        const node = new BaseNode(params.name, params.color).initializeElements(this.selection, params);
 
         { // Categories
             this.allNodes.push(node);
-            if (params.category !== Category.NONE) {
-                this.categoryToNodes.get(Category.ALL)!.push(node);
-                this.categoryToNodes.get(params.category)!.push(node);
-            }
+            this.categoryToNodes.get(Category.ALL)!.push(node);
+            this.categoryToNodes.get(params.category)!.push(node);
         }
 
         { // Dragging
@@ -118,8 +130,16 @@ export class NodeInterface {
             nodeAttached.onDownRaw = event => {
                 if (event.button !== ButtonType.LEFT) return;
                 interval = setTimeout(() => {
-                    this.dragging = NodeCreator.createTemplateNode(node);
-                    this.dragging.initialize(this.root, event);
+                    const w = this.root.windowWidth;
+                    const h = this.root.windowHeight;
+
+                    const box = nodeBody.getBoundingClientRect();
+                    const centerX = box.left + box.width / 2 - w / 2;
+                    const centerY = box.top + box.height / 2 - h / 2;
+
+                    this.dragging = new TemplateNode(node, centerX, centerY);
+                    this.dragging.initialize(this.root);
+                    this.dragging.startDragging(event);
 
                     this.toggleSelection(false);
                 }, 100);
@@ -131,6 +151,10 @@ export class NodeInterface {
         }
 
         return node;
+    }
+
+    public getNodeByName(name: string): BaseNode | null {
+        return this.allNodes.find(node => node.name.toUpperCase() === name.toUpperCase()) ?? null;
     }
 
     private fixScrollFading(): void {
@@ -159,9 +183,9 @@ export class NodeInterface {
 
         this.expanded = !this.expanded;
         if (this.expanded) {
-            this.getAudio("opening").play();
+            // this.getAudio("opening").play();
         } else {
-            this.getAudio("closing").play();
+            // this.getAudio("closing").play();
         }
 
         getElementById("node-playground").style.filter = `blur(${this.expanded ? 2 : 0}px)`;

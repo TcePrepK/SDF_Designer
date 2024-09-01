@@ -1,9 +1,8 @@
-import {ButtonType} from "../../core/mouse";
 import {getElementById} from "../../core/utils";
-import {AttachedMouse} from "../utils/AttachedMouse";
+import {AttachedMouse, ButtonType} from "../../core/AttachedMouse";
 import {TemplateNode} from "../nodes/TemplateNode";
 import {ConnectionManager} from "../connections/ConnectionManager";
-import {Root} from "../root";
+import {Root} from "../Root";
 
 export class TemplateEnvironment {
     private root!: Root;
@@ -15,9 +14,6 @@ export class TemplateEnvironment {
     public readonly ctx: CanvasRenderingContext2D;
 
     private activeState = false;
-
-    private width = 0;
-    private height = 0;
 
     private x = 0;
     private y = 0;
@@ -33,11 +29,6 @@ export class TemplateEnvironment {
 
         this.canvas = getElementById("playground-canvas");
         this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-
-        this.width = window.innerWidth;
-        this.height = window.innerHeight;
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
     }
 
     public initialize(root: Root): void {
@@ -45,16 +36,17 @@ export class TemplateEnvironment {
         this.connectionManager.initialize(this.root);
 
         { // Window resize
-            window.addEventListener("resize", () => {
-                this.width = window.innerWidth;
-                this.height = window.innerHeight;
-                this.canvas.width = this.width;
-                this.canvas.height = this.height;
-                // this.ctx.reset();
-                this.ctx.translate(this.width / 2, this.height / 2);
-            });
-            // this.ctx.reset();
-            this.ctx.translate(this.width / 2, this.height / 2);
+            const w = this.root.windowWidth;
+            const h = this.root.windowHeight;
+            this.canvas.width = w;
+            this.canvas.height = h;
+            this.ctx.translate(w / 2, h / 2);
+
+            this.root.windowMouse.onResize = (w, h) => {
+                this.canvas.width = w;
+                this.canvas.height = h;
+                this.ctx.translate(w / 2, h / 2);
+            };
         }
 
         { // Canvas movement
@@ -79,11 +71,22 @@ export class TemplateEnvironment {
                 this.templateNodes.forEach(node => node.updateRelative(dx, dy));
             };
         }
+
+        { // Initial Nodes
+            const nodeInterface = this.root.nodeInterface;
+            const data = nodeInterface.getNodeByName("pixel")!;
+            const templateNode = new TemplateNode(data, 0, 0).initialize(this.root);
+            templateNode.setupPixelNode();
+            this.addNode(templateNode);
+        }
     }
 
     public updateFrame(): void {
+        const w = this.root.windowWidth / 2;
+        const h = this.root.windowHeight / 2;
+
         // Clear canvas
-        this.ctx.clearRect(-this.width / 2, -this.height / 2, this.width, this.height);
+        this.ctx.clearRect(-w, -h, 2 * w, 2 * h);
 
         { // Render background lines
             this.ctx.save();
@@ -96,7 +99,7 @@ export class TemplateEnvironment {
 
         { // Render connections
             this.ctx.save();
-            this.ctx.translate(-this.width / 2, -this.height / 2);
+            this.ctx.translate(-w, -h);
 
             this.connectionManager.render(this.ctx);
 
@@ -129,8 +132,8 @@ export class TemplateEnvironment {
         ctx.strokeStyle = color;
         ctx.lineWidth = width;
 
-        const w = this.width / 2;
-        const h = this.height / 2;
+        const w = this.root.windowWidth / 2;
+        const h = this.root.windowHeight / 2;
 
         const left = Math.floor(-w / size) * size;
         const top = Math.floor(-h / size) * size;
