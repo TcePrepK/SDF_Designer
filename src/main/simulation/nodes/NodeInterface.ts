@@ -1,4 +1,4 @@
-import {getElementById, getElementByQuery, toggleClass} from "../../core/utils";
+import {getElementById, getElementByQuery, toggleClass} from "../../core/htmlUtils";
 import {AttachedMouse, ButtonType} from "../../core/AttachedMouse";
 import {Root} from "../Root";
 import {TemplateNode} from "./TemplateNode";

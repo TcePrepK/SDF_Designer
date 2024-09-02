@@ -1,5 +1,5 @@
 import {Signal} from "./signal";
-import {createCanvas, ElementArgs} from "./utils";
+import {createCanvas, ElementArgs} from "./htmlUtils";
 
 export type DrawParameters = {
     width: number;

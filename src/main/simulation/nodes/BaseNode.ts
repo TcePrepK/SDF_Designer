@@ -1,5 +1,5 @@
 import {NodePort, PortType} from "./NodePort";
-import {createCanvas, createDiv, createElement, createInput} from "../../core/utils";
+import {createCanvas, createDiv, createElement, createInput} from "../../core/htmlUtils";
 import {NodeInput, NodeOutput, NodeParams, NoName} from "./NodeInterface";
 
 export class BaseNode {

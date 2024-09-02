@@ -1,6 +1,6 @@
 import {FPSCounter} from "./core/fpsCounter";
 import {GlobalVariables} from "./core/globalVariables";
-import {fixEveryPreload} from "./core/utils";
+import {fixEveryPreload} from "./core/htmlUtils";
 import {BrowserSupport} from "./simulation/ui/BrowserSupport";
 import "../assets/style/style.scss";
 import {ErrorScreen} from "./simulation/ui/ErrorScreen";

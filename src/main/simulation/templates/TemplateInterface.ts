@@ -1,4 +1,4 @@
-import {createDiv, getElementById} from "../../core/utils";
+import {createDiv, getElementById} from "../../core/htmlUtils";
 import {Template} from "./Template";
 import {TemplateNode} from "../nodes/TemplateNode";
 import {Root} from "../Root";

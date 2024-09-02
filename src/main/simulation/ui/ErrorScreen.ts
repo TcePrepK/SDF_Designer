@@ -1,4 +1,4 @@
-import {getElementById, getElementByQuery} from "../../core/utils";
+import {getElementById, getElementByQuery} from "../../core/htmlUtils";
 import {Logger} from "../../core/logger";
 
 const logger = new Logger("Error Screen", "❌");

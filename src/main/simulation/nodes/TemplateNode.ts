@@ -1,6 +1,6 @@
 import {AttachedMouse, ButtonType} from "../../core/AttachedMouse";
 import {Root} from "../Root";
-import {getElementById} from "../../core/utils";
+import {getElementById} from "../../core/htmlUtils";
 import {BaseNode} from "./BaseNode";
 import {OperationFunction} from "./NodeInterface";
 

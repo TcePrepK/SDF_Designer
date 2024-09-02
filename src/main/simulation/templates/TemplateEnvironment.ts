@@ -1,4 +1,4 @@
-import {getElementById} from "../../core/utils";
+import {getElementById} from "../../core/htmlUtils";
 import {AttachedMouse, ButtonType} from "../../core/AttachedMouse";
 import {TemplateNode} from "../nodes/TemplateNode";
 import {ConnectionManager} from "../connections/ConnectionManager";
