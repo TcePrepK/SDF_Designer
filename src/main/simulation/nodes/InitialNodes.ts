@@ -1,5 +1,6 @@
 import {Root} from "../Root";
 import {Category} from "./NodeInterface";
+import {Utils} from "../../core/Utils";
 
 export const PossibleColors: Array<string> = [
     "#FF5733", // Red-Orange
@@ -86,7 +87,7 @@ export class InitialNodes {
                     }
                 ],
                 outputs: [{}],
-                opp: args => args.A * 2 - 1,
+                opp: args => Utils.sub(Utils.mult(args.A, 2), 1),
 
                 category: Category.LOGIC,
                 color: this.randomColor()
@@ -103,7 +104,7 @@ export class InitialNodes {
                     }
                 ],
                 outputs: [{}],
-                opp: args => Math.abs(args.A),
+                opp: args => Utils.abs(args.A),
 
                 category: Category.LOGIC,
                 color: this.randomColor()
@@ -122,7 +123,7 @@ export class InitialNodes {
                     }
                 ],
                 outputs: [{}],
-                opp: args => Math.min(args.A, args.B),
+                opp: args => Utils.min(args.A, args.B),
 
                 category: Category.LOGIC,
                 color: this.randomColor()
@@ -141,7 +142,7 @@ export class InitialNodes {
                     }
                 ],
                 outputs: [{}],
-                opp: args => Math.max(args.A, args.B),
+                opp: args => Utils.max(args.A, args.B),
 
                 category: Category.LOGIC,
                 color: this.randomColor()

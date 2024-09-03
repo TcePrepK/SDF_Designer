@@ -7,24 +7,38 @@ export class Vector2D {
         this.y = this.cast(y);
     }
 
-    public add(v: Vector2D): Vector2D {
+    public add(v: number | Vector2D): Vector2D {
+        if (typeof v === "number") v = new Vector2D(v, v);
         return new Vector2D(this.x + v.x, this.y + v.y);
     }
 
-    public sub(v: Vector2D): Vector2D {
+    public sub(v: number | Vector2D): Vector2D {
+        if (typeof v === "number") v = new Vector2D(v, v);
         return new Vector2D(this.x - v.x, this.y - v.y);
     }
 
-    public mul(v: Vector2D): Vector2D {
+    public mult(v: number | Vector2D): Vector2D {
+        if (typeof v === "number") v = new Vector2D(v, v);
         return new Vector2D(this.x * v.x, this.y * v.y);
     }
 
-    public mulScalar(n: number): Vector2D {
-        return new Vector2D(this.x * n, this.y * n);
+    public div(v: number | Vector2D): Vector2D {
+        if (typeof v === "number") v = new Vector2D(v, v);
+        return new Vector2D(this.x / v.x, this.y / v.y);
     }
 
-    public div(v: Vector2D): Vector2D {
-        return new Vector2D(this.x / v.x, this.y / v.y);
+    public min(v: number | Vector2D): Vector2D {
+        if (typeof v === "number") v = new Vector2D(v, v);
+        return new Vector2D(Math.min(this.x, v.x), Math.min(this.y, v.y));
+    }
+
+    public max(v: number | Vector2D): Vector2D {
+        if (typeof v === "number") v = new Vector2D(v, v);
+        return new Vector2D(Math.max(this.x, v.x), Math.max(this.y, v.y));
+    }
+
+    public abs(): Vector2D {
+        return new Vector2D(Math.abs(this.x), Math.abs(this.y));
     }
 
     public mag(): number {

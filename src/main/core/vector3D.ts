@@ -13,24 +13,38 @@ export class Vector3D {
         return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
-    public add(v: Vector3D): Vector3D {
+    public add(v: number | Vector3D): Vector3D {
+        if (typeof v === "number") v = new Vector3D(v, v, v);
         return new Vector3D(this.x + v.x, this.y + v.y, this.z + v.z);
     }
 
-    public sub(v: Vector3D): Vector3D {
+    public sub(v: number | Vector3D): Vector3D {
+        if (typeof v === "number") v = new Vector3D(v, v, v);
         return new Vector3D(this.x - v.x, this.y - v.y, this.z - v.z);
     }
 
-    public mul(v: Vector3D): Vector3D {
+    public mult(v: number | Vector3D): Vector3D {
+        if (typeof v === "number") v = new Vector3D(v, v, v);
         return new Vector3D(this.x * v.x, this.y * v.y, this.z * v.z);
     }
 
-    public mulScalar(n: number): Vector3D {
-        return new Vector3D(this.x * n, this.y * n, this.z * n);
+    public div(v: number | Vector3D): Vector3D {
+        if (typeof v === "number") v = new Vector3D(v, v, v);
+        return new Vector3D(this.x / v.x, this.y / v.y, this.z / v.z);
     }
 
-    public div(v: Vector3D): Vector3D {
-        return new Vector3D(this.x / v.x, this.y / v.y, this.z / v.z);
+    public min(v: number | Vector3D): Vector3D {
+        if (typeof v === "number") v = new Vector3D(v, v, v);
+        return new Vector3D(Math.min(this.x, v.x), Math.min(this.y, v.y), Math.min(this.z, v.z));
+    }
+
+    public max(v: number | Vector3D): Vector3D {
+        if (typeof v === "number") v = new Vector3D(v, v, v);
+        return new Vector3D(Math.max(this.x, v.x), Math.max(this.y, v.y), Math.max(this.z, v.z));
+    }
+
+    public abs(): Vector3D {
+        return new Vector3D(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z));
     }
 
     public dot(v: Vector3D): number {
@@ -68,27 +82,27 @@ export class Color extends Vector3D {
         super(r, g, b);
     }
 
-    get r(): number {
-        return this.x;
-    }
-
-    get g(): number {
-        return this.y;
-    }
-
-    get b(): number {
-        return this.z;
-    }
-
     set r(value: number) {
         this.x = value;
+    }
+
+    get r(): number {
+        return this.x;
     }
 
     set g(value: number) {
         this.y = value;
     }
 
+    get g(): number {
+        return this.y;
+    }
+
     set b(value: number) {
         this.z = value;
+    }
+
+    get b(): number {
+        return this.z;
     }
 }

@@ -3,8 +3,11 @@ import {Root} from "../Root";
 import {getElementById} from "../../core/htmlUtils";
 import {BaseNode} from "./BaseNode";
 import {OperationFunction} from "./NodeInterface";
+import {Vector2D} from "../../core/vector2D";
+import {Vector3D} from "../../core/vector3D";
 
-export type PortValue = number | Float32Array | null;
+export type PixelType = number | Vector2D | Vector3D;
+export type PortValue = PixelType | Float32Array | null;
 
 export class TemplateNode extends BaseNode {
     private root!: Root;
@@ -19,7 +22,7 @@ export class TemplateNode extends BaseNode {
     private dragY = 0;
 
     private opp!: OperationFunction | undefined;
-    currentValue: PortValue = null;
+    public currentValue: PortValue = null;
 
     private grabBlock = false;
 
@@ -127,47 +130,78 @@ export class TemplateNode extends BaseNode {
         if (Object.values(allInputs).includes(null)) {
             // We need to set the canvas back to non-visible state.
             this.resetTheOutputs();
-
             return false;
         } else {
             // Get the input values and update the canvas accordingly.
             // If there is a problem with it, return false!
 
-            const consistsCanvas = Object.values(allInputs).find(value => value instanceof Float32Array);
-            if (!consistsCanvas) {
+            const pixelBasedInputs = Object.values(allInputs).filter(value => value instanceof Float32Array) as Array<Float32Array>;
+            if (pixelBasedInputs.length === 0) {
                 this.currentValue = this.opp!(allInputs as Record<string, number>);
             } else {
-                const result = new Float32Array(256 * 256 * 3);
+                const test2D = pixelBasedInputs.find(val => val.length === 256 * 256 * 2);
+                const test3D = pixelBasedInputs.find(val => val.length === 256 * 256 * 3);
+                if (test2D && test3D) {
+                    // This means there are wrong sized inputs.
+                    this.resetTheOutputs();
+                    return false;
+                }
+
+                const newSize = test3D ? 3 : test2D ? 2 : 1;
+                const resultData = new Float32Array(256 * 256 * newSize);
                 const newCanvas = new ImageData(256, 256);
                 for (let i = 0; i < 256; i++) {
                     for (let j = 0; j < 256; j++) {
                         const idx = i + j * 256;
 
-                        for (let c = 0; c < 3; c++) {
-                            const subValues: Record<string, number> = {};
-                            for (const name in allInputs) {
-                                const val = allInputs[name];
-                                if (val instanceof Float32Array) subValues[name] = val[idx * 3 + c];
-                                else subValues[name] = val as number;
+                        const subValues: Record<string, PixelType> = {};
+                        for (const name in allInputs) {
+                            const val = allInputs[name];
+                            if (!(val instanceof Float32Array)) {
+                                subValues[name] = val as number;
+                                continue;
                             }
 
-                            const oppResult = this.opp!(subValues);
-                            result[idx * 3 + c] = oppResult;
-                            newCanvas.data[idx * 4 + c] = oppResult * 256;
+                            const dataSize = val.length / (256 * 256);
+                            switch (dataSize) {
+                                case 3:
+                                    subValues[name] = new Vector3D(val[idx * 3], val[idx * 3 + 1], val[idx * 3 + 2]);
+                                    break;
+                                case 2:
+                                    subValues[name] = new Vector2D(val[idx * 2], val[idx * 2 + 1]);
+                                    break;
+                                case 1:
+                                    subValues[name] = val[idx];
+                                    break;
+                            }
                         }
+
                         newCanvas.data[idx * 4 + 3] = 255;
+
+                        const result = this.opp!(subValues);
+                        // console.log(subValues);
+                        if (typeof result === "number") {
+                            resultData[idx * newSize] = result;
+                            newCanvas.data[idx * 4] = result * 256;
+                            newCanvas.data[idx * 4 + 1] = result * 256;
+                            newCanvas.data[idx * 4 + 2] = result * 256;
+                            continue;
+                        }
+
+                        resultData[idx * newSize] = result.x;
+                        resultData[idx * newSize + 1] = result.y;
+                        newCanvas.data[idx * 4] = result.x * 256;
+                        newCanvas.data[idx * 4 + 1] = result.y * 256;
+                        if (result instanceof Vector3D) {
+                            resultData[idx * newSize + 2] = result.z;
+                            newCanvas.data[idx * 4 + 2] = result.z * 256;
+                        }
                     }
                 }
 
                 this.canvas.getContext("2d")!.putImageData(newCanvas, 0, 0);
-                this.currentValue = result;
+                this.currentValue = resultData;
             }
-            // for (const output of this.outputs) {
-            //     if (!output.opp) continue;
-            //     const result = output.opp(allInputs);
-            //     console.log(result);
-            // }
-            // const outputs = this.outputs;
         }
 
         return true;
@@ -234,7 +268,7 @@ export class TemplateNode extends BaseNode {
         const size = 256;
         const ctx = this.canvas.getContext("2d")!;
 
-        this.currentValue = new Float32Array(size * size * 3);
+        this.currentValue = new Float32Array(size * size * 2);
         const canvasData: ImageData = new ImageData(size, size);
         for (let x = 0; x < size; x++) {
             for (let y = 0; y < size; y++) {
@@ -244,9 +278,8 @@ export class TemplateNode extends BaseNode {
                 canvasData.data[i * 4 + 2] = 0;
                 canvasData.data[i * 4 + 3] = 255;
 
-                this.currentValue[i * 3] = x / 256;
-                this.currentValue[i * 3 + 1] = y / 256;
-                this.currentValue[i * 3 + 2] = 0;
+                this.currentValue[i * 2] = x / 256;
+                this.currentValue[i * 2 + 1] = y / 256;
             }
         }
 

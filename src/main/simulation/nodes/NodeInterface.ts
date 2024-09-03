@@ -1,7 +1,7 @@
 import {getElementById, getElementByQuery, toggleClass} from "../../core/htmlUtils";
 import {AttachedMouse, ButtonType} from "../../core/AttachedMouse";
 import {Root} from "../Root";
-import {TemplateNode} from "./TemplateNode";
+import {PixelType, TemplateNode} from "./TemplateNode";
 import {BaseNode} from "./BaseNode";
 
 export enum Category {
@@ -15,7 +15,7 @@ export type NodeInput = {
     manual?: boolean;
 };
 
-export type OperationFunction = (args: Record<string, number>) => number;
+export type OperationFunction = (args: Record<string, PixelType>) => PixelType;
 export type NodeOutput = {
     name?: string;
     manual?: boolean;
